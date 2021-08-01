@@ -1,0 +1,224 @@
+import 'package:dist_v2/models/item.dart';
+import 'package:dist_v2/services/cliente_service.dart';
+import 'package:dist_v2/services/lista_service.dart';
+import 'package:dist_v2/services/pedido_service.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class IzqView extends StatefulWidget {
+  IzqView({Key? key}) : super(key: key);
+
+  @override
+  _IzqViewState createState() => _IzqViewState();
+}
+
+class _IzqViewState extends State<IzqView> {
+  @override
+  Widget build(BuildContext context) {
+    final pedidoService = Provider.of<PedidoService>(context);
+    final listaService = Provider.of<ListaService>(context, listen: false);
+    final items = listaService.todo;
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Container(
+          width: MediaQuery.of(context).size.width * .45,
+          height: MediaQuery.of(context).size.height * .7,
+          decoration: BoxDecoration(
+            color: Color(0xFFFFFFFF),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: ListView.builder(
+              itemCount: items.toSet().length,
+              itemBuilder: (_, i) => items.length < 1
+                  ? Center(child: CircularProgressIndicator())
+                  : lista(items[i], i)),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * .45,
+          height: 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width * .15,
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Color(0xFFE6E6E6),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: StadiumBorder(),
+                    elevation: 0,
+                    primary: Color(0xFFE6E6E6),
+                  ),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          final namecontroller = new TextEditingController();
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            title: Text("Guardar pedido"),
+                            content: TextField(
+                                autofocus: true,
+                                controller: namecontroller,
+                                decoration:
+                                    InputDecoration(hintText: 'Nombre cliente'),
+                                onSubmitted: (string) =>
+                                    savePedido(context, string, pedidoService)),
+                            actions: <Widget>[
+                              MaterialButton(
+                                onPressed: () {
+                                  savePedido(context, namecontroller.text,
+                                      pedidoService);
+                                },
+                                child: Text(
+                                  "Guardar",
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                              )
+                            ],
+                          );
+                        });
+                  }, // guardar,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Guardar",
+                      style: TextStyle(
+                        color: Color(0xFF202020),
+                        fontSize: 33,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                //width: MediaQuery.of(context).size.width * .15,
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Color(0xFFE6E6E6),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: StadiumBorder(),
+                    elevation: 0,
+                    primary: Color(0xFFE6E6E6),
+                  ),
+                  onPressed: () {
+                    final pedidoService =
+                        Provider.of<PedidoService>(context, listen: false);
+                    final namecontroller = new TextEditingController();
+                    final colorcontroller = new TextEditingController();
+                    final pricecontroller = new TextEditingController();
+                    showDialog(
+                      context: context,
+                      builder: (_) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: Text("Nuevo accesorio"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                autofocus: true,
+                                controller: namecontroller,
+                                decoration: InputDecoration(hintText: 'Nombre'),
+                              ),
+                              TextField(
+                                autofocus: true,
+                                controller: colorcontroller,
+                                decoration:
+                                    InputDecoration(hintText: 'Color/Tipo'),
+                              ),
+                              TextField(
+                                autofocus: true,
+                                controller: pricecontroller,
+                                decoration: InputDecoration(hintText: 'Precio'),
+                              ),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            MaterialButton(
+                              child: Text(
+                                "Añadir",
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                              onPressed: () {
+                                Map<String, dynamic> showData() => {
+                                      "nombre": namecontroller.text,
+                                      "tipo": colorcontroller.text,
+                                      "precio": pricecontroller.text,
+                                    };
+                                var data = showData();
+                                pedidoService.addCarrito(data);
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Añadir manual",
+                      style: TextStyle(
+                        color: Color(0xFF202020),
+                        fontSize: 29,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void savePedido(
+      BuildContext context, String name, PedidoService pedidoService) {
+    final clienteService = Provider.of<ClienteService>(context, listen: false);
+
+    clienteService.guardarPedido(
+      name,
+      pedidoService.giveSaved(),
+      pedidoService.sumTot(),
+    );
+    pedidoService.clearAll();
+    Navigator.pop(context);
+  }
+
+  Widget lista(Item item, int i) {
+    return ListTile(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            item.nombre,
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          Text(item.tipo.toLowerCase()),
+          Text("\$ " + "${item.precio}"),
+        ],
+      ),
+      onTap: () {
+        final pedidoService =
+            Provider.of<PedidoService>(context, listen: false);
+        pedidoService.addCarrito(item);
+      },
+    );
+  }
+}
