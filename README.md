@@ -1,6 +1,6 @@
 # AutoBiller
 
-Desktop app for Markets to make bills from a local list of items.
+##Desktop app for Markets to make bills from a local list of items.
 
 Features:
 - SearchBar
