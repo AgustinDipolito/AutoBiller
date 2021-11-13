@@ -1,3 +1,4 @@
+import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/services/lista_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,8 @@ class TopView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final listaService = Provider.of<ListaService>(context);
+    final clienteService = Provider.of<ClienteService>(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -44,7 +47,11 @@ class TopView extends StatelessWidget {
               elevation: 1,
               primary: Color(0xFFE6E6E6),
             ),
-            onPressed: () => Navigator.pushNamed(context, "todos"),
+            onPressed: () async {
+              clienteService.setClientes = await clienteService.loadClientes();
+
+              Navigator.pushNamed(context, "todos");
+            },
             child: Align(
               alignment: Alignment.center,
               child: Text(

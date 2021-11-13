@@ -1,3 +1,4 @@
+import 'package:dist_v2/models/user_preferences.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,38 +14,72 @@ class _TodosPageState extends State<TodosPage> {
   @override
   Widget build(BuildContext context) {
     final clienteService = Provider.of<ClienteService>(context);
+    clienteService.setClientes = UserPreferences.getPedidos();
+
     return Scaffold(
       backgroundColor: Color(0xFF808080),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width * .15,
-            height: 45,
-            decoration: BoxDecoration(
-              color: Color(0xFFE6E6E6),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: StadiumBorder(),
-                elevation: 0,
-                primary: Color(0xFFE6E6E6),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Volver",
-                  style: TextStyle(
-                    color: Color(0xFF202020),
-                    fontSize: 33,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * .15,
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Color(0xFFE6E6E6),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: StadiumBorder(),
+                    elevation: 0,
+                    primary: Color(0xFFE6E6E6),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Volver",
+                      style: TextStyle(
+                        color: Color(0xFF202020),
+                        fontSize: 33,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+              Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Color(0xFFE6E6E6),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: StadiumBorder(),
+                    elevation: 0,
+                    primary: Color(0xFFE6E6E6),
+                  ),
+                  onPressed: () {
+                    UserPreferences.clearAllStored();
+                  },
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Eliminar todo",
+                      style: TextStyle(
+                        color: Color(0xFF202020),
+                        fontSize: 33,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           Center(
             child: Container(

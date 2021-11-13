@@ -5,10 +5,11 @@ import 'package:dist_v2/services/pedido_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-main() {
-  // var path = Directory.current.path;
-  // Hive.init(path);
-  //Hive.openBox("data");
+import 'models/user_preferences.dart';
+
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await UserPreferences.init();
   runApp(Myapp());
 }
 

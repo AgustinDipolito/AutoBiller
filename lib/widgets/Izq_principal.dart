@@ -1,5 +1,6 @@
+import 'package:dist_v2/helpers/savePedido.dart';
 import 'package:dist_v2/models/item.dart';
-import 'package:dist_v2/services/cliente_service.dart';
+
 import 'package:dist_v2/services/lista_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,6 @@ class IzqView extends StatefulWidget {
 class _IzqViewState extends State<IzqView> {
   @override
   Widget build(BuildContext context) {
-    final pedidoService = Provider.of<PedidoService>(context);
     final listaService = Provider.of<ListaService>(context, listen: false);
     final items = listaService.todo;
     return Column(
@@ -31,9 +31,9 @@ class _IzqViewState extends State<IzqView> {
           ),
           child: ListView.builder(
               itemCount: items.toSet().length,
-              itemBuilder: (_, i) => items.length < 1
-                  ? Center(child: CircularProgressIndicator())
-                  : lista(items[i], i)),
+              itemBuilder: (_, i) => items.length == 0
+                  ? const Center(child: CircularProgressIndicator())
+                  : lista(items[i], i, context)),
         ),
         Container(
           width: MediaQuery.of(context).size.width * .45,
@@ -70,13 +70,15 @@ class _IzqViewState extends State<IzqView> {
                                 controller: namecontroller,
                                 decoration:
                                     InputDecoration(hintText: 'Nombre cliente'),
-                                onSubmitted: (string) =>
-                                    savePedido(context, string, pedidoService)),
+                                onSubmitted: (string) {
+                                  savePedido(context, string);
+                                  Navigator.pop(context);
+                                }),
                             actions: <Widget>[
                               MaterialButton(
                                 onPressed: () {
-                                  savePedido(context, namecontroller.text,
-                                      pedidoService);
+                                  savePedido(context, namecontroller.text);
+                                  Navigator.pop(context);
                                 },
                                 child: Text(
                                   "Guardar",
@@ -153,16 +155,13 @@ class _IzqViewState extends State<IzqView> {
                                 "Añadir",
                                 style: TextStyle(color: Colors.blue),
                               ),
-                              onPressed: () {
-                                Map<String, dynamic> showData() => {
-                                      "nombre": namecontroller.text,
-                                      "tipo": colorcontroller.text,
-                                      "precio": pricecontroller.text,
-                                    };
-                                var data = showData();
-                                pedidoService.addCarrito(data);
-                                Navigator.pop(context);
-                              },
+                              onPressed: () => _onAddManual(
+                                namecontroller,
+                                colorcontroller,
+                                pricecontroller,
+                                pedidoService,
+                                context,
+                              ),
                             )
                           ],
                         );
@@ -188,37 +187,36 @@ class _IzqViewState extends State<IzqView> {
     );
   }
 
-  void savePedido(
-      BuildContext context, String name, PedidoService pedidoService) {
-    final clienteService = Provider.of<ClienteService>(context, listen: false);
+  void _onAddManual(
+      TextEditingController namecontroller,
+      TextEditingController colorcontroller,
+      TextEditingController pricecontroller,
+      PedidoService pedidoService,
+      BuildContext context) {
+    var data = new Item(namecontroller.text, colorcontroller.text,
+        int.parse(pricecontroller.text), "0000");
 
-    clienteService.guardarPedido(
-      name,
-      pedidoService.giveSaved(),
-      pedidoService.sumTot(),
-    );
-    pedidoService.clearAll();
+    pedidoService.addCarrito(data);
     Navigator.pop(context);
   }
+}
 
-  Widget lista(Item item, int i) {
-    return ListTile(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            item.nombre,
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          Text(item.tipo.toLowerCase()),
-          Text("\$ " + "${item.precio}"),
-        ],
-      ),
-      onTap: () {
-        final pedidoService =
-            Provider.of<PedidoService>(context, listen: false);
-        pedidoService.addCarrito(item);
-      },
-    );
-  }
+Widget lista(Item item, int i, BuildContext context) {
+  return ListTile(
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          item.nombre,
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        Text(item.tipo.toLowerCase()),
+        Text("\$ " + "${item.precio}"),
+      ],
+    ),
+    onTap: () {
+      final pedidoService = Provider.of<PedidoService>(context, listen: false);
+      pedidoService.addCarrito(item);
+    },
+  );
 }

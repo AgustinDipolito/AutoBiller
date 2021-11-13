@@ -18,7 +18,7 @@ class _PedidoPageState extends State<PedidoPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width * .40,
+            width: MediaQuery.of(context).size.width * .65,
             height: MediaQuery.of(context).size.height * .90,
             decoration: BoxDecoration(
               color: Color(0xFFFFFFFF),
@@ -29,12 +29,38 @@ class _PedidoPageState extends State<PedidoPage> {
               itemBuilder: (context, i) {
                 return ListTile(
                   leading: Text("${cliente.lista[i].cantidad}"),
-                  title: Text(
-                    "${cliente.lista[i].nombre}  ---   ${cliente.lista[i].tipo}",
+                  title: RichText(
+                    text: TextSpan(
+                      text: "${cliente.lista[i].nombre}",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: "  ---   ",
+                          style: TextStyle(
+                              color: Colors.black45,
+                              fontWeight: FontWeight.w200),
+                        ),
+                        TextSpan(
+                          text: "${cliente.lista[i].tipo}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  trailing: Text(
-                    "${cliente.lista[i].precioT}",
-                    style: TextStyle(fontWeight: FontWeight.w100, fontSize: 15),
+                  trailing: RichText(
+                    text: TextSpan(
+                      text: "${cliente.lista[i].precioT}",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w100,
+                          fontSize: 15),
+                    ),
                   ),
                 );
               },

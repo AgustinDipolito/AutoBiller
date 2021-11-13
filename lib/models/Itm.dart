@@ -12,4 +12,21 @@ class Itm {
     required this.precioT,
     required this.cantidad,
   });
+
+  Itm.fromJson(Map<String, dynamic> json)
+      : precio = int.parse(json["precio"]),
+        nombre = json["nombre"],
+        tipo = json["tipo"],
+        precioT = int.parse(json["precioT"]),
+        cantidad = int.parse(json["cantidad"]);
+
+  Map<String, dynamic> toJson() {
+    return {
+      "precio": precio.toString(),
+      "nombre": nombre,
+      "tipo": tipo,
+      "precioT": precioT.toString(),
+      "cantidad": cantidad.toString(),
+    };
+  }
 }

@@ -1,17 +1,18 @@
 import 'package:dist_v2/models/Itm.dart';
+import 'package:dist_v2/models/item.dart';
 import 'package:flutter/material.dart';
 
 class PedidoService with ChangeNotifier {
   late List<Itm> _carrito = [];
   List<Itm> get carrito => this._carrito;
 
-  void addCarrito(showData) {
+  void addCarrito(Item itmData) {
     this._carrito.add(Itm(
           cantidad: 1,
-          tipo: (showData.tipo),
-          nombre: (showData.nombre),
-          precio: (showData.precio),
-          precioT: (showData.precio),
+          tipo: (itmData.tipo),
+          nombre: (itmData.nombre),
+          precio: (itmData.precio),
+          precioT: (itmData.precio),
         ));
     notifyListeners();
   }
