@@ -10,7 +10,7 @@ class ListaService with ChangeNotifier {
   // Map<String, dynamic> get data => this._data;
 
   List<Item> _todo = [];
-  List<Item> get todo => this._todo.toSet().toList();
+  Future<List<Item>> get todo async => this._todo.toSet().toList();
 
   void readJson() async {
     final response = await rootBundle.loadString("assets/catalogo.json");
@@ -25,7 +25,7 @@ class ListaService with ChangeNotifier {
   }
 
   void searchItem(String cad) {
-    final itemf = todo.where((item) {
+    final itemf = this._todo.where((item) {
       final nombreLow = item.nombre.toLowerCase();
       final searchLow = cad.toLowerCase();
 

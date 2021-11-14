@@ -9,8 +9,10 @@ class Pedido {
   late final List<Itm> lista;
   String? listaString = "";
   final Key key;
+  final int intKey;
 
   Pedido({
+    required this.intKey,
     required this.nombre,
     required this.fecha,
     required this.lista,
@@ -24,6 +26,7 @@ class Pedido {
         lista: List<Itm>.from(json["lista"].map((x) => Itm.fromJson(x))),
         key: ValueKey(json["key"]),
         total: int.parse(json["total"]),
+        intKey: int.parse(json["intKey"]),
       );
 
   Map<String, dynamic> toJson() {
@@ -33,6 +36,7 @@ class Pedido {
       "lista": lista,
       "key": key.toString(),
       "total": total.toString(),
+      "intKey": intKey.toString(),
     };
   }
 }

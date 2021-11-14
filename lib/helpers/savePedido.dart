@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/models/user_preferences.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
@@ -10,7 +11,7 @@ void savePedido(BuildContext context, String name) async {
   final pedidoService = Provider.of<PedidoService>(context, listen: false);
   final clienteService = Provider.of<ClienteService>(context, listen: false);
   try {
-    clienteService.guardarPedido(
+    Pedido pedido = clienteService.guardarPedido(
       name,
       pedidoService.giveSaved(),
       pedidoService.sumTot(),
@@ -18,7 +19,7 @@ void savePedido(BuildContext context, String name) async {
     pedidoService.clearAll();
 
     String pedidos = json.encode(clienteService.clientes);
-    await UserPreferences.setPedido(pedidos);
+    await UserPreferences.setPedido(pedidos, pedido.intKey);
   } catch (e) {
     print("EEEEEEError:  $e");
   }

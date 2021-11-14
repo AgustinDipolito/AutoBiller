@@ -1,27 +1,29 @@
 import 'dart:convert';
 
-import 'package:dist_v2/models/pedido.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dist_v2/models/pedido.dart';
 
 class UserPreferences {
   static SharedPreferences? _preferences;
-
+  static int x = 0;
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
 
-  static Future setPedido(String lista) async {
-    var x = getCantidad()!;
-    await _preferences!.setString("pedidos$x", lista);
-    setCant(x + 1);
+  static Future setPedido(String lista, int key) async {
+    (_preferences!.containsKey("pedidos$key"))
+        ? await _preferences!.setString("pedidos${key + 1}", lista)
+        : await _preferences!.setString("pedidos$key", lista);
+    x++;
   }
 
   static List<Pedido> getPedidos() {
+    var keys = _preferences!.getKeys();
+    print("${_preferences!.getKeys()}");
     try {
-      var x = getCantidad()!;
       List<Pedido> pedidos = [];
       String list = "";
-      for (int i = 0; i < x; i++) {
-        list = _preferences!.getString("pedidos$i") ?? "";
+      for (var key in keys) {
+        list = _preferences!.getString(key) ?? "";
 
         //Map<String, dynamic>
         var map = jsonDecode(list);
@@ -35,19 +37,15 @@ class UserPreferences {
     }
   }
 
-  static int? getCantidad() {
-    return _preferences!.getInt("cant") ?? 0;
-  }
-
-  static Future setCant(int x) async {
-    await _preferences!.setInt("cant", x);
+  static int getCantidad() {
+    return _preferences!.getKeys().length;
   }
 
   static Future clearAllStored() async {
     await _preferences!.clear();
   }
 
-  static Future deleteOne(String key) async {
-    await _preferences!.remove(key);
+  static Future deleteOne(int key) async {
+    await _preferences!.remove("pedidos$key");
   }
 }

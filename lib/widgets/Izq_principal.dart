@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 class IzqView extends StatefulWidget {
   IzqView({Key? key}) : super(key: key);
-
   @override
   _IzqViewState createState() => _IzqViewState();
 }
@@ -17,7 +16,7 @@ class _IzqViewState extends State<IzqView> {
   @override
   Widget build(BuildContext context) {
     final listaService = Provider.of<ListaService>(context, listen: false);
-    final items = listaService.todo;
+
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -29,11 +28,23 @@ class _IzqViewState extends State<IzqView> {
             color: Color(0xFFFFFFFF),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: ListView.builder(
-              itemCount: items.toSet().length,
-              itemBuilder: (_, i) => items.length == 0
-                  ? const Center(child: CircularProgressIndicator())
-                  : lista(items[i], i, context)),
+          child: FutureBuilder(
+            future: listaService.todo,
+            builder: (context, AsyncSnapshot<List<Item>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                //return Center(child: CircularProgressIndicator());
+                return ListView.builder(
+                    itemCount: snapshot.data?.length ?? 0,
+                    //items.toSet().length,
+                    itemBuilder: (context, i) => snapshot.data == null
+                        ? const Center(child: CircularProgressIndicator())
+                        : lista(snapshot.data![i], i, context));
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
         ),
         Container(
           width: MediaQuery.of(context).size.width * .45,

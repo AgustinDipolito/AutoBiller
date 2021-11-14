@@ -65,7 +65,35 @@ class _TodosPageState extends State<TodosPage> {
                     primary: Color(0xFFE6E6E6),
                   ),
                   onPressed: () {
-                    UserPreferences.clearAllStored();
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            title: Text("Eliminar"),
+                            content: Text("Eliminar todos los pedidos ?"),
+                            actions: <Widget>[
+                              MaterialButton(
+                                  child: Text(
+                                    "Cancelar",
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  onPressed: () => Navigator.pop(context)),
+                              MaterialButton(
+                                  child: Text(
+                                    "Si, borrar",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  onPressed: () {
+                                    UserPreferences.clearAllStored();
+                                    clienteService.loadClientes();
+                                    Navigator.pop(context);
+                                  }),
+                            ],
+                          );
+                        });
                   },
                   child: Align(
                     alignment: Alignment.center,
