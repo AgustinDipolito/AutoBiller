@@ -1,109 +1,109 @@
 [
     {
         "nombre": "CORDÓN 4,5 mm",
-        "tipo": "Negro 100Mts",
+        "tipo": " 100Mts",
         "precio": "600",
         "id": "1"
     },
     {
         "nombre": "CORDÓN 5 mm",
-        "tipo": "Negro 100Mts",
+        "tipo": " 100Mts",
         "precio": "650",
         "id": "2"
     },
     {
         "nombre": "CORDON 5,5 mm",
-        "tipo": "Negro 100Mts",
+        "tipo": " 100Mts",
         "precio": "700",
         "id": "3"
     },
     {
         "nombre": "CORDÓN 6 mm",
-        "tipo": "Negro 100Mts",
+        "tipo": " 100Mts",
         "precio": "830",
         "id": "4"
     },
     {
         "nombre": "TAPA PUERTA ROSARIO 32 mm",
-        "tipo": "Negro 100Mts",
+        "tipo": " 100Mts",
         "precio": "2500",
         "id": "5"
     },
     {
         "nombre": "TAPA POSTIGO 21 mm linea 1",
-        "tipo": "Negro 50Mts",
+        "tipo": " 50Mts",
         "precio": "1265",
         "id": "6"
     },
     {
         "nombre": "UNIVERSAL LIVIANO",
-        "tipo": "Negro 100Mts",
+        "tipo": " 100Mts",
         "precio": "2100",
         "id": "7"
     },
     {
         "nombre": "UNIVERSAL ESTANDAR",
-        "tipo": "Negro 100Mts",
+        "tipo": "  100Mts",
         "precio": "2350",
         "id": "8"
     },
     {
         "nombre": "UNIVERSAL PESADO",
-        "tipo": "Negro 100Mts",
+        "tipo": "  100Mts",
         "precio": "2620",
         "id": "9"
     },
     {
         "nombre": "FELPA 7 x 4,5 mm",
-        "tipo": "Negro 100Mts",
+        "tipo": "  100Mts",
         "precio": "587",
         "id": "10"
     },
     {
         "nombre": "CUÑA MULTI (Paraguaya)",
-        "tipo": "Negro 100Mts",
+        "tipo": "  100Mts",
         "precio": "2381",
         "id": "11"
     },
     {
         "nombre": "LAT. MOSQUITERO PESADO",
-        "tipo": "Negro 100Mts",
+        "tipo": "  100Mts",
         "precio": "2863",
         "id": "12"
     },
     {
         "nombre": "LAT. MOSQUITERO LIVIANO",
-        "tipo": "Negro 100Mts",
+        "tipo": "  100Mts",
         "precio": "2380",
         "id": "13"
     },
     {
         "nombre": "CUÑA Nº10 VIDRIO REP 3 mm.",
-        "tipo": "Negro 100Mts",
+        "tipo": "  100Mts",
         "precio": "1305",
         "id": "14"
     },
     {
         "nombre": "CUÑA Nº11 VIDRIO REP 4 mm.",
-        "tipo": "Negro 100Mts",
+        "tipo": "  100Mts",
         "precio": "1139",
         "id": "15"
     },
     {
         "nombre": "CUÑA Nº 0 VIDRIO REP.",
-        "tipo": "Negro 100Mts",
+        "tipo": "  100Mts",
         "precio": "851",
         "id": "16"
     },
     {
         "nombre": "TUBO DE PAÑO FIJO",
-        "tipo": "Negro 50Mts",
+        "tipo": " 50Mts",
         "precio": "1642",
         "id": "17"
     },
     {
         "nombre": "CUÑA PARAGUAYA Pesada",
-        "tipo": "Negro 100Mts",
+        "tipo": " 100Mts",
         "precio": "3349",
         "id": "18"
     },
@@ -498,7 +498,7 @@
         "id": "83"
     },
     {
-        "nombre": "LZ TIRADOR CORREDIZA NEGRO ALUMINIO",
+        "nombre": "LZ TIRADOR CORREDIZA   ALUMINIO",
         "tipo": "X30",
         "precio": "1276",
         "id": "84"
@@ -931,49 +931,49 @@
     },
     {
         "nombre": "PARTE J (Tope terminación) 7 mm",
-        "tipo": "Negro x200",
+        "tipo": "  x200",
         "precio": "167",
         "id": "156"
     },
     {
         "nombre": "PARTE P Patin Mosq. Superior",
-        "tipo": "negro x100",
+        "tipo": "  x100",
         "precio": "161",
         "id": "157"
     },
     {
         "nombre": "ADR Patin Mosq. Inferior",
-        "tipo": "Negro x100",
+        "tipo": "  x100",
         "precio": "161",
         "id": "158"
     },
     {
         "nombre": "R 8 Patin Mosq. Inferior",
-        "tipo": "Negro x100",
+        "tipo": "  x100",
         "precio": "161",
         "id": "159"
     },
     {
         "nombre": "PARTE PB Patin mosq. Regula.",
-        "tipo": "Negro x100",
+        "tipo": "  x100",
         "precio": "161",
         "id": "160"
     },
     {
         "nombre": "MANIJA TIRADORA TIPO L",
-        "tipo": "Negro x100",
+        "tipo": "  x100",
         "precio": "924",
         "id": "161"
     },
     {
         "nombre": "R43 SUPERIOR E INFERIOR",
-        "tipo": "Negro x100",
+        "tipo": "  x100",
         "precio": "993",
         "id": "162"
     },
     {
         "nombre": "ANTIRRUIDO Nº 2",
-        "tipo": "Negro x100",
+        "tipo": "  x100",
         "precio": "146",
         "id": "163"
     },

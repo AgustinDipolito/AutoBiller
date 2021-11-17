@@ -18,14 +18,12 @@ class UserPreferences {
 
   static List<Pedido> getPedidos() {
     var keys = _preferences!.getKeys();
-    print("${_preferences!.getKeys()}");
     try {
       List<Pedido> pedidos = [];
       String list = "";
       for (var key in keys) {
         list = _preferences!.getString(key) ?? "";
 
-        //Map<String, dynamic>
         var map = jsonDecode(list);
         pedidos.add(Pedido.fromJson(map[0]));
       }

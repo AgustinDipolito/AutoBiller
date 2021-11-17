@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
 import 'package:dist_v2/routes/routes.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/services/lista_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'models/user_preferences.dart';
 

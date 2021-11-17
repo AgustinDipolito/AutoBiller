@@ -1,10 +1,11 @@
-import 'package:dist_v2/helpers/savePedido.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:dist_v2/models/item.dart';
+import 'package:dist_v2/helpers/savePedido.dart';
 
 import 'package:dist_v2/services/lista_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class IzqView extends StatefulWidget {
   IzqView({Key? key}) : super(key: key);
@@ -32,15 +33,13 @@ class _IzqViewState extends State<IzqView> {
             future: listaService.todo,
             builder: (context, AsyncSnapshot<List<Item>> snapshot) {
               if (snapshot.connectionState == ConnectionState.done &&
-                  snapshot.hasData) {
-                //return Center(child: CircularProgressIndicator());
+                  snapshot.hasData)
                 return ListView.builder(
                     itemCount: snapshot.data?.length ?? 0,
-                    //items.toSet().length,
                     itemBuilder: (context, i) => snapshot.data == null
                         ? const Center(child: CircularProgressIndicator())
                         : lista(snapshot.data![i], i, context));
-              } else {
+              else {
                 return const Center(child: CircularProgressIndicator());
               }
             },
@@ -51,10 +50,8 @@ class _IzqViewState extends State<IzqView> {
           height: 100,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width * .15,
                 height: 45,
                 decoration: BoxDecoration(
                   color: Color(0xFFE6E6E6),
@@ -99,7 +96,7 @@ class _IzqViewState extends State<IzqView> {
                             ],
                           );
                         });
-                  }, // guardar,
+                  },
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -113,7 +110,6 @@ class _IzqViewState extends State<IzqView> {
                 ),
               ),
               Container(
-                //width: MediaQuery.of(context).size.width * .15,
                 height: 45,
                 decoration: BoxDecoration(
                   color: Color(0xFFE6E6E6),
@@ -186,6 +182,37 @@ class _IzqViewState extends State<IzqView> {
                       style: TextStyle(
                         color: Color(0xFF202020),
                         fontSize: 29,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Color(0xFFE6E6E6),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: StadiumBorder(),
+                    elevation: 0,
+                    primary: Color(0xFFE6E6E6),
+                  ),
+                  onPressed: () {
+                    final pedidoService = Provider.of<PedidoService>(
+                      context,
+                      listen: false,
+                    );
+                    pedidoService.clearAll();
+                  },
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Vaciar",
+                      style: TextStyle(
+                        color: Color(0xFF202020),
+                        fontSize: 33,
                       ),
                     ),
                   ),

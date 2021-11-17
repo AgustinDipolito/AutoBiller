@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class PedidoService with ChangeNotifier {
   late List<Itm> _carrito = [];
   List<Itm> get carrito => this._carrito;
+  set carrito(List<Itm> carro) => this._carrito = carro;
 
   void addCarrito(Item itmData) {
     this._carrito.add(Itm(

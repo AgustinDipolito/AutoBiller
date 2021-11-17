@@ -35,7 +35,7 @@ class TopView extends StatelessWidget {
           ),
         ),
         Container(
-          width: MediaQuery.of(context).size.width * .15,
+          width: MediaQuery.of(context).size.width * .12,
           height: 45,
           decoration: BoxDecoration(
             color: Color(0xFFE6E6E6),

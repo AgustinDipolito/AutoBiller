@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ListaService with ChangeNotifier {
-  // late Map<String, dynamic> _data;
-  // Map<String, dynamic> get data => this._data;
-
   List<Item> _todo = [];
   Future<List<Item>> get todo async => this._todo.toSet().toList();
 

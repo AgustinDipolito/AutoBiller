@@ -1,6 +1,5 @@
 import 'package:dist_v2/models/Itm.dart';
 import 'package:flutter/material.dart';
-//import 'package:hive/hive.dart';
 
 class Pedido {
   final String nombre;
