@@ -3,7 +3,6 @@ class Itm {
   final int precio;
   int precioT, cantidad = 0;
   bool status = false;
-  late String color;
 
   Itm({
     required this.precio,

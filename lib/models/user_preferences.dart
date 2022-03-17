@@ -5,30 +5,33 @@ import 'package:dist_v2/models/pedido.dart';
 
 class UserPreferences {
   static SharedPreferences? _preferences;
-  static int x = 0;
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
 
-  static Future setPedido(String lista, int key) async {
-    (_preferences!.containsKey("pedidos$key"))
-        ? await _preferences!.setString("pedidos${key + 1}", lista)
-        : await _preferences!.setString("pedidos$key", lista);
-    x++;
+  static Future setPedido(String lista, String key) async {
+    await _preferences!.setString("pedidos$key", lista);
   }
 
   static List<Pedido> getPedidos() {
     var keys = _preferences!.getKeys();
+    print(keys);
     try {
       List<Pedido> pedidos = [];
-      String list = "";
+      List<String> keysPedidos = [];
+      var i = 0;
       for (var key in keys) {
-        list = _preferences!.getString(key) ?? "";
+        keysPedidos.add(_preferences!.getString(key)!);
 
-        var map = jsonDecode(list);
-        pedidos.add(Pedido.fromJson(map[0]));
+        if (keysPedidos.isNotEmpty) {
+          var map = jsonDecode(keysPedidos[i]);
+          pedidos.add(Pedido.fromJson(map));
+          i++;
+        }
       }
+      if (pedidos.length > 1)
+        pedidos.sort((a, b) => a.fecha.compareTo(b.fecha));
 
-      return pedidos;
+      return pedidos.reversed.toList();
     } on Exception catch (e) {
       print("${e.runtimeType}");
       return [];
@@ -41,9 +44,17 @@ class UserPreferences {
 
   static Future clearAllStored() async {
     await _preferences!.clear();
+
+    // print(getPedidos());
+    // deleteOne(0, true);
   }
 
-  static Future deleteOne(int key) async {
-    await _preferences!.remove("pedidos$key");
+  static Future deleteOne(String key, bool firstTime) async {
+    var newKey = key.substring(2, key.length - 2);
+
+    if (_preferences!.containsKey("pedidos$newKey")) {
+      await _preferences!.remove("pedidos$newKey");
+    } else
+      print("no existe: $key");
   }
 }

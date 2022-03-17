@@ -12,6 +12,11 @@ import 'models/user_preferences.dart';
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.init();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    //DeviceOrientation.landscapeRight,
+  ]);
   runApp(Myapp());
 }
 
@@ -38,7 +43,6 @@ class Myapp extends StatelessWidget {
         theme: ThemeData(
           brightness: Brightness.light,
           primaryColor: Color(0xFFE6E6E6),
-          accentColor: Color(0xFF404040),
           textTheme: TextTheme(
             headline1: TextStyle(
               fontSize: 36,

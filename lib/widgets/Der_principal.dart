@@ -17,18 +17,21 @@ class _DerViewState extends State<DerView> {
 
     return Column(
       children: <Widget>[
-        CarritoWidget(),
-        Container(
-          width: 300,
-          height: 100,
-          child: Center(
-            child: Container(
-              child: Text(
-                "Total: \$ ${pedidoService.sumTot()}",
-                style: TextStyle(
-                  fontSize: 33,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
+        Expanded(flex: 4, child: CarritoWidget()),
+        Expanded(
+          flex: 1,
+          child: Container(
+            width: 300,
+            height: 100,
+            child: Center(
+              child: Container(
+                child: Text(
+                  "Total: \$ ${pedidoService.sumTot()}",
+                  style: TextStyle(
+                    fontSize: 33,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),

@@ -63,7 +63,7 @@ class PdfInvoiceApi {
   static Widget buildCustomerAddress(Customer customer) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(customer.name, style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(customer.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           Text(customer.address),
         ],
       );
@@ -178,6 +178,7 @@ class PdfInvoiceApi {
                   titleStyle: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
+                    letterSpacing: .6,
                   ),
                   value: Utils.formatPrice(total),
                   unite: true,

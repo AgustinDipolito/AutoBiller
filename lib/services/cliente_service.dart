@@ -8,19 +8,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ClienteService with ChangeNotifier {
   late List<Pedido> _clientes = [];
-  List<Pedido> get clientes => this._clientes.reversed.toList();
+  List<Pedido> get clientes => this._clientes;
   set setClientes(List<Pedido> lista) => this._clientes = lista;
 
-  Pedido guardarPedido(String name, List<Itm> list, int tot) {
+  Pedido guardarPedido(String name, List<Itm> list, int tot, [DateTime? date]) {
     Pedido pedido = Pedido(
       nombre: name,
-      fecha: DateTime.now(),
+      fecha: date ?? DateTime.now(),
       lista: list,
       key: UniqueKey(),
       total: tot,
-      intKey: tot,
     );
-    this._clientes.add(pedido);
+    _clientes = [...this._clientes, pedido];
 
     notifyListeners();
     return pedido;
@@ -35,9 +34,9 @@ class ClienteService with ChangeNotifier {
     return [];
   }
 
-  deletePedido(int i) {
-    UserPreferences.deleteOne(this.clientes[i].total);
-    this._clientes.removeAt(i);
+  deletePedido(int i, String key) async {
+    await UserPreferences.deleteOne(key, true);
+    clientes.removeAt(i);
     notifyListeners();
   }
 }

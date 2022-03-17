@@ -17,20 +17,34 @@ class _PrincipalPageState extends State<PrincipalPage> {
   Widget build(context) {
     final listaService = Provider.of<ListaService>(context);
     listaService.readJson();
-    return Scaffold(
-      backgroundColor: Color(0xFF808080),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          TopView(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [Colors.grey.shade600, Colors.grey.shade400]),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              IzqView(),
-              DerView(),
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: TopView(),
+              ),
+              Expanded(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    IzqView(),
+                    Expanded(flex: 2, child: DerView()),
+                  ],
+                ),
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

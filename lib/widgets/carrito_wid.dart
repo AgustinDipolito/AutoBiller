@@ -11,7 +11,7 @@ class CarritoWidget extends StatelessWidget {
     final pedidoService = Provider.of<PedidoService>(context);
 
     return Container(
-      width: MediaQuery.of(context).size.width * .45,
+      width: MediaQuery.of(context).size.width * .40,
       height: MediaQuery.of(context).size.height * .7,
       decoration: BoxDecoration(
         color: Color(0xFFFFFFFF),
@@ -64,8 +64,8 @@ class CarritoWidget extends StatelessWidget {
                               pedido.nombre,
                               style: TextStyle(fontWeight: FontWeight.w600),
                             ),
-                            Text(pedido.tipo.toLowerCase()),
-                            Text("\$ ${pedido.precioT}"),
+                            //Text(pedido.tipo.toLowerCase()),
+                            //Text("\$ ${pedido.precioT}"),
                           ],
                         ),
                         onLongPress: () => pedidoService.delCant(i),
