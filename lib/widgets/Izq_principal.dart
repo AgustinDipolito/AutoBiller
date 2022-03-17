@@ -63,7 +63,7 @@ class _IzqViewState extends State<IzqView> {
                 ),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    shape: StadiumBorder(),
+                    shape: const StadiumBorder(),
                     elevation: 0,
                     primary: const Color(0xFFE6E6E6),
                   ),
@@ -71,7 +71,7 @@ class _IzqViewState extends State<IzqView> {
                     showDialog(
                       context: context,
                       builder: (_) {
-                        final namecontroller = new TextEditingController();
+                        final namecontroller = TextEditingController();
                         return AlertDialog(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -80,8 +80,8 @@ class _IzqViewState extends State<IzqView> {
                           content: TextField(
                               autofocus: true,
                               controller: namecontroller,
-                              decoration:
-                                  InputDecoration(hintText: 'Nombre cliente'),
+                              decoration: const InputDecoration(
+                                  hintText: 'Nombre cliente'),
                               onSubmitted: (string) {
                                 if (namecontroller.text.isNotEmpty) {
                                   savePedido(context, string);
