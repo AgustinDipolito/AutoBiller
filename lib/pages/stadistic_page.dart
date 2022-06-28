@@ -19,16 +19,16 @@ class StadisticPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.black,
+            title: const Text('Ventas'),
           ),
           backgroundColor: Colors.transparent,
           body: ListView.builder(
             itemCount: 3,
             itemBuilder: (_, int index) {
               var total = 0;
-              final compact = new NumberFormat.compactCurrency(
-                  name: "\$", decimalDigits: 0);
-              final long =
-                  new NumberFormat.currency(name: "\$", decimalDigits: 0);
+              final compact =
+                  NumberFormat.compactCurrency(name: "\$", decimalDigits: 0);
+              final long = NumberFormat.currency(name: "\$", decimalDigits: 0);
 
               createSampleData(context, tipos[index])
                   .first
@@ -71,7 +71,7 @@ class Grafico extends StatelessWidget {
         animate: true,
         defaultRenderer: charts.BarRendererConfig(),
         defaultInteractions: false,
-        primaryMeasureAxis: new charts.NumericAxisSpec(
+        primaryMeasureAxis: const charts.NumericAxisSpec(
           showAxisLine: true,
           tickProviderSpec: charts.BasicNumericTickProviderSpec(
             desiredTickCount: 5,

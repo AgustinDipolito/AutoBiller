@@ -63,7 +63,8 @@ class PdfInvoiceApi {
   static Widget buildCustomerAddress(Customer customer) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(customer.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          Text(customer.name,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           Text(customer.address),
         ],
       );
@@ -118,15 +119,15 @@ class PdfInvoiceApi {
       );
 
   static Widget buildInvoice(Invoice invoice) {
-    final headers = ['Descripción', 'Cant.', 'Valor unitario', 'Total'];
+    final headers = ['Cant.', 'Descripción', 'Valor unitario', 'Total'];
     final data = invoice.items.map((item) {
       final total = item.unitPrice * item.quantity;
 
       return [
-        item.description,
         '${item.quantity}',
-        '\$ ${item.unitPrice}',
-        '\$ ${total.toStringAsFixed(2)}',
+        item.description,
+        '\$ ${item.unitPrice.toStringAsFixed(0)}',
+        '\$ ${total.toStringAsFixed(0)}',
       ];
     }).toList();
 
@@ -135,7 +136,7 @@ class PdfInvoiceApi {
       data: data,
       border: null,
       headerStyle: TextStyle(fontWeight: FontWeight.bold),
-      headerDecoration: BoxDecoration(color: PdfColors.grey300),
+      headerDecoration: const BoxDecoration(color: PdfColors.grey300),
       cellHeight: 25,
       cellAlignments: {
         0: Alignment.centerLeft,
@@ -163,22 +164,11 @@ class PdfInvoiceApi {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildText(
-                  title: 'Net total',
-                  value: Utils.formatPrice(netTotal),
-                  unite: true,
-                ),
-                buildText(
-                  title: 'Imp ${0 * 100} %',
-                  value: Utils.formatPrice(0),
-                  unite: true,
-                ),
-                Divider(),
-                buildText(
                   title: 'Monto Total',
                   titleStyle: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    letterSpacing: .6,
+                    letterSpacing: .7,
                   ),
                   value: Utils.formatPrice(total),
                   unite: true,

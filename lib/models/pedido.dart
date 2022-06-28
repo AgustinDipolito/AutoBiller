@@ -1,4 +1,4 @@
-import 'package:dist_v2/models/Itm.dart';
+import 'package:dist_v2/models/itm.dart';
 import 'package:flutter/material.dart';
 
 class Pedido {

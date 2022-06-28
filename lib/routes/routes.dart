@@ -6,8 +6,8 @@ import 'package:dist_v2/pages/todos_page.dart';
 import 'package:flutter/material.dart';
 
 final Map<String, Widget Function(BuildContext)> appRoutes = {
-  "principal": (_) => PrincipalPage(),
-  "todos": (_) => TodosPage(),
-  "pedido": (_) => PedidoPage(),
-  "ventas": (_) => StadisticPage(),
+  "principal": (_) => const PrincipalPage(),
+  "todos": (_) => const TodosPage(),
+  "pedido": (_) => const PedidoPage(),
+  "ventas": (_) => const StadisticPage(),
 };

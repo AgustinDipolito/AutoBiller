@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PedidoPage extends StatefulWidget {
-  PedidoPage({Key? key}) : super(key: key);
+  const PedidoPage({Key? key}) : super(key: key);
 
   @override
-  _PedidoPageState createState() => _PedidoPageState();
+  State<PedidoPage> createState() => _PedidoPageState();
 }
 
 class _PedidoPageState extends State<PedidoPage> {
-  List<bool> _selected = List.generate(100, (i) => false);
+  final List<bool> _selected = List.generate(100, (i) => false);
   @override
   Widget build(BuildContext context) {
     final cliente = ModalRoute.of(context)!.settings.arguments as Pedido;
@@ -35,35 +35,35 @@ class _PedidoPageState extends State<PedidoPage> {
                 width: MediaQuery.of(context).size.width * .6,
                 height: MediaQuery.of(context).size.height * .90,
                 decoration: BoxDecoration(
-                  color: Color(0xFFFFFFFF),
-                  borderRadius: BorderRadius.circular(20),
+                  color: const Color(0xFFFFFFFF),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: cliente.lista.length,
                   itemBuilder: (context, i) {
                     return Container(
-                      color: _selected[i] ? Color(0xFF808080) : null,
+                      color: _selected[i] ? const Color(0xFF808080) : null,
                       child: ListTile(
                         leading: Text("${cliente.lista[i].cantidad}"),
                         onLongPress: () => _switchColor(i),
                         title: RichText(
                           text: TextSpan(
-                            text: "${cliente.lista[i].nombre}",
-                            style: TextStyle(
+                            text: cliente.lista[i].nombre,
+                            style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                             children: <TextSpan>[
-                              TextSpan(
+                              const TextSpan(
                                 text: "  ---   ",
                                 style: TextStyle(
                                     color: Colors.black45,
                                     fontWeight: FontWeight.w200),
                               ),
                               TextSpan(
-                                text: "${cliente.lista[i].tipo}",
-                                style: TextStyle(
+                                text: cliente.lista[i].tipo,
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -74,7 +74,7 @@ class _PedidoPageState extends State<PedidoPage> {
                         trailing: RichText(
                           text: TextSpan(
                             text: "${cliente.lista[i].precioT}",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w100,
                                 fontSize: 15),
@@ -92,19 +92,20 @@ class _PedidoPageState extends State<PedidoPage> {
                     Text("${cliente.nombre}\n\$${cliente.total}"),
                     Container(
                       height: 45,
+                      width: MediaQuery.of(context).size.width * .2,
                       decoration: BoxDecoration(
-                        color: Color(0xFFE6E6E6),
-                        borderRadius: BorderRadius.circular(20),
+                        color: const Color(0xFFE6E6E6),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          shape: StadiumBorder(),
+                          shape: const StadiumBorder(),
                           elevation: 0,
-                          primary: Color(0xFFE6E6E6),
+                          backgroundColor: const Color(0xFFE6E6E6),
                         ),
                         onPressed: () async {
                           final date = DateTime.now();
-                          final dueDate = date.add(Duration(days: 3));
+                          final dueDate = date.add(const Duration(days: 3));
                           final List<InvoiceItem> lista = <InvoiceItem>[];
                           for (var item in cliente.lista) {
                             lista.add(
@@ -122,7 +123,7 @@ class _PedidoPageState extends State<PedidoPage> {
                                 description: "NOTA DE PRESUPUESTO",
                                 dueDate: dueDate,
                                 number: "${date.day}${date.month}${date.year}"),
-                            supplier: Supplier(
+                            supplier: const Supplier(
                               address: "Eva Peron 417, Temperley.",
                               name: "DISTRIBUIDORA ALUSOL",
                               paymentInfo: "+54 9 11 66338293",
@@ -134,7 +135,7 @@ class _PedidoPageState extends State<PedidoPage> {
                           final pdffile = await PdfInvoiceApi.generate(invoice);
                           PdfApi.openFile(pdffile);
                         },
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             "PDF",
                             style: TextStyle(
@@ -146,17 +147,17 @@ class _PedidoPageState extends State<PedidoPage> {
                       ),
                     ),
                     Container(
-                      // width: MediaQuery.of(context).size.width * .15,
                       height: 45,
+                      width: MediaQuery.of(context).size.width * .2,
                       decoration: BoxDecoration(
-                        color: Color(0xFFE6E6E6),
-                        borderRadius: BorderRadius.circular(20),
+                        color: const Color(0xFFE6E6E6),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          shape: StadiumBorder(),
+                          shape: const StadiumBorder(),
                           elevation: 0,
-                          primary: Color(0xFFE6E6E6),
+                          backgroundColor: const Color(0xFFE6E6E6),
                         ),
                         onPressed: () {
                           final pedidoService = Provider.of<PedidoService>(
@@ -167,7 +168,7 @@ class _PedidoPageState extends State<PedidoPage> {
                           Navigator.pop(context);
                           Navigator.pop(context);
                         },
-                        child: Align(
+                        child: const Align(
                           alignment: Alignment.center,
                           child: Text(
                             "Editar",
@@ -180,22 +181,22 @@ class _PedidoPageState extends State<PedidoPage> {
                       ),
                     ),
                     Container(
-                      //width: MediaQuery.of(context).size.width * .15,
+                      width: MediaQuery.of(context).size.width * .2,
                       height: 45,
                       decoration: BoxDecoration(
-                        color: Color(0xFFE6E6E6),
-                        borderRadius: BorderRadius.circular(20),
+                        color: const Color(0xFFE6E6E6),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          shape: StadiumBorder(),
+                          shape: const StadiumBorder(),
                           elevation: 0,
-                          primary: Color(0xFFE6E6E6),
+                          backgroundColor: const Color(0xFFE6E6E6),
                         ),
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Align(
+                        child: const Align(
                           alignment: Alignment.center,
                           child: Text(
                             "Volver",

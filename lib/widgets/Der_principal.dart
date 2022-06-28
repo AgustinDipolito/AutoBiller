@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DerView extends StatefulWidget {
-  DerView({Key? key}) : super(key: key);
+  const DerView({Key? key}) : super(key: key);
 
   @override
-  _DerViewState createState() => _DerViewState();
+  State<DerView> createState() => _DerViewState();
 }
 
 class _DerViewState extends State<DerView> {
@@ -17,21 +17,19 @@ class _DerViewState extends State<DerView> {
 
     return Column(
       children: <Widget>[
-        Expanded(flex: 4, child: CarritoWidget()),
+        const Expanded(flex: 4, child: CarritoWidget()),
         Expanded(
           flex: 1,
-          child: Container(
+          child: SizedBox(
             width: 300,
             height: 100,
             child: Center(
-              child: Container(
-                child: Text(
-                  "Total: \$ ${pedidoService.sumTot()}",
-                  style: TextStyle(
-                    fontSize: 33,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
+              child: Text(
+                "Total: \$ ${pedidoService.sumTot()}",
+                style: const TextStyle(
+                  fontSize: 33,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
                 ),
               ),
             ),

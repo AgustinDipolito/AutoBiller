@@ -14,11 +14,11 @@ class CarritoWidget extends StatelessWidget {
       width: MediaQuery.of(context).size.width * .40,
       height: MediaQuery.of(context).size.height * .7,
       decoration: BoxDecoration(
-        color: Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFFFFFFFF),
+        borderRadius: BorderRadius.circular(15),
       ),
       child: pedidoService.carrito.isEmpty
-          ? Center(
+          ? const Center(
               child: Icon(
                 Icons.add_shopping_cart,
                 size: 40,
@@ -37,8 +37,8 @@ class CarritoWidget extends StatelessWidget {
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8),
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 8),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -62,7 +62,8 @@ class CarritoWidget extends StatelessWidget {
                             Text("${pedido.cantidad}"),
                             Text(
                               pedido.nombre,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600),
                             ),
                             //Text(pedido.tipo.toLowerCase()),
                             //Text("\$ ${pedido.precioT}"),
@@ -73,7 +74,7 @@ class CarritoWidget extends StatelessWidget {
                       Container(
                         height: 1,
                         width: 525,
-                        color: Color(0xFFE6E6E6),
+                        color: const Color(0xFFE6E6E6),
                       ),
                     ],
                   ),

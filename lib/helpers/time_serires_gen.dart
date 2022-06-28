@@ -5,14 +5,11 @@ import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/models/user_preferences.dart';
 
 List<charts.Series<TimeSeriesSales, DateTime>> createSampleData(
-  BuildContext context,
-  String tipo,
-) {
+    BuildContext context, String tipo) {
   List<TimeSeriesSales> data = [];
   int x = 0;
-  int y = 0;
 
-  List<int> totales = List.generate(99, (index) => 0);
+  List<int> totales = [];
   List<DateTime> fechas = [];
   var clientes = Provider.of<ClienteService>(context);
   clientes.setClientes = UserPreferences.getPedidos();
@@ -28,12 +25,15 @@ List<charts.Series<TimeSeriesSales, DateTime>> createSampleData(
     if (!(fechas.contains(firstTime))) {
       fechas.add(firstTime);
     }
-    mismoDia.forEach((element) {
-      totales[y] += element.total;
-    });
+
+    var total = 0;
+
+    for (var element in mismoDia) {
+      total += element.total;
+    }
+    totales.add(total);
 
     x++;
-    y++;
   }
 
   totales = totales.toSet().toList();
@@ -77,7 +77,8 @@ List<TimeSeriesSales> getUltSemana(List<DateTime> fechas, List<int> totales) {
   List<TimeSeriesSales> data = [];
   var ultSemana = fechas
       .where((element) =>
-          element.compareTo(DateTime.now().subtract(Duration(days: 7))) >= 0)
+          element.compareTo(DateTime.now().subtract(const Duration(days: 7))) >=
+          0)
       .toList();
 
   for (var i = 0; i < ultSemana.length; i++) {

@@ -1,4 +1,3 @@
-// import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/services/lista_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ class TopView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final listaService = Provider.of<ListaService>(context);
-    // final clienteService = Provider.of<ClienteService>(context);
     final pedidoService = Provider.of<PedidoService>(context);
 
     return Row(
@@ -19,23 +17,27 @@ class TopView extends StatelessWidget {
         Expanded(
           flex: 10,
           child: Container(
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.only(left: 20),
+            margin: const EdgeInsets.all(20),
+            padding: const EdgeInsets.only(left: 20),
             width: MediaQuery.of(context).size.width * .75,
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(15),
             ),
             child: TextField(
-              onSubmitted: (_) async {
-                var x = await listaService.todo;
-                pedidoService.addCarrito(x[0]);
+              onSubmitted: (value) async {
+                if (value.isNotEmpty) {
+                  var x = await listaService.todo;
+                  pedidoService.addCarrito(x[0]);
+                }
               },
               onChanged: (value) {
                 listaService.searchItem(value);
-                if (value.isNotEmpty) listaService.sort();
+                if (value.isNotEmpty) {
+                  listaService.sort();
+                }
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 focusedBorder: InputBorder.none,
                 border: InputBorder.none,
                 hintText: "Buscar...",
@@ -48,19 +50,14 @@ class TopView extends StatelessWidget {
           child: Container(
             height: 45,
             decoration: BoxDecoration(
-              color: Color(0xFFE6E6E6),
-              borderRadius: BorderRadius.circular(20),
+              color: const Color(0xFFE6E6E6),
+              borderRadius: BorderRadius.circular(15),
             ),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: StadiumBorder(),
-                elevation: 1,
-                primary: Color(0xFFE6E6E6),
-              ),
+            child: MaterialButton(
               onPressed: () async {
                 Navigator.pushNamed(context, "ventas");
               },
-              child: Center(
+              child: const Center(
                 child: FittedBox(
                   fit: BoxFit.contain,
                   child: Text(
@@ -75,25 +72,20 @@ class TopView extends StatelessWidget {
             ),
           ),
         ),
-        Spacer(flex: 1),
+        const Spacer(flex: 1),
         Expanded(
           flex: 3,
           child: Container(
             height: 45,
             decoration: BoxDecoration(
-              color: Color(0xFFE6E6E6),
-              borderRadius: BorderRadius.circular(20),
+              color: const Color(0xFFE6E6E6),
+              borderRadius: BorderRadius.circular(15),
             ),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: StadiumBorder(),
-                elevation: 1,
-                primary: Color(0xFFE6E6E6),
-              ),
+            child: MaterialButton(
               onPressed: () async {
                 Navigator.pushNamed(context, "todos");
               },
-              child: Center(
+              child: const Center(
                 child: FittedBox(
                   fit: BoxFit.contain,
                   child: Text(

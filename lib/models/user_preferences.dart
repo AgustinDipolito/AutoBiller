@@ -14,7 +14,6 @@ class UserPreferences {
 
   static List<Pedido> getPedidos() {
     var keys = _preferences!.getKeys();
-    print(keys);
     try {
       List<Pedido> pedidos = [];
       List<String> keysPedidos = [];
@@ -28,12 +27,12 @@ class UserPreferences {
           i++;
         }
       }
-      if (pedidos.length > 1)
+      if (pedidos.length > 1) {
         pedidos.sort((a, b) => a.fecha.compareTo(b.fecha));
+      }
 
       return pedidos.reversed.toList();
-    } on Exception catch (e) {
-      print("${e.runtimeType}");
+    } on Exception catch (_) {
       return [];
     }
   }
@@ -54,7 +53,6 @@ class UserPreferences {
 
     if (_preferences!.containsKey("pedidos$newKey")) {
       await _preferences!.remove("pedidos$newKey");
-    } else
-      print("no existe: $key");
+    }
   }
 }

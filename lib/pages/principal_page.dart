@@ -1,15 +1,15 @@
 import 'package:dist_v2/services/lista_service.dart';
-import 'package:dist_v2/widgets/Der_principal.dart';
-import 'package:dist_v2/widgets/Top_principal.dart';
-import 'package:dist_v2/widgets/Izq_principal.dart';
+import 'package:dist_v2/widgets/der_principal.dart';
+import 'package:dist_v2/widgets/top_principal.dart';
+import 'package:dist_v2/widgets/izq_principal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PrincipalPage extends StatefulWidget {
-  PrincipalPage({Key? key}) : super(key: key);
+  const PrincipalPage({Key? key}) : super(key: key);
 
   @override
-  _PrincipalPageState createState() => _PrincipalPageState();
+  State<PrincipalPage> createState() => _PrincipalPageState();
 }
 
 class _PrincipalPageState extends State<PrincipalPage> {
@@ -25,24 +25,29 @@ class _PrincipalPageState extends State<PrincipalPage> {
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0),
-                child: TopView(),
-              ),
-              Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    IzqView(),
-                    Expanded(flex: 2, child: DerView()),
-                  ],
+          body: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.only(right: 12.0),
+                  child: TopView(),
                 ),
-              ),
-            ],
+                Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const <Widget>[
+                      IzqView(),
+                      Expanded(flex: 2, child: DerView()),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

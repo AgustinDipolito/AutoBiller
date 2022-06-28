@@ -8,47 +8,46 @@ import 'package:dist_v2/services/lista_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
 
 class IzqView extends StatefulWidget {
-  IzqView({Key? key}) : super(key: key);
+  const IzqView({Key? key}) : super(key: key);
   @override
-  _IzqViewState createState() => _IzqViewState();
+  State<IzqView> createState() => _IzqViewState();
 }
 
 class _IzqViewState extends State<IzqView> {
   @override
   Widget build(BuildContext context) {
-    final listaService = Provider.of<ListaService>(context, listen: false);
+    final listaService = Provider.of<ListaService>(context);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        Expanded(
-          flex: 2,
-          child: Container(
-            width: MediaQuery.of(context).size.width * .45,
-            height: MediaQuery.of(context).size.height * .7,
-            decoration: BoxDecoration(
-              color: Color(0xFFFFFFFF),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: FutureBuilder(
-              future: listaService.todo,
-              builder: (context, AsyncSnapshot<List<Item>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData)
-                  return ListView.builder(
-                      itemCount: snapshot.data?.length ?? 0,
-                      itemBuilder: (context, i) => snapshot.data == null
+        Container(
+          width: MediaQuery.of(context).size.width * .45,
+          height: MediaQuery.of(context).size.height * .5,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFFFFF),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: FutureBuilder(
+            future: listaService.todo,
+            builder: (context, AsyncSnapshot<List<Item>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                return ListView.builder(
+                    itemCount: snapshot.data?.length ?? 0,
+                    itemBuilder: (context, i) {
+                      return (snapshot.data == null)
                           ? const Center(child: CircularProgressIndicator())
-                          : lista(snapshot.data![i], i, context));
-                else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
+                          : lista(snapshot.data![i], i, context);
+                    });
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
           ),
         ),
-        Container(
+        SizedBox(
           width: 380,
           height: 60,
           child: Row(
@@ -59,13 +58,13 @@ class _IzqViewState extends State<IzqView> {
                 height: 45,
                 decoration: BoxDecoration(
                   color: const Color(0xFFE6E6E6),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
                     elevation: 0,
-                    primary: const Color(0xFFE6E6E6),
+                    backgroundColor: const Color(0xFFE6E6E6),
                   ),
                   onPressed: () {
                     showDialog(
@@ -74,7 +73,7 @@ class _IzqViewState extends State<IzqView> {
                         final namecontroller = TextEditingController();
                         return AlertDialog(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(15),
                           ),
                           title: const Text("Guardar pedido"),
                           content: TextField(
@@ -85,6 +84,7 @@ class _IzqViewState extends State<IzqView> {
                               onSubmitted: (string) {
                                 if (namecontroller.text.isNotEmpty) {
                                   savePedido(context, string);
+
                                   Navigator.pop(context);
                                 }
                               }),
@@ -142,26 +142,26 @@ class _IzqViewState extends State<IzqView> {
                 height: 45,
                 decoration: BoxDecoration(
                   color: const Color(0xFFE6E6E6),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
                     elevation: 0,
-                    primary: const Color(0xFFE6E6E6),
+                    backgroundColor: const Color(0xFFE6E6E6),
                   ),
                   onPressed: () {
                     final pedidoService =
                         Provider.of<PedidoService>(context, listen: false);
-                    final namecontroller = new TextEditingController();
-                    final colorcontroller = new TextEditingController();
-                    final pricecontroller = new TextEditingController();
+                    final namecontroller = TextEditingController();
+                    final colorcontroller = TextEditingController();
+                    final pricecontroller = TextEditingController();
                     showDialog(
                       context: context,
                       builder: (_) {
                         return AlertDialog(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(15),
                           ),
                           title: const Text("Nuevo accesorio"),
                           content: Column(
@@ -208,7 +208,7 @@ class _IzqViewState extends State<IzqView> {
                   },
                   child: const Align(
                     alignment: Alignment.center,
-                    child: const Text(
+                    child: Text(
                       "Añadir manual",
                       style: TextStyle(
                         color: Color(0xFF202020),
@@ -222,13 +222,13 @@ class _IzqViewState extends State<IzqView> {
                 height: 45,
                 decoration: BoxDecoration(
                   color: const Color(0xFFE6E6E6),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
                     elevation: 0,
-                    primary: const Color(0xFFE6E6E6),
+                    backgroundColor: const Color(0xFFE6E6E6),
                   ),
                   onPressed: () {
                     final pedidoService = Provider.of<PedidoService>(
@@ -240,10 +240,10 @@ class _IzqViewState extends State<IzqView> {
                   },
                   child: const Align(
                     alignment: Alignment.center,
-                    child: const Text(
+                    child: Text(
                       "Vaciar",
                       style: TextStyle(
-                        color: const Color(0xFF202020),
+                        color: Color(0xFF202020),
                         fontSize: 16,
                       ),
                     ),
@@ -263,7 +263,7 @@ class _IzqViewState extends State<IzqView> {
       TextEditingController pricecontroller,
       PedidoService pedidoService,
       BuildContext context) {
-    var data = new Item(namecontroller.text, colorcontroller.text,
+    var data = Item(namecontroller.text, colorcontroller.text,
         int.parse(pricecontroller.text), "0000");
 
     pedidoService.addCarrito(data);
@@ -275,15 +275,16 @@ Widget lista(Item item, int i, BuildContext context) {
   return ListTile(
     leading: Text(
       item.nombre,
-      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+      overflow: TextOverflow.fade,
     ),
     title: Text(
       item.tipo.toLowerCase(),
       overflow: TextOverflow.ellipsis,
     ),
     trailing: Text(
-      "\$ " + "${item.precio}",
-      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+      "\$ ${item.precio}",
+      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
     ),
     onTap: () {
       final pedidoService = Provider.of<PedidoService>(context, listen: false);

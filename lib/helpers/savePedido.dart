@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
 import 'package:dist_v2/models/pedido.dart';
@@ -21,7 +23,5 @@ void savePedido(BuildContext context, String name, [DateTime? date]) async {
 
     String pedidos = json.encode(clienteService.clientes.last);
     await UserPreferences.setPedido(pedidos, "${pedido.key}");
-  } catch (e) {
-    print("EEEEEEError:  $e");
-  }
+  } catch (_) {}
 }

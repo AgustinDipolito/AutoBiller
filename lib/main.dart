@@ -17,22 +17,24 @@ main() async {
     DeviceOrientation.landscapeLeft,
     //DeviceOrientation.landscapeRight,
   ]);
-  runApp(Myapp());
+  runApp(const Myapp());
 }
 
 class Myapp extends StatelessWidget {
+  const Myapp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => new PedidoService(),
+          create: (_) => PedidoService(),
         ),
         ChangeNotifierProvider(
-          create: (_) => new ClienteService(),
+          create: (_) => ClienteService(),
         ),
         ChangeNotifierProvider(
-          create: (_) => new ListaService(),
+          create: (_) => ListaService(),
         ),
       ],
       child: MaterialApp(
@@ -42,8 +44,8 @@ class Myapp extends StatelessWidget {
         routes: appRoutes,
         theme: ThemeData(
           brightness: Brightness.light,
-          primaryColor: Color(0xFFE6E6E6),
-          textTheme: TextTheme(
+          primaryColor: const Color(0xFFE6E6E6),
+          textTheme: const TextTheme(
             headline1: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,

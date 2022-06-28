@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:dist_v2/models/Itm.dart';
+import 'package:dist_v2/models/itm.dart';
 import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/models/user_preferences.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ClienteService with ChangeNotifier {
   late List<Pedido> _clientes = [];
-  List<Pedido> get clientes => this._clientes;
-  set setClientes(List<Pedido> lista) => this._clientes = lista;
+  List<Pedido> get clientes => _clientes;
+  set setClientes(List<Pedido> lista) => _clientes = lista;
 
   Pedido guardarPedido(String name, List<Itm> list, int tot, [DateTime? date]) {
     Pedido pedido = Pedido(
@@ -19,7 +19,7 @@ class ClienteService with ChangeNotifier {
       key: UniqueKey(),
       total: tot,
     );
-    _clientes = [...this._clientes, pedido];
+    _clientes = [..._clientes, pedido];
 
     notifyListeners();
     return pedido;

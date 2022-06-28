@@ -7,34 +7,34 @@ import 'package:flutter/services.dart';
 
 class ListaService with ChangeNotifier {
   List<Item> _todo = [];
-  Future<List<Item>> get todo async => this._todo.toSet().toList();
+  Future<List<Item>> get todo async => _todo.toSet().toList();
 
   void readJson() async {
     final response = await rootBundle.loadString("assets/catalogo.json");
     final data = await json.decode(response);
     int i = 0;
     while (i < data.length) {
-      this._todo.add(Item.fromJson(data[i]));
+      _todo.add(Item.fromJson(data[i]));
       i++;
-      final ids = Set();
+      final ids = <dynamic>{};
       _todo.retainWhere((x) => ids.add(x.id));
     }
   }
 
   void searchItem(String cad) {
-    final itemf = this._todo.where((item) {
+    final itemf = _todo.where((item) {
       final nombreLow = item.nombre.toLowerCase();
       final searchLow = cad.toLowerCase();
 
       return nombreLow.contains(searchLow);
     }).toList();
 
-    this._todo = itemf;
+    _todo = itemf;
     notifyListeners();
   }
 
   void sort() {
-    this._todo.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
+    _todo.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
 
     notifyListeners();
   }

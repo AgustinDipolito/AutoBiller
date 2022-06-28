@@ -6,7 +6,7 @@ List<List<DateTime>> getWeeksForRange(DateTime start, DateTime end) {
 
   while (date.difference(end).inDays <= 0) {
     // start new week on Monday
-    if (date.weekday == 1 && week.length > 0) {
+    if (date.weekday == 1 && week.isNotEmpty) {
       result.add(week);
       week = <DateTime>[];
     }
