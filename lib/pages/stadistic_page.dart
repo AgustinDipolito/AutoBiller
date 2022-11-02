@@ -1,85 +1,75 @@
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:dist_v2/helpers/time_serires_gen.dart';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:dist_v2/pages/analysis_page.dart';
+import 'package:dist_v2/pages/graphs_page.dart';
 
-class StadisticPage extends StatelessWidget {
+class StadisticPage extends StatefulWidget {
   const StadisticPage({Key? key}) : super(key: key);
 
-  static const List<String> tipos = ['semana', 'mes', 'año'];
+  @override
+  State<StadisticPage> createState() => _StadisticPageState();
+}
+
+class _StadisticPageState extends State<StadisticPage>
+    with SingleTickerProviderStateMixin {
+  late final TabController _controller;
+  int _tabIndex = 0;
+
+  final List<BottomNavigationBarItem> _items = [
+    const BottomNavigationBarItem(
+        icon: Icon(Icons.data_object), label: 'Datos'),
+    const BottomNavigationBarItem(
+        icon: Icon(Icons.graphic_eq), label: 'Ventas'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TabController(
+      length: 2,
+      initialIndex: 0,
+      vsync: this,
+    )..addListener(_viewSwitcher);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Colors.grey.shade600, Colors.grey.shade400]),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [Colors.grey.shade600, Colors.grey.shade400]),
+          ),
+          child: TabBarView(
+            controller: _controller,
+            children: const [
+              AnalysisPage(),
+              GraphsPage(),
+            ],
+          ),
         ),
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.black,
-            title: const Text('Ventas'),
-          ),
-          backgroundColor: Colors.transparent,
-          body: ListView.builder(
-            itemCount: 3,
-            itemBuilder: (_, int index) {
-              var total = 0;
-              final compact =
-                  NumberFormat.compactCurrency(name: "\$", decimalDigits: 0);
-              final long = NumberFormat.currency(name: "\$", decimalDigits: 0);
-
-              createSampleData(context, tipos[index])
-                  .first
-                  .data
-                  .forEach((element) {
-                total += element.sales;
-              });
-
-              String totalWord =
-                  index != 0 ? compact.format(total) : long.format(total);
-
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Grafico(tipo: tipos[index]),
-                  Center(
-                    child: Text('Total ${tipos[index]}:\n $totalWord'),
-                  )
-                ],
-              );
-            },
-          ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: _items,
+          backgroundColor: Colors.black,
+          currentIndex: _tabIndex,
+          elevation: 8,
+          unselectedItemColor: Colors.white54,
+          selectedItemColor: Colors.white,
+          type: BottomNavigationBarType.fixed,
+          onTap: (int i) {
+            _controller.animateTo(i);
+            _viewSwitcher();
+          },
         ),
       ),
     );
   }
-}
 
-class Grafico extends StatelessWidget {
-  const Grafico({Key? key, required this.tipo}) : super(key: key);
-  final String tipo;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * .7,
-      height: MediaQuery.of(context).size.height * .7,
-      padding: const EdgeInsets.only(left: 10, top: 25),
-      child: charts.TimeSeriesChart(
-        createSampleData(context, tipo),
-        animate: true,
-        defaultRenderer: charts.BarRendererConfig(),
-        defaultInteractions: false,
-        primaryMeasureAxis: const charts.NumericAxisSpec(
-          showAxisLine: true,
-          tickProviderSpec: charts.BasicNumericTickProviderSpec(
-            desiredTickCount: 5,
-            zeroBound: true,
-          ),
-        ),
-        behaviors: [charts.DomainHighlighter(), charts.PanAndZoomBehavior()],
-      ),
-    );
+  void _viewSwitcher() {
+    _tabIndex = _controller.index;
+    setState(() {});
   }
 }

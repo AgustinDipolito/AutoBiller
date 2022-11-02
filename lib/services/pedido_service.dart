@@ -1,17 +1,18 @@
-import 'package:dist_v2/models/itm.dart';
 import 'package:dist_v2/models/item.dart';
+import 'package:dist_v2/models/item_response.dart';
 import 'package:flutter/material.dart';
 
 class PedidoService with ChangeNotifier {
-  late List<Itm> carrito = [];
+  late List<Item> carrito = [];
 
-  void addCarrito(Item itmData) {
-    carrito.add(Itm(
+  void addCarrito(ItemResponse itmData) {
+    carrito.add(Item(
       cantidad: 1,
       tipo: (itmData.tipo),
       nombre: (itmData.nombre),
       precio: (itmData.precio),
       precioT: (itmData.precio),
+      id: int.parse(itmData.id),
     ));
     notifyListeners();
   }
@@ -41,8 +42,8 @@ class PedidoService with ChangeNotifier {
     return tot;
   }
 
-  List<Itm> giveSaved() {
-    List<Itm> lista = [];
+  List<Item> giveSaved() {
+    List<Item> lista = [];
     lista.addAll(carrito);
     return lista;
   }

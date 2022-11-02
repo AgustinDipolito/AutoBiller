@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:dist_v2/models/itm.dart';
+import 'package:dist_v2/models/item.dart';
 import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/models/user_preferences.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,8 @@ class ClienteService with ChangeNotifier {
   List<Pedido> get clientes => _clientes;
   set setClientes(List<Pedido> lista) => _clientes = lista;
 
-  Pedido guardarPedido(String name, List<Itm> list, int tot, [DateTime? date]) {
+  Pedido guardarPedido(String name, List<Item> list, int tot,
+      [DateTime? date]) {
     Pedido pedido = Pedido(
       nombre: name,
       fecha: date ?? DateTime.now(),
@@ -29,9 +30,11 @@ class ClienteService with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? listString = prefs.getString("pedidosKey") ?? "";
 
-    if (listString.isNotEmpty) return jsonDecode(listString) as List<Pedido>;
+    if (listString.isEmpty) return [];
+
+    _clientes = jsonDecode(listString);
     notifyListeners();
-    return [];
+    return _clientes;
   }
 
   deletePedido(int i, String key) async {

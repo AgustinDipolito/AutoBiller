@@ -1,19 +1,37 @@
 class Item {
-  String nombre, tipo, id;
-  int precio;
+  final String nombre;
+  final String tipo;
+  final int precio;
+  final int id;
+  int precioT;
+  int cantidad = 0;
+  bool status = false;
 
-  Item(this.nombre, this.tipo, this.precio, this.id);
+  Item({
+    required this.precio,
+    required this.nombre,
+    required this.id,
+    required this.tipo,
+    required this.precioT,
+    required this.cantidad,
+  });
 
-  Item.fromJson(json)
-      : nombre = json["nombre"] as String,
-        tipo = json["tipo"] as String,
-        id = json["id"] as String,
-        precio = int.parse(json["precio"]);
+  Item.fromJson(Map<String, dynamic> json)
+      : precio = int.parse(json["precio"]),
+        nombre = json["nombre"],
+        tipo = json["tipo"] ?? '',
+        precioT = int.parse(json["precioT"]),
+        id = int.parse(json["id"] ?? '0'),
+        cantidad = int.parse(json["cantidad"]);
 
-  Map<String, dynamic> toJson() => {
-        "nombre": nombre,
-        "tipo": tipo,
-        "precio": precio,
-        "id": id,
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      "precio": precio.toString(),
+      "nombre": nombre,
+      "tipo": tipo,
+      "precioT": precioT.toString(),
+      "cantidad": cantidad.toString(),
+      "id": id.toString(),
+    };
+  }
 }

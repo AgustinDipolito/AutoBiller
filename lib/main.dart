@@ -1,3 +1,4 @@
+import 'package:dist_v2/services/analysis_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -13,10 +14,7 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.init();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeLeft,
-    //DeviceOrientation.landscapeRight,
-  ]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
   runApp(const Myapp());
 }
 
@@ -36,6 +34,9 @@ class Myapp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => ListaService(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => AnalysisService(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -46,11 +47,11 @@ class Myapp extends StatelessWidget {
           brightness: Brightness.light,
           primaryColor: const Color(0xFFE6E6E6),
           textTheme: const TextTheme(
-            headline1: TextStyle(
+            displayLarge: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
             ),
-            bodyText2: TextStyle(
+            bodyMedium: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
             ),

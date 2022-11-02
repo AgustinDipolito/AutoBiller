@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:dist_v2/models/item.dart';
+import 'package:dist_v2/models/item_response.dart';
 import 'package:dist_v2/helpers/savePedido.dart';
 
 import 'package:dist_v2/services/lista_service.dart';
@@ -31,7 +31,7 @@ class _IzqViewState extends State<IzqView> {
           ),
           child: FutureBuilder(
             future: listaService.todo,
-            builder: (context, AsyncSnapshot<List<Item>> snapshot) {
+            builder: (context, AsyncSnapshot<List<ItemResponse>> snapshot) {
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData) {
                 return ListView.builder(
@@ -182,6 +182,7 @@ class _IzqViewState extends State<IzqView> {
                               TextField(
                                 autofocus: true,
                                 controller: pricecontroller,
+                                keyboardType: TextInputType.number,
                                 decoration:
                                     const InputDecoration(hintText: 'Precio'),
                               ),
@@ -263,7 +264,7 @@ class _IzqViewState extends State<IzqView> {
       TextEditingController pricecontroller,
       PedidoService pedidoService,
       BuildContext context) {
-    var data = Item(namecontroller.text, colorcontroller.text,
+    var data = ItemResponse(namecontroller.text, colorcontroller.text,
         int.parse(pricecontroller.text), "0000");
 
     pedidoService.addCarrito(data);
@@ -271,16 +272,17 @@ class _IzqViewState extends State<IzqView> {
   }
 }
 
-Widget lista(Item item, int i, BuildContext context) {
+Widget lista(ItemResponse item, int i, BuildContext context) {
   return ListTile(
-    leading: Text(
+    title: Text(
       item.nombre,
-      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+      style: const TextStyle(fontWeight: FontWeight.bold),
       overflow: TextOverflow.fade,
     ),
-    title: Text(
+    subtitle: Text(
       item.tipo.toLowerCase(),
       overflow: TextOverflow.ellipsis,
+      style: const TextStyle(fontSize: 14),
     ),
     trailing: Text(
       "\$ ${item.precio}",

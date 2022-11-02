@@ -1,22 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:provider/provider.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/models/user_preferences.dart';
 
 List<charts.Series<TimeSeriesSales, DateTime>> createSampleData(
-    BuildContext context, String tipo) {
+    ClienteService clientes, String tipo) {
   List<TimeSeriesSales> data = [];
   int x = 0;
 
   List<int> totales = [];
   List<DateTime> fechas = [];
-  var clientes = Provider.of<ClienteService>(context);
   clientes.setClientes = UserPreferences.getPedidos();
 
   while (x < clientes.clientes.length) {
-    DateTime firstTime = DateTime(clientes.clientes[x].fecha.year,
-        clientes.clientes[x].fecha.month, clientes.clientes[x].fecha.day);
+    DateTime firstTime = clientes.clientes[x].fecha;
 
     var mismoDia = clientes.clientes.where((element) =>
         (element.fecha.day == firstTime.day) &&
@@ -104,7 +100,7 @@ List<TimeSeriesSales> getUltAno(List<DateTime> fechas, List<int> totales) {
   var ultAno =
       fechas.where((element) => DateTime.now().year == element.year).toList();
 
-  for (var i = 0; i < ultAno.length; i++) {
+  for (var i = 0; i < totales.length; i++) {
     data.add(TimeSeriesSales(ultAno[i], totales[i]));
   }
 

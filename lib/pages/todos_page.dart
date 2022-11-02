@@ -47,7 +47,7 @@ class _TodosPageState extends State<TodosPage> {
                               style: TextStyle(color: Colors.red),
                             ),
                             onPressed: () async {
-                              await UserPreferences.clearAllStored();
+                              // await UserPreferences.clearAllStored();
                               setState(() {});
                               if (!mounted) return;
                               Navigator.of(context).pop();
@@ -81,15 +81,17 @@ class _TodosPageState extends State<TodosPage> {
                           backgroundColor: Colors.black,
 
                           maxRadius: 18,
-                          child: Text(
-                            clienteService.clientes[i].nombre
-                                .toUpperCase()
-                                .substring(0, 2),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
+                          child: clienteService.clientes[i].nombre.length >= 2
+                              ? Text(
+                                  clienteService.clientes[i].nombre
+                                      .toUpperCase()
+                                      .substring(0, 2),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                )
+                              : null,
                         ),
                         title: Text(
                           clienteService.clientes[i].nombre,

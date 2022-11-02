@@ -1,12 +1,12 @@
-import 'package:dist_v2/models/itm.dart';
 import 'package:flutter/material.dart';
+import 'package:dist_v2/models/item.dart';
 
 class Pedido {
   final String nombre;
   String? listaString = "";
   final int total;
   final DateTime fecha;
-  late final List<Itm> lista;
+  late final List<Item> lista;
   final Key key;
 
   Pedido({
@@ -20,7 +20,7 @@ class Pedido {
   factory Pedido.fromJson(Map<String, dynamic> json) => Pedido(
         nombre: json["nombre"],
         fecha: DateTime.parse(json["fecha"]),
-        lista: List<Itm>.from(json["lista"].map((x) => Itm.fromJson(x))),
+        lista: List<Item>.from(json["lista"].map((x) => Item.fromJson(x))),
         key: ValueKey(json["key"]),
         total: int.parse(json["total"]),
       );
