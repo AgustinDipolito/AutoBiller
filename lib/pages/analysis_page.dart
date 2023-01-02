@@ -42,49 +42,49 @@ class _AnalysisPageState extends State<AnalysisPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _button(
-              icon: Icons.abc,
+              name: 'abc',
               action: () {
                 tops = analysisService.sortList(SortBy.nameDown);
               },
             ),
             _button(
-              icon: Icons.abc,
+              name: 'zxy',
               action: () {
                 tops = analysisService.sortList(SortBy.nameUp);
               },
             ),
             _button(
-              icon: Icons.interests,
+              name: 'max cant',
               action: () {
                 tops = analysisService.sortList(SortBy.cantDown);
               },
             ),
             _button(
-              icon: Icons.interests_sharp,
+              name: 'min cant',
               action: () {
                 tops = analysisService.sortList(SortBy.cantUp);
               },
             ),
             _button(
-              icon: Icons.repeat_one,
+              name: 'max rep',
               action: () {
                 tops = analysisService.sortList(SortBy.repsDown);
               },
             ),
             _button(
-              icon: Icons.repeat_one_on,
+              name: 'min rep',
               action: () {
                 tops = analysisService.sortList(SortBy.repsUp);
               },
             ),
             _button(
-              icon: Icons.rotate_90_degrees_cw_outlined,
+              name: '\$\$\$',
               action: () {
                 tops = analysisService.sortList(SortBy.raisedDown);
               },
             ),
             _button(
-              icon: Icons.rotate_90_degrees_ccw_rounded,
+              name: '\$',
               action: () {
                 tops = analysisService.sortList(SortBy.raisedDown);
               },
@@ -98,17 +98,17 @@ class _AnalysisPageState extends State<AnalysisPage> {
             child: ListView.builder(
               itemCount: tops.length,
               itemBuilder: (_, int index) {
-                return Column (
-                  children:[
+                return Column(
+                  children: [
                     ListTile(
-                  title: Text(
-                      'Cant. total: ${tops[index].cantTotal}, reps: ${tops[index].repeticiones}'),
-                  subtitle: Text(
-                      '${tops[index].nombre},   \$ ${tops[index].recaudado}'),
-                ),
-                const Divider(),
-                
-                ],);
+                      title: Text(
+                          'Cant. total: ${tops[index].cantTotal}, reps: ${tops[index].repeticiones}'),
+                      subtitle: Text(
+                          '${tops[index].nombre},   \$ ${tops[index].recaudado}'),
+                    ),
+                    const Divider(),
+                  ],
+                );
               },
             ),
           ),
@@ -117,13 +117,15 @@ class _AnalysisPageState extends State<AnalysisPage> {
     );
   }
 
-  Widget _button({required Function() action, required IconData icon}) {
+  Widget _button({required Function() action, required String name}) {
     return IconButton(
       onPressed: () => action(),
       color: const Color(0xFFE6E6E6),
-      icon: Icon(
-        icon,
-        color: const Color(0xFF404040),
+      icon: FittedBox(
+        child: Text(
+          name,
+          // color: const Color(0xFF404040),
+        ),
       ),
     );
   }

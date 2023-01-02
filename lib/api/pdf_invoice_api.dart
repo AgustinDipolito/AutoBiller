@@ -26,8 +26,9 @@ class PdfInvoiceApi {
     ));
 
     return PdfApi.saveDocument(
-        name: 'FACTURA ${invoice.customer.name} - ${invoice.info.number}.pdf',
-        pdf: pdf);
+      name: 'FACTURA ${invoice.customer.name} - ${invoice.info.number}.pdf',
+      pdf: pdf,
+    );
   }
 
   static Widget buildHeader(Invoice invoice) => Column(

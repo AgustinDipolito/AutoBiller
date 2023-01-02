@@ -49,6 +49,7 @@ class TopView extends StatelessWidget {
           flex: 3,
           child: Container(
             height: 45,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
             decoration: BoxDecoration(
               color: const Color(0xFFE6E6E6),
               borderRadius: BorderRadius.circular(15),
@@ -72,10 +73,38 @@ class TopView extends StatelessWidget {
             ),
           ),
         ),
-        const Spacer(flex: 1),
         Expanded(
           flex: 3,
           child: Container(
+            height: 45,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE6E6E6),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: MaterialButton(
+              onPressed: () async {
+                Navigator.pushNamed(context, "stock");
+              },
+              child: const Center(
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: Text(
+                    "Stock",
+                    style: TextStyle(
+                      color: Color(0xFF404040),
+                      fontSize: 32,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 5),
             height: 45,
             decoration: BoxDecoration(
               color: const Color(0xFFE6E6E6),

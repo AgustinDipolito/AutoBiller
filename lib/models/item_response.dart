@@ -9,7 +9,7 @@ class ItemResponse {
   ItemResponse.fromJson(json)
       : nombre = json["nombre"] as String,
         tipo = json["tipo"] ?? '',
-        id = json["id"] as String,
+        id = json["ID"] as String,
         precio = int.parse(json["precio"]);
 
   Map<String, dynamic> toJson() => {

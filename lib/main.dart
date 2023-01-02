@@ -9,6 +9,7 @@ import 'package:dist_v2/services/lista_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
 
 import 'models/user_preferences.dart';
+import 'services/stock_service.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,9 @@ class Myapp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => AnalysisService(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => StockService(),
         ),
       ],
       child: MaterialApp(

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dist_v2/models/pedido.dart';
+import 'package:dist_v2/services/stock_service.dart';
 
 class UserPreferences {
   static SharedPreferences? _preferences;
@@ -12,8 +13,42 @@ class UserPreferences {
     await _preferences!.setString("pedidos$key", lista);
   }
 
+  static Future setStock(String stock, String key) async {
+    await _preferences!.setString("stock$key", stock);
+  }
+
+  static List<Stock> getStock() {
+    var key = _preferences!
+        .getKeys()
+        .firstWhere((element) => element.startsWith('stock'));
+    // _preferences!.remove('stock1');
+    // _preferences!.remove('stock2');
+
+    try {
+      List<Stock> stock = <Stock>[];
+
+      final json = _preferences!.getString(key) ?? '';
+
+      if (json.isNotEmpty) {
+        final maps = jsonDecode(json);
+        for (var map in maps) {
+          final itemStock = Stock.fromJson(map);
+
+          stock.add(itemStock);
+        }
+      }
+
+      return stock;
+    } catch (e) {
+      return [];
+    }
+  }
+
   static List<Pedido> getPedidos() {
-    var keys = _preferences!.getKeys();
+    var keys = _preferences!
+        .getKeys()
+        .where((element) => element.startsWith('pedido'));
+
     try {
       List<Pedido> pedidos = [];
       List<String> keysPedidos = [];
@@ -37,8 +72,11 @@ class UserPreferences {
     }
   }
 
-  static int getCantidad() {
-    return _preferences!.getKeys().length;
+  static int getCantidadPedidos() {
+    return _preferences!
+        .getKeys()
+        .where((element) => element.startsWith('pedido'))
+        .length;
   }
 
   static Future clearAllStored() async {

@@ -1,13 +1,18 @@
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/models/user_preferences.dart';
+import 'package:flutter/cupertino.dart';
 
 List<charts.Series<TimeSeriesSales, DateTime>> createSampleData(
     ClienteService clientes, String tipo) {
   List<TimeSeriesSales> data = [];
   int x = 0;
 
-  List<int> totales = [];
+  List<Pedido> totaleslUltimaSem = [];
+  List<Pedido> totalesUltimoMes = [];
+  List<Pedido> totalesUltimoAnio = [];
+
   List<DateTime> fechas = [];
   clientes.setClientes = UserPreferences.getPedidos();
 
@@ -21,29 +26,57 @@ List<charts.Series<TimeSeriesSales, DateTime>> createSampleData(
     if (!(fechas.contains(firstTime))) {
       fechas.add(firstTime);
     }
-
     var total = 0;
 
     for (var element in mismoDia) {
       total += element.total;
     }
-    totales.add(total);
+
+    if (firstTime.isAfter(DateTime.now().subtract(const Duration(days: 7)))) {
+      totaleslUltimaSem.add(Pedido(
+          nombre: '',
+          fecha: firstTime,
+          lista: [],
+          key: const Key(''),
+          total: total));
+    }
+
+    if (firstTime.month == DateTime.now().month) {
+      totalesUltimoMes.add(Pedido(
+          nombre: '',
+          fecha: firstTime,
+          lista: [],
+          key: const Key(''),
+          total: total));
+    }
+    if (firstTime.year == DateTime.now().year) {
+      totalesUltimoAnio.add(Pedido(
+          nombre: '',
+          fecha: firstTime,
+          lista: [],
+          key: const Key(''),
+          total: total));
+    }
+    // totales.add(total);
 
     x++;
   }
 
-  totales = totales.toSet().toList();
+  // totales = totales.toSet().toList();
+  totaleslUltimaSem = totaleslUltimaSem.toSet().toList();
+  totalesUltimoMes = totalesUltimoMes.toSet().toList();
+  totalesUltimoAnio = totalesUltimoAnio.toSet().toList();
 
   switch (tipo) {
     case "semana":
-      data = getUltSemana(fechas, totales);
+      data = getUltSemana(fechas, totaleslUltimaSem);
       break;
     case "mes":
-      data = getUltMes(fechas, totales);
+      data = getUltMes(fechas, totalesUltimoMes);
       break;
 
     case "año":
-      data = getUltAno(fechas, totales);
+      data = getUltAno(fechas, totalesUltimoAnio);
       break;
     default:
   }
@@ -69,40 +102,29 @@ class TimeSeriesSales {
   TimeSeriesSales(this.weekday, this.sales);
 }
 
-List<TimeSeriesSales> getUltSemana(List<DateTime> fechas, List<int> totales) {
+List<TimeSeriesSales> getUltSemana(
+    List<DateTime> fechas, List<Pedido> totales) {
   List<TimeSeriesSales> data = [];
-  var ultSemana = fechas
-      .where((element) =>
-          element.compareTo(DateTime.now().subtract(const Duration(days: 7))) >=
-          0)
-      .toList();
 
-  for (var i = 0; i < ultSemana.length; i++) {
-    data.add(TimeSeriesSales(ultSemana[i], totales[i]));
+  for (var element in totales) {
+    data.add(TimeSeriesSales(element.fecha, element.total));
   }
+
   return data;
 }
 
-List<TimeSeriesSales> getUltMes(List<DateTime> fechas, List<int> totales) {
+List<TimeSeriesSales> getUltMes(List<DateTime> fechas, List<Pedido> totales) {
   List<TimeSeriesSales> data = [];
 
-  var ultMes =
-      fechas.where((element) => DateTime.now().month == element.month).toList();
-
-  for (var i = 0; i < ultMes.length; i++) {
-    data.add(TimeSeriesSales(ultMes[i], totales[i]));
+  for (var element in totales) {
+    data.add(TimeSeriesSales(element.fecha, element.total));
   }
+
   return data;
 }
 
-List<TimeSeriesSales> getUltAno(List<DateTime> fechas, List<int> totales) {
+List<TimeSeriesSales> getUltAno(List<DateTime> fechas, List<Pedido> totales) {
   List<TimeSeriesSales> data = [];
-  var ultAno =
-      fechas.where((element) => DateTime.now().year == element.year).toList();
-
-  for (var i = 0; i < totales.length; i++) {
-    data.add(TimeSeriesSales(ultAno[i], totales[i]));
-  }
 
   return data;
 }
