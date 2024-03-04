@@ -1,29 +1,28 @@
 import 'dart:io';
 
 import 'package:dist_v2/api/api.dart';
-import 'package:dist_v2/models/customer.dart';
 import 'package:dist_v2/models/invoice.dart';
-import 'package:dist_v2/models/supplier.dart';
 import 'package:dist_v2/utils.dart';
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
 class PdfInvoiceApi {
   static Future<File> generate(Invoice invoice) async {
     final pdf = Document();
 
-    pdf.addPage(MultiPage(
-      build: (context) => [
-        buildHeader(invoice),
-        SizedBox(height: 2 * PdfPageFormat.cm),
-        buildTitle(invoice),
-        buildInvoice(invoice),
-        Divider(),
-        buildTotal(invoice),
-      ],
-      footer: (context) => buildFooter(invoice),
-    ));
+    pdf.addPage(
+      MultiPage(
+        margin: const EdgeInsets.all(.5 * PdfPageFormat.cm),
+        build: (context) => [
+          buildHeader(invoice),
+          SizedBox(height: PdfPageFormat.cm),
+          buildInvoice(invoice),
+          Divider(),
+          buildTotal(invoice),
+        ],
+        footer: (context) => buildFooter(invoice),
+      ),
+    );
 
     return PdfApi.saveDocument(
       name: 'FACTURA ${invoice.customer.name} - ${invoice.info.number}.pdf',
@@ -38,51 +37,39 @@ class PdfInvoiceApi {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              buildSupplierAddress(invoice.supplier),
-              Container(
-                height: 50,
-                width: 50,
-                child: BarcodeWidget(
-                  barcode: Barcode.qrCode(),
-                  data: invoice.info.number,
-                ),
+              Flexible(
+                child: buildSupplierAddress(invoice),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    height: 50,
+                    width: 50,
+                    child: BarcodeWidget(
+                      barcode: Barcode.qrCode(),
+                      data: invoice.info.number,
+                    ),
+                  ),
+                  SizedBox(height: 0.8 * PdfPageFormat.cm),
+                  buildInvoiceInfo(invoice.info),
+                ],
               ),
             ],
           ),
-          SizedBox(height: 1 * PdfPageFormat.cm),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              buildCustomerAddress(invoice.customer),
-              buildInvoiceInfo(invoice.info),
-            ],
-          ),
-        ],
-      );
-
-  static Widget buildCustomerAddress(Customer customer) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(customer.name,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          Text(customer.address),
         ],
       );
 
   static Widget buildInvoiceInfo(InvoiceInfo info) {
-    final paymentTerms = '${info.dueDate.difference(info.date).inDays} dias';
     final titles = <String>[
-      'Numero factura:',
-      'Fecha facturacion:',
+      'Fecha facturación:',
       'Validez:',
-      'Fecha vencimiento:'
+      'Cant. items:',
     ];
     final data = <String>[
+      info.date.toString().substring(0, 10).split('-').reversed.join('/'),
+      '3 dias',
       info.number,
-      Utils.formatDate(info.date),
-      paymentTerms,
-      Utils.formatDate(info.dueDate),
     ];
 
     return Column(
@@ -96,26 +83,20 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildSupplierAddress(Supplier supplier) => Column(
+  static Widget buildSupplierAddress(Invoice invoice) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(supplier.name,
+          Text(invoice.supplier.name,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26)),
           SizedBox(height: 1 * PdfPageFormat.mm),
           Text("Accesorios de carpinteria de aluminio."),
-        ],
-      );
-
-  static Widget buildTitle(Invoice invoice) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+          SizedBox(height: 0.8 * PdfPageFormat.cm),
           Text(
-            'FACTURA',
+            invoice.customer.name,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 0.8 * PdfPageFormat.cm),
           Text(invoice.info.description),
-          SizedBox(height: 0.8 * PdfPageFormat.cm),
         ],
       );
 
@@ -125,14 +106,14 @@ class PdfInvoiceApi {
       final total = item.unitPrice * item.quantity;
 
       return [
-        '${item.quantity}',
+        item.quantity.toString(),
         item.description,
-        '\$ ${item.unitPrice.toStringAsFixed(0)}',
-        '\$ ${total.toStringAsFixed(0)}',
+        Utils.formatPrice(item.unitPrice),
+        Utils.formatPrice(total),
       ];
     }).toList();
 
-    return Table.fromTextArray(
+    return TableHelper.fromTextArray(
       headers: headers,
       data: data,
       border: null,
@@ -140,10 +121,10 @@ class PdfInvoiceApi {
       headerDecoration: const BoxDecoration(color: PdfColors.grey300),
       cellHeight: 25,
       cellAlignments: {
-        0: Alignment.centerLeft,
+        0: Alignment.center,
         1: Alignment.centerLeft,
         2: Alignment.centerLeft,
-        3: Alignment.centerLeft,
+        3: Alignment.centerRight,
       },
     );
   }
@@ -165,7 +146,7 @@ class PdfInvoiceApi {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildText(
-                  title: 'Monto Total',
+                  title: 'Monto Total:',
                   titleStyle: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -193,8 +174,7 @@ class PdfInvoiceApi {
           SizedBox(height: 2 * PdfPageFormat.mm),
           buildSimpleText(title: 'Dirección', value: invoice.supplier.address),
           SizedBox(height: 1 * PdfPageFormat.mm),
-          buildSimpleText(
-              title: 'Contacto', value: invoice.supplier.paymentInfo),
+          buildSimpleText(title: 'Contacto', value: invoice.supplier.paymentInfo),
         ],
       );
 
@@ -206,11 +186,11 @@ class PdfInvoiceApi {
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: pw.CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(title, style: style),
         SizedBox(width: 2 * PdfPageFormat.mm),
-        Text(value),
+        Text(value, style: style),
       ],
     );
   }

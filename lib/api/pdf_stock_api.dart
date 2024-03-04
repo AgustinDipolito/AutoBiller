@@ -40,15 +40,14 @@ class PdfStockApi {
       ];
     }).toList();
 
-    return Table.fromTextArray(
+    return TableHelper.fromTextArray(
       headers: headers,
       data: data,
       border: null,
       headerStyle: TextStyle(fontWeight: FontWeight.bold),
       headerDecoration: const BoxDecoration(color: PdfColors.grey300),
       cellDecoration: (_, __, ___) => const BoxDecoration(
-          border:
-              Border(bottom: BorderSide(width: .5, color: PdfColors.grey300))),
+          border: Border(bottom: BorderSide(width: .5, color: PdfColors.grey300))),
       cellHeight: 25,
       cellAlignments: {
         0: Alignment.centerLeft,
@@ -76,8 +75,7 @@ class PdfStockApi {
         children: [
           Divider(),
           SizedBox(height: 2 * PdfPageFormat.mm),
-          _buildSimpleText(
-              title: 'Dirección', value: "Eva Peron 417, Temperley."),
+          _buildSimpleText(title: 'Dirección', value: "Eva Peron 417, Temperley."),
           SizedBox(height: 1 * PdfPageFormat.mm),
           _buildSimpleText(title: 'Contacto', value: "+54 9 11 66338293"),
         ],

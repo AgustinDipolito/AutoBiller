@@ -1,5 +1,8 @@
+import 'package:dist_v2/models/item.dart';
+import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/models/user_preferences.dart';
 import 'package:dist_v2/services/cliente_service.dart';
+import 'package:dist_v2/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,100 +14,192 @@ class TodosPage extends StatefulWidget {
 }
 
 class _TodosPageState extends State<TodosPage> {
+  List<List>? busqueda;
+  bool selectionMode = false;
+  List<bool> selects = [];
+
   @override
   Widget build(BuildContext context) {
     final clienteService = Provider.of<ClienteService>(context);
     clienteService.setClientes = UserPreferences.getPedidos();
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade600,
+      backgroundColor: Colors.grey,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.blueGrey,
         title: const Text('Todos los pedidos'),
         actions: [
+          if (selectionMode)
+            IconButton(
+                color: kDefaultIconDarkColor,
+                onPressed: () async {
+                  final nav = Navigator.of(context);
+                  final pedidoGrande = <Item>[];
+
+                  for (var i = 0; i < clienteService.clientes.length; i++) {
+                    if (selects[i]) {
+                      pedidoGrande.addAll(clienteService.clientes[i].lista);
+                    }
+                  }
+                  final pedidoGrandeJunto = <Item>[];
+
+                  for (var element in pedidoGrande) {
+                    if (!pedidoGrandeJunto
+                        .any((conjunto) => element.nombre == conjunto.nombre)) {
+                      pedidoGrandeJunto.add(element);
+                    } else {
+                      final index = pedidoGrandeJunto
+                          .indexWhere((conjunto) => element.nombre == conjunto.nombre);
+                      pedidoGrandeJunto[index].cantidad += element.cantidad;
+                    }
+                  }
+
+                  final pedido = Pedido(
+                      nombre: 'CONJUNTO',
+                      fecha: DateTime.now(),
+                      lista: pedidoGrandeJunto,
+                      key: const Key(''),
+                      total: 0);
+                  selectionMode = false;
+                  setState(() {});
+                  nav.pushNamed("pedido", arguments: pedido);
+                },
+                icon: const Icon(Icons.check_circle)),
           IconButton(
-            icon: const Icon(Icons.delete_forever),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (_) {
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      title: const Text("Eliminar"),
-                      content: const Text("Eliminar todos los pedidos ?"),
-                      actions: <Widget>[
-                        MaterialButton(
-                            child: const Text(
-                              "Cancelar",
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                            onPressed: () => Navigator.pop(context)),
-                        MaterialButton(
-                            child: const Text(
-                              "Si, borrar",
-                              style: TextStyle(color: Colors.red),
-                            ),
-                            onPressed: () async {
-                              // await UserPreferences.clearAllStored();
-                              setState(() {});
-                              if (!mounted) return;
-                              Navigator.of(context).pop();
-                            }),
-                      ],
-                    );
-                  });
-            },
-          ),
+              color: kDefaultIconDarkColor,
+              onPressed: () async {
+                setState(() {
+                  selectionMode = !selectionMode;
+                  selects = List.generate(clienteService.clientes.length, (i) => false);
+                });
+              },
+              icon: const Icon(Icons.join_full_outlined))
         ],
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Container(
-                  height: MediaQuery.of(context).size.height * .69,
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Container(
+            height: MediaQuery.of(context).size.height * .9,
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFFFFF),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.only(left: 20),
+                  width: MediaQuery.of(context).size.width * .9,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
+                    color: Theme.of(context).highlightColor,
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: ListView.builder(
-                    itemCount: clienteService.clientes.length,
-                    itemBuilder: (BuildContext context, int i) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          // foregroundColor: Colors.black,
-                          backgroundColor: Colors.black,
+                  child: TextField(
+                    onChanged: (value) {
+                      if (value.isEmpty) {
+                        busqueda = null;
+                        setState(() {});
 
-                          maxRadius: 18,
-                          child: clienteService.clientes[i].nombre.length >= 2
-                              ? Text(
-                                  clienteService.clientes[i].nombre
-                                      .toUpperCase()
-                                      .substring(0, 2),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                )
-                              : null,
-                        ),
+                        return;
+                      }
+
+                      busqueda = clienteService.searchOnPedidos(value);
+                      setState(() {});
+                    },
+                    decoration: const InputDecoration(
+                      focusedBorder: InputBorder.none,
+                      border: InputBorder.none,
+                      hintText: "Buscar...",
+                    ),
+                  ),
+                ),
+                if (busqueda != null)
+                  ListView.builder(
+                    itemCount: busqueda!.first.length,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int i) {
+                      final item = busqueda!.first[i] as Item;
+                      return ListTile(
                         title: Text(
-                          clienteService.clientes[i].nombre,
+                          item.nombre,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        trailing: Text(
-                            "${clienteService.clientes[i].fecha.day}- ${clienteService.clientes[i].fecha.month}"),
-                        onTap: () {
-                          Navigator.pushNamed(context, "pedido",
-                              arguments: clienteService.clientes[i]);
-                        },
-                        onLongPress: () {
-                          showDialog(
+                        trailing: Text('\$ ${item.precio}'),
+                      );
+                    },
+                  ),
+                if (busqueda != null) const Divider(color: Colors.grey),
+                if (busqueda != null) const Divider(color: Colors.blueGrey),
+                if (busqueda != null)
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: busqueda!.last.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        final item = busqueda!.last[i] as Pedido;
+                        return ListTile(
+                          title: Text(
+                            item.nombre,
+                          ),
+                          onTap: () {
+                            Navigator.pushNamed(context, "pedido", arguments: item);
+                          },
+                          trailing: Text(
+                            Utils.formatDate(item.fecha),
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.normal),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                if (busqueda == null)
+                  Flexible(
+                    child: ListView.builder(
+                      itemCount: clienteService.clientes.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        final cliente = clienteService.clientes[i];
+                        return ListTile(
+                          leading: selectionMode
+                              ? (selects[i]
+                                  ? const Icon(
+                                      Icons.check_circle,
+                                      color: Colors.blueGrey,
+                                    )
+                                  : null)
+                              : CircleAvatar(
+                                  backgroundColor: Colors.blueGrey,
+                                  maxRadius: 18,
+                                  child: cliente.nombre.length >= 2
+                                      ? Text(
+                                          cliente.nombre.toUpperCase().substring(0, 2),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        )
+                                      : null,
+                                ),
+                          title: Text(
+                            cliente.nombre,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          trailing: Text(
+                            Utils.formatDate(cliente.fecha),
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.normal),
+                          ),
+                          onTap: () {
+                            if (selectionMode) {
+                              setState(() {
+                                selects[i] = !selects[i];
+                              });
+                            } else {
+                              Navigator.pushNamed(context, "pedido", arguments: cliente);
+                            }
+                          },
+                          onLongPress: () {
+                            showDialog(
                               context: context,
                               builder: (_) {
                                 return AlertDialog(
@@ -112,43 +207,73 @@ class _TodosPageState extends State<TodosPage> {
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   title: const Text("Eliminar"),
-                                  content: Text(
-                                      "Eliminar el pedido de ${clienteService.clientes[i].nombre} ?"),
+                                  content:
+                                      Text("Eliminar el pedido de ${cliente.nombre} ?"),
                                   actions: <Widget>[
                                     MaterialButton(
                                         child: const Text(
                                           "Cancelar",
                                           style: TextStyle(color: Colors.blue),
                                         ),
-                                        onPressed: () =>
-                                            Navigator.pop(context)),
+                                        onPressed: () => Navigator.pop(context)),
                                     MaterialButton(
                                         child: const Text(
                                           "Si, borrar",
                                           style: TextStyle(color: Colors.red),
                                         ),
                                         onPressed: () {
-                                          var key = clienteService
-                                              .clientes[i]
-                                              // .toList()[i]
-                                              .key
-                                              .toString();
+                                          var key = cliente.key.toString();
                                           clienteService.deletePedido(i, key);
                                           Navigator.pop(context);
                                         }),
                                   ],
                                 );
-                              });
-                        },
-                      );
-                    },
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  void deleteForever(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: const Text("Eliminar"),
+          content: const Text("Eliminar todos los pedidos ?"),
+          actions: <Widget>[
+            MaterialButton(
+                child: const Text(
+                  "Cancelar",
+                  style: TextStyle(color: Colors.blue),
+                ),
+                onPressed: () => Navigator.pop(context)),
+            MaterialButton(
+                child: const Text(
+                  "Si, borrar",
+                  style: TextStyle(color: Colors.red),
+                ),
+                onPressed: () async {
+                  // await UserPreferences.clearAllStored();
+                  setState(() {});
+                  if (!mounted) return;
+                  Navigator.of(context).pop();
+                }),
+          ],
+        );
+      },
     );
   }
 }

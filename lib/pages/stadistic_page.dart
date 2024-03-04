@@ -15,10 +15,8 @@ class _StadisticPageState extends State<StadisticPage>
   int _tabIndex = 0;
 
   final List<BottomNavigationBarItem> _items = [
-    const BottomNavigationBarItem(
-        icon: Icon(Icons.data_object), label: 'Datos'),
-    const BottomNavigationBarItem(
-        icon: Icon(Icons.graphic_eq), label: 'Ventas'),
+    const BottomNavigationBarItem(icon: Icon(Icons.data_object), label: 'Datos'),
+    const BottomNavigationBarItem(icon: Icon(Icons.graphic_eq), label: 'Ventas'),
   ];
 
   @override
@@ -39,10 +37,7 @@ class _StadisticPageState extends State<StadisticPage>
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [Colors.grey.shade600, Colors.grey.shade400]),
-          ),
+          color: Colors.grey,
           child: TabBarView(
             controller: _controller,
             children: const [
@@ -53,7 +48,7 @@ class _StadisticPageState extends State<StadisticPage>
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: _items,
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.blueGrey,
           currentIndex: _tabIndex,
           elevation: 8,
           unselectedItemColor: Colors.white54,

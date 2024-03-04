@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dist_v2/api/api.dart';
 import 'package:dist_v2/api/pdf_stock_api.dart';
 import 'package:dist_v2/services/stock_service.dart';
@@ -13,11 +15,18 @@ class StockPage extends StatefulWidget {
 
 class _StockPageState extends State<StockPage> {
   late StockService stockService;
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => stockService.init());
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 
   @override
@@ -27,11 +36,10 @@ class _StockPageState extends State<StockPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.blueGrey,
         title: const Text('Stock'),
         actions: [
-          ElevatedButton.icon(
-            label: const Text('Exportar'),
+          IconButton(
             onPressed: () async {
               final pdffile = await PdfStockApi.generate(
                   stockService.stockFiltered.isNotEmpty
@@ -39,65 +47,56 @@ class _StockPageState extends State<StockPage> {
                       : stockService.stock);
               PdfApi.openFile(pdffile);
             },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.black),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: kDefaultIconDarkColor,
+              backgroundColor: Colors.blueGrey,
             ),
-            icon: const Icon(
-              Icons.exit_to_app,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.picture_as_pdf),
           ),
-          ElevatedButton.icon(
-            label: const Text('Nuevo'),
+          IconButton(
             onPressed: () => _showAddDialog(context),
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.black),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueGrey,
+              foregroundColor: kDefaultIconDarkColor,
             ),
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.add),
           ),
         ],
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height * .69,
+        // height: MediaQuery.of(context).size.height * .69,
         decoration: BoxDecoration(
           color: const Color(0xFFFFFFFF),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Column(
           children: [
-            Expanded(
-              flex: 2,
-              child: Container(
-                margin: const EdgeInsets.all(20),
-                padding: const EdgeInsets.only(left: 20),
-                width: MediaQuery.of(context).size.width * .75,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: TextField(
-                  onChanged: (value) {
-                    if (value.isEmpty) return;
+            Container(
+              margin: const EdgeInsets.all(20),
+              padding: const EdgeInsets.only(left: 20),
+              width: MediaQuery.of(context).size.width * .9,
+              decoration: BoxDecoration(
+                color: Theme.of(context).highlightColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: TextField(
+                onChanged: (value) {
+                  if (value.isEmpty) return;
 
-                    stockService.searchItem(value);
+                  stockService.searchItem(value);
 
-                    if (value.isNotEmpty) {
-                      stockService.sort();
-                    }
-                  },
-                  decoration: const InputDecoration(
-                    focusedBorder: InputBorder.none,
-                    border: InputBorder.none,
-                    hintText: "Buscar...",
-                  ),
+                  if (value.isNotEmpty) {
+                    stockService.sort();
+                  }
+                },
+                decoration: const InputDecoration(
+                  focusedBorder: InputBorder.none,
+                  border: InputBorder.none,
+                  hintText: "Buscar...",
                 ),
               ),
             ),
             Flexible(
-              flex: 4,
               child: ListView.builder(
                 itemCount: stockService.stockFiltered.isNotEmpty
                     ? stockService.stockFiltered.length
@@ -108,30 +107,32 @@ class _StockPageState extends State<StockPage> {
                       : stockService.stock[index];
                   return ListTile(
                     title: Text(item.name.toUpperCase()),
-                    subtitle: Text(item.cant.toString()),
+                    subtitle: Text('${item.cant}'),
                     onLongPress: (() {
                       stockService.removeByName(item.name);
                     }),
                     trailing: SizedBox(
-                      width: MediaQuery.of(context).size.width * .2,
-                      child: Row(children: [
-                        IconButton(
-                          color: Colors.black,
-                          icon: const Icon(Icons.remove_circle_outline_sharp),
-                          onPressed: () {
-                            if (item.cant > 0) {
-                              stockService.addCantToItem(item.id, cant: -1);
-                            }
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          color: Colors.black,
-                          onPressed: () {
-                            stockService.addCantToItem(item.id);
-                          },
-                        ),
-                      ]),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            color: kDefaultIconDarkColor,
+                            icon: const Icon(Icons.remove_circle_outline_sharp),
+                            onPressed: () {
+                              if (item.cant > 0) {
+                                stockService.addCantToItem(item.id, cant: -1);
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            color: kDefaultIconDarkColor,
+                            onPressed: () {
+                              stockService.addCantToItem(item.id);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -177,8 +178,7 @@ class _StockPageState extends State<StockPage> {
                   style: TextStyle(color: Colors.blue),
                 ),
                 onPressed: () {
-                  if (namecontroller.text.isNotEmpty &&
-                      cantController.text.isNotEmpty) {
+                  if (namecontroller.text.isNotEmpty && cantController.text.isNotEmpty) {
                     final stockService =
                         Provider.of<StockService>(context, listen: false);
                     stockService.createNew(

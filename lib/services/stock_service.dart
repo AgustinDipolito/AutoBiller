@@ -18,6 +18,7 @@ class StockService with ChangeNotifier {
     for (var element in stock) {
       if (element.id == id) {
         element.cant += cant;
+        element.fechaMod = DateTime.now();
       }
     }
     final stockJson = json.encode(stock);
@@ -38,12 +39,12 @@ class StockService with ChangeNotifier {
         cant: cant,
         name: name,
         id: lastId,
+        fechaMod: DateTime.now(),
+        ultCant: cant,
       ));
 
       final stockJson = json.encode(stock);
       UserPreferences.setStock(stockJson, 'Unique');
-      // print('ID:::');
-      // print(lastId);
 
       notifyListeners();
     }
@@ -73,19 +74,39 @@ class StockService with ChangeNotifier {
 
     notifyListeners();
   }
+
+  void setLastNumber(int id, int cant) {
+    for (var element in stock) {
+      if (element.id == id) {
+        element.ultCant = cant;
+      }
+    }
+    final stockJson = json.encode(stock);
+    UserPreferences.setStock(stockJson, 'Unique');
+    notifyListeners();
+  }
 }
 
 class Stock {
+  final int id;
   int cant;
   String name;
-  final int id;
+  DateTime fechaMod;
+  int ultCant;
 
-  Stock({required this.cant, required this.name, required this.id});
+  Stock(
+      {required this.fechaMod,
+      required this.ultCant,
+      required this.cant,
+      required this.name,
+      required this.id});
 
   factory Stock.fromJson(Map<String, dynamic> json) => Stock(
         cant: int.parse(json['cant']),
         name: json['name'],
         id: int.parse(json['id']),
+        fechaMod: json['date'] != null ? DateTime.parse(json['date']) : DateTime(2023),
+        ultCant: json['ultimaCant'] != null ? int.parse(json['ultimaCant']) : 0,
       );
 
   Map<String, dynamic> toJson() {
@@ -93,6 +114,8 @@ class Stock {
       "name": name,
       "cant": cant.toString(),
       "id": id.toString(),
+      "date": fechaMod.toString(),
+      "ultimaCant": ultCant.toString(),
     };
   }
 }

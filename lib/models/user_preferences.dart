@@ -6,8 +6,7 @@ import 'package:dist_v2/services/stock_service.dart';
 
 class UserPreferences {
   static SharedPreferences? _preferences;
-  static Future init() async =>
-      _preferences = await SharedPreferences.getInstance();
+  static Future init() async => _preferences = await SharedPreferences.getInstance();
 
   static Future setPedido(String lista, String key) async {
     await _preferences!.setString("pedidos$key", lista);
@@ -18,11 +17,8 @@ class UserPreferences {
   }
 
   static List<Stock> getStock() {
-    var key = _preferences!
-        .getKeys()
-        .firstWhere((element) => element.startsWith('stock'));
-    // _preferences!.remove('stock1');
-    // _preferences!.remove('stock2');
+    var key =
+        _preferences!.getKeys().firstWhere((element) => element.startsWith('stock'));
 
     try {
       List<Stock> stock = <Stock>[];
@@ -45,10 +41,7 @@ class UserPreferences {
   }
 
   static List<Pedido> getPedidos() {
-    var keys = _preferences!
-        .getKeys()
-        .where((element) => element.startsWith('pedido'));
-
+    var keys = _preferences!.getKeys().where((element) => element.startsWith('pedido'));
     try {
       List<Pedido> pedidos = [];
       List<String> keysPedidos = [];
@@ -81,9 +74,6 @@ class UserPreferences {
 
   static Future clearAllStored() async {
     await _preferences!.clear();
-
-    // print(getPedidos());
-    // deleteOne(0, true);
   }
 
   static Future deleteOne(String key, bool firstTime) async {

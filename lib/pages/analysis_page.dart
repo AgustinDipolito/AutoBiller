@@ -1,6 +1,7 @@
 import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/models/vip_item.dart';
 import 'package:dist_v2/services/analysis_service.dart';
+import 'package:dist_v2/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,79 +39,93 @@ class _AnalysisPageState extends State<AnalysisPage> {
     analysisService = Provider.of<AnalysisService>(context);
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _button(
-              name: 'abc',
-              action: () {
-                tops = analysisService.sortList(SortBy.nameDown);
-              },
+        ColoredBox(
+          color: Colors.blueGrey,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _button(
+                  name: 'abc',
+                  action: () {
+                    tops = analysisService.sortList(SortBy.nameUp);
+                  },
+                ),
+                _button(
+                  name: 'zxy',
+                  action: () {
+                    tops = analysisService.sortList(SortBy.nameDown);
+                  },
+                ),
+                _button(
+                  name: 'max cant',
+                  action: () {
+                    tops = analysisService.sortList(SortBy.cantDown);
+                  },
+                ),
+                _button(
+                  name: 'min cant',
+                  action: () {
+                    tops = analysisService.sortList(SortBy.cantUp);
+                  },
+                ),
+                _button(
+                  name: 'max rep',
+                  action: () {
+                    tops = analysisService.sortList(SortBy.repsDown);
+                  },
+                ),
+                _button(
+                  name: 'min rep',
+                  action: () {
+                    tops = analysisService.sortList(SortBy.repsUp);
+                  },
+                ),
+                _button(
+                  name: '\$\$\$',
+                  action: () {
+                    tops = analysisService.sortList(SortBy.raisedDown);
+                  },
+                ),
+                _button(
+                  name: '\$',
+                  action: () {
+                    tops = analysisService.sortList(SortBy.raisedUp);
+                  },
+                ),
+              ],
             ),
-            _button(
-              name: 'zxy',
-              action: () {
-                tops = analysisService.sortList(SortBy.nameUp);
-              },
-            ),
-            _button(
-              name: 'max cant',
-              action: () {
-                tops = analysisService.sortList(SortBy.cantDown);
-              },
-            ),
-            _button(
-              name: 'min cant',
-              action: () {
-                tops = analysisService.sortList(SortBy.cantUp);
-              },
-            ),
-            _button(
-              name: 'max rep',
-              action: () {
-                tops = analysisService.sortList(SortBy.repsDown);
-              },
-            ),
-            _button(
-              name: 'min rep',
-              action: () {
-                tops = analysisService.sortList(SortBy.repsUp);
-              },
-            ),
-            _button(
-              name: '\$\$\$',
-              action: () {
-                tops = analysisService.sortList(SortBy.raisedDown);
-              },
-            ),
-            _button(
-              name: '\$',
-              action: () {
-                tops = analysisService.sortList(SortBy.raisedDown);
-              },
-            ),
-          ],
+          ),
         ),
-        SingleChildScrollView(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * .64,
-            child: ListView.builder(
-              itemCount: tops.length,
-              itemBuilder: (_, int index) {
-                return Column(
-                  children: [
-                    ListTile(
-                      title: Text(
-                          'Cant. total: ${tops[index].cantTotal}, reps: ${tops[index].repeticiones}'),
-                      subtitle: Text(
-                          '${tops[index].nombre},   \$ ${tops[index].recaudado}'),
+        Flexible(
+          child: ListView.builder(
+            itemCount: tops.length,
+            itemBuilder: (_, int index) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ListTile(
+                    title: Text(tops[index].nombre),
+                    trailing: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(Utils.formatPrice(tops[index].recaudado.toDouble())),
+                        Text('Total: ${tops[index].cantTotal}'),
+                        Text('Reps: ${tops[index].repeticiones}'),
+                      ],
                     ),
-                    const Divider(),
-                  ],
-                );
-              },
-            ),
+                  ),
+                  const Divider(
+                    color: Colors.blueGrey,
+                    endIndent: 16,
+                    indent: 16,
+                    thickness: 0,
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ],
@@ -118,14 +133,11 @@ class _AnalysisPageState extends State<AnalysisPage> {
   }
 
   Widget _button({required Function() action, required String name}) {
-    return IconButton(
-      onPressed: () => action(),
-      color: const Color(0xFFE6E6E6),
-      icon: FittedBox(
-        child: Text(
-          name,
-          // color: const Color(0xFF404040),
-        ),
+    return TextButton(
+      onPressed: action,
+      child: Text(
+        name,
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }

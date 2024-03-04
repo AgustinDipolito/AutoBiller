@@ -3,7 +3,7 @@ import 'package:dist_v2/models/item.dart';
 
 class Pedido {
   final String nombre;
-  String? listaString = "";
+  String? msg;
   final int total;
   final DateTime fecha;
   late final List<Item> lista;
@@ -15,15 +15,16 @@ class Pedido {
     required this.lista,
     required this.key,
     required this.total,
+    this.msg,
   });
 
   factory Pedido.fromJson(Map<String, dynamic> json) => Pedido(
-        nombre: json["nombre"],
-        fecha: DateTime.parse(json["fecha"]),
-        lista: List<Item>.from(json["lista"].map((x) => Item.fromJson(x))),
-        key: ValueKey(json["key"]),
-        total: int.parse(json["total"]),
-      );
+      nombre: json["nombre"],
+      fecha: DateTime.parse(json["fecha"]),
+      lista: List<Item>.from(json["lista"].map((x) => Item.fromJson(x))),
+      key: ValueKey(json["key"]),
+      total: int.parse(json["total"]),
+      msg: json['msg']);
 
   Map<String, dynamic> toJson() {
     return {
@@ -32,6 +33,7 @@ class Pedido {
       "lista": lista,
       "key": key.toString(),
       "total": total.toString(),
+      'msg': msg,
     };
   }
 }

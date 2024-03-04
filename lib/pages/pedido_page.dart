@@ -16,40 +16,51 @@ class PedidoPage extends StatefulWidget {
 }
 
 class _PedidoPageState extends State<PedidoPage> {
-  final List<bool> _selected = List.generate(100, (i) => false);
+  List<bool> selecteds = [];
   @override
   Widget build(BuildContext context) {
-    final cliente = ModalRoute.of(context)!.settings.arguments as Pedido;
+    final pedido = ModalRoute.of(context)!.settings.arguments as Pedido;
+
+    selecteds = List.generate(pedido.lista.length, (i) => false);
     return SafeArea(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Colors.grey.shade600, Colors.grey.shade400]),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Scaffold(
+        backgroundColor: Colors.grey,
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Text("${pedido.nombre} \$ ${pedido.total}"),
+              Text(
+                "${pedido.lista.length} items.",
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+              ),
+              Text(
+                pedido.msg ?? '',
+                style: const TextStyle(
+                    color: Colors.white, fontSize: 14, fontWeight: FontWeight.normal),
+              ),
+              //TODO agregar textfield y accion al editar
               Container(
-                width: MediaQuery.of(context).size.width * .6,
-                height: MediaQuery.of(context).size.height * .90,
+                width: MediaQuery.of(context).size.width * .9,
+                height: MediaQuery.of(context).size.height * .6,
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: cliente.lista.length,
+                  itemCount: pedido.lista.length,
                   itemBuilder: (context, i) {
                     return Container(
-                      color: _selected[i] ? const Color(0xFF808080) : null,
+                      color: selecteds[i] ? const Color(0xFF808080) : null,
                       child: ListTile(
-                        leading: Text("${cliente.lista[i].cantidad}"),
+                        leading: Text("${pedido.lista[i].cantidad}"),
                         onLongPress: () => _switchColor(i),
                         title: RichText(
                           text: TextSpan(
-                            text: cliente.lista[i].nombre,
+                            text: pedido.lista[i].nombre,
                             style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -58,11 +69,10 @@ class _PedidoPageState extends State<PedidoPage> {
                               const TextSpan(
                                 text: "  ---   ",
                                 style: TextStyle(
-                                    color: Colors.black45,
-                                    fontWeight: FontWeight.w200),
+                                    color: Colors.black45, fontWeight: FontWeight.w200),
                               ),
                               TextSpan(
-                                text: cliente.lista[i].tipo,
+                                text: pedido.lista[i].tipo,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
@@ -73,7 +83,7 @@ class _PedidoPageState extends State<PedidoPage> {
                         ),
                         trailing: RichText(
                           text: TextSpan(
-                            text: "${cliente.lista[i].precioT}",
+                            text: "${pedido.lista[i].precioT}",
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w100,
@@ -85,131 +95,83 @@ class _PedidoPageState extends State<PedidoPage> {
                   },
                 ),
               ),
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text("${cliente.nombre}\n\$${cliente.total}"),
-                    Container(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width * .2,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE6E6E6),
-                        borderRadius: BorderRadius.circular(15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .3,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const StadiumBorder(),
+                        elevation: 4,
+                        backgroundColor: Colors.blueGrey,
                       ),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          elevation: 0,
-                          backgroundColor: const Color(0xFFE6E6E6),
+                      onPressed: () async {
+                        final invoice = _generateInvoice(pedido);
+                        final pdffile = await PdfInvoiceApi.generate(invoice);
+                        await PdfApi.openFile(pdffile);
+                      },
+                      child: const Center(
+                        child: Text(
+                          "PDF",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                          ),
                         ),
-                        onPressed: () async {
-                          final date = DateTime.now();
-                          final dueDate = date.add(const Duration(days: 3));
-                          final List<InvoiceItem> lista = <InvoiceItem>[];
-                          for (var item in cliente.lista) {
-                            lista.add(
-                              InvoiceItem(
-                                  description: "${item.nombre}-${item.tipo}",
-                                  date: date,
-                                  quantity: item.cantidad,
-                                  unitPrice: item.precio.toDouble()),
-                            );
-                          }
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .3,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const StadiumBorder(),
+                        elevation: 4,
+                        backgroundColor: Colors.blueGrey,
+                      ),
+                      onPressed: () {
+                        final pedidoService =
+                            Provider.of<PedidoService>(context, listen: false);
+                        pedidoService.clearAll();
+                        pedidoService.carrito = pedido.lista;
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      child: const Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Editar",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const StadiumBorder(),
+                        elevation: 4,
+                        backgroundColor: Colors.blueGrey,
+                      ),
+                      onPressed: () {
+                        pedido.lista.sort((a, b) => a.nombre.compareTo(b.nombre));
 
-                          final invoice = Invoice(
-                            info: InvoiceInfo(
-                                date: date,
-                                description: "NOTA DE PRESUPUESTO",
-                                dueDate: dueDate,
-                                number: "${date.day}${date.month}${date.year}"),
-                            supplier: const Supplier(
-                              address: "Eva Peron 417, Temperley.",
-                              name: "DISTRIBUIDORA ALUSOL",
-                              paymentInfo: "+54 9 11 66338293",
-                            ),
-                            customer: Customer(
-                                name: cliente.nombre, address: "Ubicacion: -"),
-                            items: lista,
-                          );
-                          final pdffile = await PdfInvoiceApi.generate(invoice);
-                          PdfApi.openFile(pdffile);
-                        },
-                        child: const Center(
-                          child: Text(
-                            "PDF",
-                            style: TextStyle(
-                              color: Color(0xFF202020),
-                              fontSize: 33,
-                            ),
-                          ),
+                        setState(() {});
+                      },
+                      child: const Text(
+                        'ABC',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
                         ),
                       ),
                     ),
-                    Container(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width * .2,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE6E6E6),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          elevation: 0,
-                          backgroundColor: const Color(0xFFE6E6E6),
-                        ),
-                        onPressed: () {
-                          final pedidoService = Provider.of<PedidoService>(
-                              context,
-                              listen: false);
-                          pedidoService.clearAll();
-                          pedidoService.carrito = cliente.lista;
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        child: const Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Editar",
-                            style: TextStyle(
-                              color: Color(0xFF202020),
-                              fontSize: 33,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * .2,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE6E6E6),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          elevation: 0,
-                          backgroundColor: const Color(0xFFE6E6E6),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Volver",
-                            style: TextStyle(
-                              color: Color(0xFF202020),
-                              fontSize: 32,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               )
             ],
           ),
@@ -218,5 +180,36 @@ class _PedidoPageState extends State<PedidoPage> {
     );
   }
 
-  _switchColor(i) => setState(() => _selected[i] = !_selected[i]);
+  _switchColor(i) => setState(() => selecteds[i] = !selecteds[i]);
+
+  Invoice _generateInvoice(Pedido pedido) {
+    final date = DateTime.now();
+    final dueDate = date.add(const Duration(days: 3));
+    final List<InvoiceItem> lista = <InvoiceItem>[];
+    for (var item in pedido.lista) {
+      lista.add(
+        InvoiceItem(
+            description: "${item.nombre}-${item.tipo}",
+            date: date,
+            quantity: item.cantidad,
+            unitPrice: item.precio.toDouble()),
+      );
+    }
+
+    return Invoice(
+      info: InvoiceInfo(
+        date: date,
+        description: "NOTA DE PRESUPUESTO",
+        dueDate: dueDate,
+        number: (selecteds.length + 1).toString(),
+      ),
+      supplier: const Supplier(
+        address: "Eva Peron 417, Temperley.",
+        name: "DISTRIBUIDORA ALUSOL",
+        paymentInfo: "+54 9 11 66338293",
+      ),
+      customer: Customer(name: pedido.nombre, address: "Ubicacion: -"),
+      items: lista,
+    );
+  }
 }

@@ -15,7 +15,7 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.init();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const Myapp());
 }
 
@@ -33,7 +33,7 @@ class Myapp extends StatelessWidget {
           create: (_) => ClienteService(),
         ),
         ChangeNotifierProvider(
-          create: (_) => ListaService(),
+          create: (_) => ListaService()..readJson(),
         ),
         ChangeNotifierProvider(
           create: (_) => AnalysisService(),
@@ -49,17 +49,7 @@ class Myapp extends StatelessWidget {
         routes: appRoutes,
         theme: ThemeData(
           brightness: Brightness.light,
-          primaryColor: const Color(0xFFE6E6E6),
-          textTheme: const TextTheme(
-            displayLarge: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
-            bodyMedium: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          primaryColor: Colors.white,
         ),
       ),
     );
