@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CarritoWidget extends StatelessWidget {
-  const CarritoWidget({Key? key, this.cliente}) : super(key: key);
+  CarritoWidget({Key? key, this.cliente}) : super(key: key);
   final Pedido? cliente;
+
+  final ValueNotifier<bool> editMode = ValueNotifier(false);
+
   @override
   Widget build(BuildContext context) {
     final pedidoService = Provider.of<PedidoService>(context);
@@ -30,45 +33,52 @@ class CarritoWidget extends StatelessWidget {
                       color: Color(0xFF808080),
                     ),
                   )
-                : ListView.builder(
-                    itemCount: cliente?.lista.length ?? pedidoService.carrito.length,
-                    itemBuilder: (_, i) {
-                      var pedido = cliente?.lista[i] ?? pedidoService.carrito[i];
-                      return Dismissible(
-                        key: ValueKey(pedido),
-                        direction: DismissDirection.startToEnd,
-                        background: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Eliminar",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
+                : ValueListenableBuilder<bool>(
+                    valueListenable: editMode,
+                    builder: (context, isEditMode, _) => ListView.builder(
+                      itemCount: cliente?.lista.length ?? pedidoService.carrito.length,
+                      itemBuilder: (_, i) {
+                        var pedido = cliente?.lista[i] ?? pedidoService.carrito[i];
+                        return Dismissible(
+                          key: ValueKey(pedido),
+                          direction: DismissDirection.startToEnd,
+                          background: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.only(left: 8),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Eliminar",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        onDismissed: (direction) => pedidoService.deleteCarrito(i),
-                        child: ListTile(
-                          onTap: () => pedidoService.addCant(i),
-                          leading: Text("${pedido.cantidad}"),
-                          title: Text(
-                            pedido.nombre,
-                            overflow: TextOverflow.visible,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          onDismissed: (direction) => pedidoService.deleteCarrito(i),
+                          child: ListTile(
+                            onTap: () => pedidoService.addCant(i),
+                            trailing: isEditMode
+                                ? reorderButton(context, pedidoService, i)
+                                : null,
+                            leading:
+                                Text("${isEditMode ? i.toString() : pedido.cantidad}"),
+                            title: Text(
+                              pedido.nombre,
+                              overflow: TextOverflow.visible,
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onLongPress: () => pedidoService.delCant(i),
                           ),
-                          onLongPress: () => pedidoService.delCant(i),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
           ),
         ),
@@ -106,6 +116,26 @@ class CarritoWidget extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     "Vaciar",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: const StadiumBorder(),
+                  elevation: 4,
+                  backgroundColor: Colors.blueGrey,
+                ),
+                onPressed: () {
+                  editMode.value = !editMode.value;
+                },
+                child: const Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Reordenar",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -187,6 +217,54 @@ class CarritoWidget extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  IconButton reorderButton(BuildContext context, PedidoService pedidoService, int i) {
+    return IconButton(
+      icon: const Icon(Icons.move_down),
+      onPressed: () {
+        final posController = TextEditingController();
+
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              title: const Text("Mover a"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    autofocus: true,
+                    controller: posController,
+                    decoration: const InputDecoration(hintText: 'Nueva pos'),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                MaterialButton(
+                    child: const Text(
+                      "Añadir",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    onPressed: () {
+                      final newPos = int.parse(posController.text);
+                      if (newPos <= pedidoService.carrito.length) {
+                        pedidoService.reorderItem(
+                          oldPosition: i,
+                          newPosition: newPos,
+                        );
+                        Navigator.of(context).pop();
+                      }
+                    })
+              ],
+            );
+          },
+        );
+      },
     );
   }
 

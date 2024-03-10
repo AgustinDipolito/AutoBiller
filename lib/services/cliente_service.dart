@@ -33,8 +33,20 @@ class ClienteService with ChangeNotifier {
   editMessage(String msg, Pedido pedido) async {
     pedido.msg = msg;
 
+    // await UserPreferences.deleteOne(pedido.key.toString());
+    final i = _clientes
+        .indexWhere((element) => element.key.toString() == pedido.key.toString());
+    await deletePedido(i, pedido.key.toString());
+
+    if (i <= _clientes.length) {
+      _clientes.insert(i, pedido);
+    } else {
+      _clientes.add(pedido);
+    }
+
     String pedidoString = json.encode(pedido);
     await UserPreferences.setPedido(pedidoString, "${pedido.key}");
+    notifyListeners();
   }
 
   Future<List<Pedido>> loadClientes() async {
@@ -49,7 +61,7 @@ class ClienteService with ChangeNotifier {
   }
 
   deletePedido(int i, String key) async {
-    await UserPreferences.deleteOne(key, true);
+    await UserPreferences.deleteOne(key);
     clientes.removeAt(i);
     notifyListeners();
   }
@@ -61,8 +73,8 @@ class ClienteService with ChangeNotifier {
 
     List<Item> itemsCoincidencia = allItems
         .where((element) => element.nombre.toLowerCase().contains(word.toLowerCase()))
+        .take(4)
         .toList();
-    if (itemsCoincidencia.length > 3) itemsCoincidencia = itemsCoincidencia.sublist(0, 3);
 
     final clientesCoincidencia = clientes
         .where((cliente) =>

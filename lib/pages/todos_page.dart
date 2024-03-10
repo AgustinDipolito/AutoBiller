@@ -184,10 +184,20 @@ class _TodosPageState extends State<TodosPage> {
                             cliente.nombre,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          trailing: Text(
-                            Utils.formatDate(cliente.fecha),
-                            style: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.normal),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (cliente.msg?.isNotEmpty ?? false)
+                                Icon(
+                                  Icons.message,
+                                  color: kDefaultIconDarkColor,
+                                ),
+                              Text(
+                                Utils.formatDate(cliente.fecha),
+                                style: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.normal),
+                              ),
+                            ],
                           ),
                           onTap: () {
                             if (selectionMode) {

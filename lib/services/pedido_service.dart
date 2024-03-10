@@ -23,6 +23,14 @@ class PedidoService with ChangeNotifier {
     notifyListeners();
   }
 
+  void reorderItem({required int oldPosition, required int newPosition}) {
+    final item = carrito[oldPosition];
+
+    carrito.removeAt(oldPosition);
+    carrito.insert(newPosition, item);
+    notifyListeners();
+  }
+
   void deleteCarrito(int i) {
     carrito.removeAt(i);
     notifyListeners();

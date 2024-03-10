@@ -23,7 +23,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text('   A L U S O L ', style: TextStyle(color: Colors.white)),
-              Text('v4.3', style: TextStyle(color: Colors.white, fontSize: 14)),
+              Text('v10.3', style: TextStyle(color: Colors.white, fontSize: 14)),
             ],
           ),
           actions: [
@@ -40,7 +40,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
             IconButton(
               color: kDefaultIconDarkColor,
               onPressed: () => Navigator.pushNamed(context, "todos"),
-              icon: const Icon(Icons.person),
+              icon: const Icon(Icons.people_sharp),
             ),
           ],
         ),
@@ -48,13 +48,13 @@ class _PrincipalPageState extends State<PrincipalPage> {
           color: Colors.grey,
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(flex: 2, child: CarritoWidget()),
-              top.SearchBar(),
-              Expanded(
+              const top.SearchBar(),
+              const Expanded(
                 child: ProductsList(),
               ),
             ],

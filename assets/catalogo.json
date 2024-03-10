@@ -356,19 +356,19 @@
     {
         "nombre": "CIERRE 1070 CHAMICAL ",
         "tipo": "x50",
-        "precio": "74739",
+        "precio": "91300",
         "ID": "60"
     },
     {
         "nombre": "CIERRE 1096 CHAMICAL",
         "tipo": "x12",
-        "precio": "49931",
+        "precio": "61000",
         "ID": "61"
     },
     {
         "nombre": "CIERRE 1099 CHAMICAL",
         "tipo": "x25",
-        "precio": "51187",
+        "precio": "62600",
         "ID": "62"
     },
     {
@@ -668,7 +668,7 @@
     {
         "nombre": "PASADOR A PALANCA CHAMICAL T200",
         "tipo": "X12",
-        "precio": "46790",
+        "precio": "54610",
         "ID": "112"
     },
     {

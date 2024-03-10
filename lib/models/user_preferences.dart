@@ -76,7 +76,7 @@ class UserPreferences {
     await _preferences!.clear();
   }
 
-  static Future deleteOne(String key, bool firstTime) async {
+  static Future deleteOne(String key) async {
     var newKey = key.substring(2, key.length - 2);
 
     if (_preferences!.containsKey("pedidos$newKey")) {
