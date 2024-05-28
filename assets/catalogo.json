@@ -2,61 +2,61 @@
     {
         "nombre": "CORDÓN 4,5 mm",
         "tipo": "100 Mts",
-        "precio": "7194",
+        "precio": "6200",
         "ID": "1"
     },
     {
         "nombre": "CORDÓN 5 mm",
         "tipo": "100 Mts",
-        "precio": "7537",
+        "precio": "6600",
         "ID": "2"
     },
     {
         "nombre": "CORDÓN 5,5 mm",
         "tipo": "100 Mts",
-        "precio": "8222",
+        "precio": "7300",
         "ID": "3"
     },
     {
         "nombre": "CORDÓN 6 mm",
         "tipo": "100 Mts",
-        "precio": "9250",
+        "precio": "8000",
         "ID": "4"
     },
     {
         "nombre": "TAPA POSTIGO 25 mm",
         "tipo": "50 Mts",
-        "precio": "11990",
+        "precio": "10600",
         "ID": "5"
     },
     {
         "nombre": "TAPA ROSARIO 32 mm",
         "tipo": "50 Mts",
-        "precio": "24323",
+        "precio": "21000",
         "ID": "6"
     },
     {
         "nombre": "TAPA PESADA 45 mm",
         "tipo": "50 Mts",
-        "precio": "31175",
+        "precio": "28000",
         "ID": "7"
     },
     {
         "nombre": "UNIVERSAL LIVIANO",
         "tipo": "100 Mts",
-        "precio": "23980",
+        "precio": "21500",
         "ID": "8"
     },
     {
         "nombre": "UNIVERSAL ESTANDAR",
         "tipo": "100 Mts",
-        "precio": "28434",
+        "precio": "24600",
         "ID": "9"
     },
     {
         "nombre": "UNIVERSAL PESADO",
         "tipo": "100 Mts",
-        "precio": "31517",
+        "precio": "27900",
         "ID": "10"
     },
     {
@@ -68,19 +68,19 @@
     {
         "nombre": "CUÑA N°10 VIDRIO REP 3 mm",
         "tipo": "100 Mts",
-        "precio": "12675",
+        "precio": "11000",
         "ID": "12"
     },
     {
         "nombre": "CUÑA N°11 VIDRIO REP 4 mm",
         "tipo": "100 Mts",
-        "precio": "11305",
+        "precio": "9600",
         "ID": "13"
     },
     {
         "nombre": "CUÑA N°0",
         "tipo": "100 Mts",
-        "precio": "9250",
+        "precio": "8800",
         "ID": "14"
     },
     {
@@ -92,7 +92,7 @@
     {
         "nombre": "TUBO DE PAÑO FIJO",
         "tipo": "50 Mts",
-        "precio": "19527",
+        "precio": "17000",
         "ID": "16"
     },
     {
@@ -104,31 +104,31 @@
     {
         "nombre": "CUÑA PARAGUAYA CHICA",
         "tipo": "100 Mts ",
-        "precio": "12718",
+        "precio": "14000",
         "ID": "18"
     },
     {
         "nombre": "CUÑA PARAGUAYA MEDIANA",
         "tipo": "100 Mts",
-        "precio": "20426",
+        "precio": "23000",
         "ID": "19"
     },
     {
         "nombre": "CUÑA PARAGUAYA GRANDE",
         "tipo": "100 Mts",
-        "precio": "23509",
+        "precio": "26500",
         "ID": "20"
     },
     {
         "nombre": "CUÑA PARAGUAYA XGRANDE",
         "tipo": "100 Mts",
-        "precio": "33144",
+        "precio": "30000",
         "ID": "21"
     },
     {
         "nombre": "CUÑA PARAGUAYA PESADA",
         "tipo": "100 Mts",
-        "precio": "39396",
+        "precio": "34500",
         "ID": "22"
     },
     {
@@ -140,7 +140,7 @@
     {
         "nombre": "CUÑA PARAGUAYA MULTI",
         "tipo": "100 Mts",
-        "precio": "28091",
+        "precio": "24000",
         "ID": "24"
     },
     {
@@ -152,13 +152,13 @@
     {
         "nombre": "LAT. MOSQUITERO PESADO",
         "tipo": "100 Mts",
-        "precio": "33573",
+        "precio": "29600",
         "ID": "26"
     },
     {
         "nombre": "LAT. MOSQUITERO LIVIANO",
         "tipo": "100 Mts",
-        "precio": "27749",
+        "precio": "24600",
         "ID": "27"
     },
     {
@@ -200,19 +200,19 @@
     {
         "nombre": "BIPUNTO MODENA 90",
         "tipo": "UNIDAD",
-        "precio": "20662",
+        "precio": "18500",
         "ID": "34"
     },
     {
         "nombre": "BIPUNTO MODENA 45",
         "tipo": "UNIDAD",
-        "precio": "24213",
+        "precio": "20500",
         "ID": "35"
     },
     {
         "nombre": "BIPUNTO A30",
         "tipo": "UNIDAD",
-        "precio": "29377",
+        "precio": "22800",
         "ID": "36"
     },
     {
@@ -224,13 +224,13 @@
     {
         "nombre": "H33 AXAL",
         "tipo": "X12",
-        "precio": "22924",
+        "precio": "18450",
         "ID": "38"
     },
     {
         "nombre": "FLH1 AXAL",
         "tipo": "X12",
-        "precio": "22924",
+        "precio": "18450",
         "ID": "39"
     },
     {
@@ -247,14 +247,14 @@
     },
     {
         "nombre": "H62 ZAMAC",
-        "tipo": "X12",
-        "precio": "72638",
+        "tipo": "UNIDAD",
+        "precio": "4500",
         "ID": "42"
     },
     {
-        "nombre": "H62 ZAMAC",
+        "nombre": "H82",
         "tipo": "UNIDAD",
-        "precio": "6000",
+        "precio": "5500",
         "ID": "43"
     },
     {
@@ -278,25 +278,25 @@
     {
         "nombre": "H63 OMBU CORTO",
         "tipo": "XPAR",
-        "precio": "22610",
+        "precio": "13622",
         "ID": "47"
     },
     {
         "nombre": "H63 OMBU LARGO",
         "tipo": "XPAR",
-        "precio": "24494",
+        "precio": "14910",
         "ID": "48"
     },
     {
         "nombre": "H63 CORTO ECONOMICO ",
         "tipo": "XPAR",
-        "precio": "18401",
+        "precio": "15000",
         "ID": "49"
     },
     {
         "nombre": "H63 LARGO ECONOMICO",
         "tipo": "XPAR",
-        "precio": "19048",
+        "precio": "16000",
         "ID": "50"
     },
     {
@@ -344,7 +344,7 @@
     {
         "nombre": "CIERRE MILENIO H56 ALUMINIO",
         "tipo": "X20",
-        "precio": "125612",
+        "precio": "93955",
         "ID": "58"
     },
     {
@@ -512,7 +512,7 @@
     {
         "nombre": "PARTE C",
         "tipo": "X50",
-        "precio": "14759",
+        "precio": "16400",
         "ID": "86"
     },
     {
@@ -524,7 +524,7 @@
     {
         "nombre": "PARTE A 70.5 71.8 ESCUADRA M/CORRE",
         "tipo": "x100",
-        "precio": "37055",
+        "precio": "40000",
         "ID": "88"
     },
     {
@@ -554,7 +554,7 @@
     {
         "nombre": "PARTE B ESCUADRA MOSQUITERO",
         "tipo": "x100",
-        "precio": "11933",
+        "precio": "15600",
         "ID": "93"
     },
     {
@@ -602,7 +602,7 @@
     {
         "nombre": "E71",
         "tipo": "X20",
-        "precio": "13817",
+        "precio": "17300",
         "ID": "101"
     },
     {
@@ -626,7 +626,7 @@
     {
         "nombre": "AA008",
         "tipo": "X100",
-        "precio": "45534",
+        "precio": "49586",
         "ID": "105"
     },
     {
@@ -637,794 +637,494 @@
     },
     {
         "nombre": "FLEX 7X4,5 ",
-        "tipo": "ROLLO",
-        "precio": "53699",
+        "tipo": "250 MTS",
+        "precio": "30000",
         "ID": "107"
     },
     {
-        "nombre": "FLEX 7X6",
-        "tipo": "ROLLO",
-        "precio": "64690",
+        "nombre": "FLEX 7X4,5 AXAL",
+        "tipo": "300 MTS",
+        "precio": "53699",
         "ID": "108"
+    },
+    {
+        "nombre": "FLEX 7X6",
+        "tipo": "300 MTS",
+        "precio": "64690",
+        "ID": "109"
     },
     {
         "nombre": "MOVIMIENTO 2 ALETAS",
         "tipo": "XPAR",
         "precio": "12561",
-        "ID": "109"
+        "ID": "110"
     },
     {
         "nombre": "MOVIMIENTO 3 ALETAS",
         "tipo": "XPAR",
         "precio": "15073",
-        "ID": "110"
+        "ID": "111"
     },
     {
         "nombre": "MOVIMIENTO 4 ALETAS",
         "tipo": "XPAR",
         "precio": "17586",
-        "ID": "111"
+        "ID": "112"
     },
     {
         "nombre": "PASADOR A PALANCA CHAMICAL T200",
         "tipo": "X12",
-        "precio": "54610",
-        "ID": "112"
+        "precio": "54600",
+        "ID": "113"
     },
     {
         "nombre": "PASADOR A PALANCA CHAMICAL T600",
         "tipo": "X12",
         "precio": "58724",
-        "ID": "113"
+        "ID": "114"
     },
     {
         "nombre": "PASADOR H42 PUERTA",
         "tipo": "XPAR",
         "precio": "25122",
-        "ID": "114"
+        "ID": "115"
     },
     {
         "nombre": "PASADOR H43 TRABA VARILLA SIMPLE",
         "tipo": "UNIDAD",
         "precio": "2512",
-        "ID": "115"
+        "ID": "116"
     },
     {
         "nombre": "PASADOR H49 VENTANA",
         "tipo": "XPAR",
         "precio": "2198",
-        "ID": "116"
+        "ID": "117"
     },
     {
         "nombre": "H50 MASTER ALUMINIO",
         "tipo": "UNIDAD",
         "precio": "17111",
-        "ID": "117"
+        "ID": "118"
     },
     {
         "nombre": "H50 EMI ALUMINIO",
         "tipo": "UNIDAD",
         "precio": "15073",
-        "ID": "118"
+        "ID": "119"
     },
     {
         "nombre": "H50 EMI PLASTICO",
         "tipo": "UNIDAD",
         "precio": "2198",
-        "ID": "119"
+        "ID": "120"
     },
     {
         "nombre": "SELFIX M2",
         "tipo": "UNIDAD",
         "precio": "2826",
-        "ID": "120"
+        "ID": "121"
     },
     {
         "nombre": "SELFIX REDONDO",
         "tipo": "UNIDAD",
         "precio": "6909",
-        "ID": "121"
+        "ID": "122"
+    },
+    {
+        "nombre": "PICAPORTE MILENIO",
+        "tipo": "UNIDAD",
+        "precio": "9800",
+        "ID": "123"
     },
     {
         "nombre": "R39",
         "tipo": "X20",
         "precio": "41452",
-        "ID": "122"
+        "ID": "124"
     },
     {
         "nombre": "R40 AXAL",
         "tipo": "X20",
-        "precio": "82590",
-        "ID": "123"
+        "precio": "50000",
+        "ID": "125"
     },
     {
         "nombre": "R40 AZZURRA 40KG",
         "tipo": "X20",
         "precio": "38800",
-        "ID": "124"
+        "ID": "126"
     },
     {
         "nombre": "R42 AXAL",
         "tipo": "X20",
-        "precio": "133777",
-        "ID": "125"
+        "precio": "80750",
+        "ID": "127"
     },
     {
         "nombre": "R42 AZZURRA 80KG",
         "tipo": "X20",
         "precio": "92500",
-        "ID": "126"
+        "ID": "128"
     },
     {
         "nombre": "RO105",
         "tipo": "X20",
-        "precio": "82590",
-        "ID": "127"
+        "precio": "50000",
+        "ID": "129"
     },
     {
         "nombre": "RO115",
         "tipo": "X20",
-        "precio": "133777",
-        "ID": "128"
+        "precio": "80750",
+        "ID": "130"
     },
     {
         "nombre": "3003 N",
         "tipo": "X50",
         "precio": "72541",
-        "ID": "129"
+        "ID": "131"
     },
     {
         "nombre": "RUEDA SIMPLE REG. HERRERO",
         "tipo": "X20",
         "precio": "44278",
-        "ID": "130"
+        "ID": "132"
     },
     {
         "nombre": "RUEDA DOBLE REG. HERRERO",
         "tipo": "X20",
         "precio": "68772",
-        "ID": "131"
+        "ID": "133"
     },
     {
         "nombre": "CARRO SIMPLE C/MUNICIÓN",
         "tipo": "X100",
         "precio": "16644",
-        "ID": "132"
+        "ID": "134"
     },
     {
         "nombre": "CARRO DOBLE C/MUNICIÓN",
         "tipo": "X100",
         "precio": "31717",
-        "ID": "133"
+        "ID": "135"
     },
     {
         "nombre": "CARRO SIMPLE PLASTICO",
         "tipo": "X100",
         "precio": "4082",
-        "ID": "134"
+        "ID": "136"
     },
     {
         "nombre": "CARRO DOBLE PLASTICO",
         "tipo": "X100",
         "precio": "7537",
-        "ID": "135"
+        "ID": "137"
     },
     {
         "nombre": "R48",
         "tipo": "X20",
         "precio": "82590",
-        "ID": "136"
+        "ID": "138"
     },
     {
         "nombre": "R49",
         "tipo": "X20",
         "precio": "133777",
-        "ID": "137"
+        "ID": "139"
     },
     {
         "nombre": "R46",
-        "tipo": "X20 O UNI.",
+        "tipo": "X20",
         "precio": "181195",
-        "ID": "138"
+        "ID": "140"
     },
     {
         "nombre": "R47",
-        "tipo": "X20 O UNI.",
+        "tipo": "X20",
         "precio": "267867",
-        "ID": "139"
+        "ID": "141"
     },
     {
         "nombre": "TELA MOSQUITERO 0.60",
         "tipo": "X25 MTS.",
-        "precio": "94800",
-        "ID": "140"
+        "precio": "80000",
+        "ID": "142"
     },
     {
         "nombre": "TELA MOSQUITERO 0.80",
         "tipo": "X25 MTS.",
-        "precio": "117300",
-        "ID": "141"
+        "precio": "104000",
+        "ID": "143"
     },
     {
         "nombre": "TELA MOSQUITERO 1.00",
         "tipo": "X25 MTS.",
-        "precio": "138200",
-        "ID": "142"
+        "precio": "128000",
+        "ID": "144"
     },
     {
         "nombre": "TELA MOSQUITERO 1.20",
         "tipo": "X25 MTS.",
-        "precio": "162400",
-        "ID": "143"
+        "precio": "148000",
+        "ID": "145"
     },
     {
         "nombre": "TELA MOSQUITERO 1.50",
         "tipo": "X25 MTS.",
-        "precio": "204400",
-        "ID": "144"
+        "precio": "182000",
+        "ID": "146"
     },
     {
         "nombre": "9X38",
         "tipo": "X1000",
-        "precio": "42080",
-        "ID": "145"
+        "precio": "35000",
+        "ID": "147"
     },
     {
         "nombre": "10X38",
         "tipo": "X1000",
-        "precio": "42080",
-        "ID": "146"
+        "precio": "35000",
+        "ID": "148"
     },
     {
         "nombre": "7X7 1/6 PANFRAN",
         "tipo": "X1000",
-        "precio": "15073",
-        "ID": "147"
+        "precio": "12000",
+        "ID": "149"
     },
     {
         "nombre": "Riendas",
         "tipo": "x50",
         "precio": "13189",
-        "ID": "148"
+        "ID": "150"
     },
     {
         "nombre": "E-68",
         "tipo": "x100",
         "precio": "7788",
-        "ID": "149"
-    },
-    {
-        "nombre": "E-68 Modena2",
-        "tipo": "x100",
-        "precio": "14759",
-        "ID": "150"
-    },
-    {
-        "nombre": "E-68 Rotonda",
-        "tipo": "x100",
-        "precio": "16330",
         "ID": "151"
-    },
-    {
-        "nombre": "E-68 Flamia",
-        "tipo": "x100",
-        "precio": "16330",
-        "ID": "152"
-    },
-    {
-        "nombre": "E-78",
-        "tipo": "x50",
-        "precio": "7223",
-        "ID": "153"
-    },
-    {
-        "nombre": "E-109",
-        "tipo": "x40",
-        "precio": "14131",
-        "ID": "154"
     },
     {
         "nombre": "E-66",
         "tipo": "x100",
         "precio": "2512",
-        "ID": "155"
-    },
-    {
-        "nombre": "E-73",
-        "tipo": "x100",
-        "precio": "7851",
-        "ID": "156"
-    },
-    {
-        "nombre": "E-98",
-        "tipo": "x200",
-        "precio": "3140",
-        "ID": "157"
-    },
-    {
-        "nombre": "E-98 Alta AA- 208",
-        "tipo": "x200",
-        "precio": "3768",
-        "ID": "158"
-    },
-    {
-        "nombre": "AA 211 - T-155 Negro (sin tornillo)",
-        "tipo": "x100",
-        "precio": "9735",
-        "ID": "159"
-    },
-    {
-        "nombre": "AA 211 - T-155 Blanco (sin tornillo)",
-        "tipo": "x100",
-        "precio": "10677",
-        "ID": "160"
-    },
-    {
-        "nombre": "CNA06 Escuadra de Alineamiento",
-        "tipo": "x40",
-        "precio": "7851",
-        "ID": "161"
-    },
-    {
-        "nombre": "CAN-625\r\nEmbellecedor pata baranda",
-        "tipo": "x100",
-        "precio": "56211",
-        "ID": "162"
-    },
-    {
-        "nombre": "MT-010 (MDT)\r\n",
-        "tipo": "x25",
-        "precio": "15701",
-        "ID": "163"
-    },
-    {
-        "nombre": "MT-312 (MDT)\r\n",
-        "tipo": "x20",
-        "precio": "5653",
-        "ID": "164"
+        "ID": "152"
     },
     {
         "nombre": "T-87",
         "tipo": "x100",
         "precio": "4710",
-        "ID": "165"
-    },
-    {
-        "nombre": "T-87 Modena2",
-        "tipo": "x100",
-        "precio": "5967",
-        "ID": "166"
-    },
-    {
-        "nombre": "T-88",
-        "tipo": "x100",
-        "precio": "6909",
-        "ID": "167"
+        "ID": "153"
     },
     {
         "nombre": "T-89 Negro ",
         "tipo": "x100",
         "precio": "3454",
-        "ID": "168"
+        "ID": "154"
     },
     {
         "nombre": "T-89 Blanco",
         "tipo": "x100",
         "precio": "4082",
-        "ID": "169"
+        "ID": "155"
     },
     {
         "nombre": "T-90 Negro ",
         "tipo": "x100",
         "precio": "6909",
-        "ID": "170"
+        "ID": "156"
     },
     {
         "nombre": "T-90 Blanco",
         "tipo": "x100",
         "precio": "8479",
-        "ID": "171"
-    },
-    {
-        "nombre": " T-90 Gris",
-        "tipo": "x100",
-        "precio": "8479",
-        "ID": "172"
+        "ID": "157"
     },
     {
         "nombre": "T-91 Negro  ",
         "tipo": "x50 Pares",
         "precio": "5339",
-        "ID": "173"
+        "ID": "158"
     },
     {
         "nombre": "T-91 Blanco",
         "tipo": "x50 Pares",
         "precio": "5653",
-        "ID": "174"
-    },
-    {
-        "nombre": "T-91 Gris",
-        "tipo": "x50 Pares",
-        "precio": "5653",
-        "ID": "175"
+        "ID": "159"
     },
     {
         "nombre": "T-95 Negro",
         "tipo": "x200",
         "precio": "3140",
-        "ID": "176"
+        "ID": "160"
     },
     {
         "nombre": "T-95 Blanco",
         "tipo": "x200",
         "precio": "3768",
-        "ID": "177"
-    },
-    {
-        "nombre": "T-95 Gris",
-        "tipo": "x200",
-        "precio": "3768",
-        "ID": "178"
+        "ID": "161"
     },
     {
         "nombre": "T-96",
         "tipo": "x100",
         "precio": "2826",
-        "ID": "179"
-    },
-    {
-        "nombre": "T-115",
-        "tipo": "x100",
-        "precio": "6281",
-        "ID": "180"
-    },
-    {
-        "nombre": "T-116 Negro ",
-        "tipo": "x50 Pares",
-        "precio": "7223",
-        "ID": "181"
-    },
-    {
-        "nombre": "T-116 Blanco",
-        "tipo": "x50 Pares",
-        "precio": "7223",
-        "ID": "182"
-    },
-    {
-        "nombre": "T-116 Gris",
-        "tipo": "x50 Pares",
-        "precio": "8165",
-        "ID": "183"
-    },
-    {
-        "nombre": "T-117 Negro c/ Prisionero ",
-        "tipo": "x50",
-        "precio": "5967",
-        "ID": "184"
-    },
-    {
-        "nombre": "T-117 Blanco c/ Prisionero",
-        "tipo": "x50",
-        "precio": "6909",
-        "ID": "185"
-    },
-    {
-        "nombre": "T-118 Negro ",
-        "tipo": "x50",
-        "precio": "6909",
-        "ID": "186"
-    },
-    {
-        "nombre": "T- 118 Blanco",
-        "tipo": "x50",
-        "precio": "7851",
-        "ID": "187"
-    },
-    {
-        "nombre": "T-118 Gris",
-        "tipo": "x50",
-        "precio": "7851",
-        "ID": "188"
-    },
-    {
-        "nombre": "T-127",
-        "tipo": "x50",
-        "precio": "23238",
-        "ID": "189"
+        "ID": "162"
     },
     {
         "nombre": "T-130 Negro ",
         "tipo": "x100",
         "precio": "3140",
-        "ID": "190"
+        "ID": "163"
     },
     {
         "nombre": "T-130 Blanco",
         "tipo": "x100",
         "precio": "3768",
-        "ID": "191"
-    },
-    {
-        "nombre": " T-130 Gris",
-        "tipo": "x100",
-        "precio": "3768",
-        "ID": "192"
+        "ID": "164"
     },
     {
         "nombre": "T-131 Negro \r\n",
         "tipo": "x100",
         "precio": "3140",
-        "ID": "193"
+        "ID": "165"
     },
     {
         "nombre": "T- 131 Blanco",
         "tipo": "x100",
         "precio": "3768",
-        "ID": "194"
-    },
-    {
-        "nombre": "T-131 Gris",
-        "tipo": "x100",
-        "precio": "3768",
-        "ID": "195"
-    },
-    {
-        "nombre": "T-156 Negro ",
-        "tipo": "x50",
-        "precio": "9107",
-        "ID": "196"
-    },
-    {
-        "nombre": "T-156 Blanco",
-        "tipo": "x50",
-        "precio": "10677",
-        "ID": "197"
-    },
-    {
-        "nombre": "T-157 Negro c/ prisionero ",
-        "tipo": "x50",
-        "precio": "6909",
-        "ID": "198"
-    },
-    {
-        "nombre": "T-157 Blanco c/ prisionero",
-        "tipo": "x50",
-        "precio": "8165",
-        "ID": "199"
-    },
-    {
-        "nombre": "T-165",
-        "tipo": "x25",
-        "precio": "8165",
-        "ID": "200"
-    },
-    {
-        "nombre": "T-167",
-        "tipo": "x100",
-        "precio": "10049",
-        "ID": "201"
-    },
-    {
-        "nombre": "T-168",
-        "tipo": "x100",
-        "precio": "5024",
-        "ID": "202"
-    },
-    {
-        "nombre": "T-169",
-        "tipo": "x150",
-        "precio": "1884",
-        "ID": "203"
-    },
-    {
-        "nombre": "Cod. 2x22x80",
-        "tipo": "x100",
-        "precio": "3454",
-        "ID": "204"
-    },
-    {
-        "nombre": "Cod. 3x22x80",
-        "tipo": "x100",
-        "precio": "3768",
-        "ID": "205"
-    },
-    {
-        "nombre": "Cod. 4x22x80",
-        "tipo": "x100",
-        "precio": "4082",
-        "ID": "206"
-    },
-    {
-        "nombre": "Cod. 5x22x80",
-        "tipo": "x100",
-        "precio": "4710",
-        "ID": "207"
-    },
-    {
-        "nombre": "Cod. 6x22x80",
-        "tipo": "x100",
-        "precio": "5024",
-        "ID": "208"
-    },
-    {
-        "nombre": "Cod. 7x22x80",
-        "tipo": "x100",
-        "precio": "5967",
-        "ID": "209"
-    },
-    {
-        "nombre": "Cod. 2x26x80",
-        "tipo": "x100",
-        "precio": "3768",
-        "ID": "210"
-    },
-    {
-        "nombre": "Cod. 3x26x80",
-        "tipo": "x100",
-        "precio": "4082",
-        "ID": "211"
-    },
-    {
-        "nombre": "Cod. 4x26x80",
-        "tipo": "x100",
-        "precio": "4710",
-        "ID": "212"
-    },
-    {
-        "nombre": "Cod. 5x26x80",
-        "tipo": "x100",
-        "precio": "5339",
-        "ID": "213"
-    },
-    {
-        "nombre": "Cod. 6x26x80",
-        "tipo": "x100",
-        "precio": "5339",
-        "ID": "214"
-    },
-    {
-        "nombre": "Cod. 7x26x80",
-        "tipo": "x100",
-        "precio": "6909",
-        "ID": "215"
+        "ID": "166"
     },
     {
         "nombre": "calzo 2",
         "tipo": "x100",
         "precio": "1884",
-        "ID": "216"
+        "ID": "167"
     },
     {
         "nombre": "calzo 3",
         "tipo": "x100",
         "precio": "1916",
-        "ID": "217"
+        "ID": "168"
     },
     {
         "nombre": "calzo 4",
         "tipo": "x100",
         "precio": "1947",
-        "ID": "218"
+        "ID": "169"
     },
     {
         "nombre": "calzo 5",
         "tipo": "x100",
         "precio": "2104",
-        "ID": "219"
+        "ID": "170"
     },
     {
         "nombre": "calzo 6",
         "tipo": "x100",
         "precio": "2324",
-        "ID": "220"
+        "ID": "171"
     },
     {
         "nombre": "calzo 7",
         "tipo": "x100",
         "precio": "2355",
-        "ID": "221"
+        "ID": "172"
     },
     {
-        "nombre": "Parte A",
+        "nombre": " Parte A Plástica",
         "tipo": "x100",
         "precio": "12875",
-        "ID": "222"
+        "ID": "173"
     },
     {
         "nombre": "Tirador Blanco ",
         "tipo": "x100",
         "precio": "9735",
-        "ID": "223"
+        "ID": "174"
     },
     {
         "nombre": "Tirador Negro",
         "tipo": "x100",
         "precio": "7537",
-        "ID": "224"
+        "ID": "175"
     },
     {
         "nombre": "Aldaba",
         "tipo": "x100",
         "precio": "7851",
-        "ID": "225"
+        "ID": "176"
     },
     {
         "nombre": "Antirruido",
         "tipo": "x100",
         "precio": "1413",
-        "ID": "226"
+        "ID": "177"
     },
     {
         "nombre": "Parte J",
         "tipo": "x200",
         "precio": "2826",
-        "ID": "227"
+        "ID": "178"
     },
     {
         "nombre": "Patín Regulable PB",
         "tipo": "x100",
         "precio": "1335",
-        "ID": "228"
+        "ID": "179"
     },
     {
         "nombre": "Patín Inferior R-8",
         "tipo": "x100",
         "precio": "1335",
-        "ID": "229"
+        "ID": "190"
     },
     {
         "nombre": "R-43 Sup / Inf",
         "tipo": "x100",
         "precio": "10991",
-        "ID": "230"
+        "ID": "181"
     },
     {
         "nombre": "R-43 Inferior/2",
         "tipo": "x100",
         "precio": "3768",
-        "ID": "231"
+        "ID": "182"
     },
     {
         "nombre": "Escuadra DVH 9mm",
         "tipo": "x100",
         "precio": "2983",
-        "ID": "232"
+        "ID": "183"
     },
     {
         "nombre": "Escuadra DVH 9mm 10k",
         "tipo": "x10000",
         "precio": "284511",
-        "ID": "233"
+        "ID": "184"
     },
     {
         "nombre": "Escuadra DVH 12mm",
         "tipo": "x100",
         "precio": "3454",
-        "ID": "234"
+        "ID": "185"
     },
     {
         "nombre": "Escuadra DVH 12mm 5k",
         "tipo": "x5000",
         "precio": "157957",
-        "ID": "235"
+        "ID": "186"
     },
     {
         "nombre": "Acople DVH 9 mm",
         "tipo": "x100",
         "precio": "5653",
-        "ID": "236"
+        "ID": "187"
     },
     {
         "nombre": "Acople DVH 12 mm",
         "tipo": "x100",
         "precio": "6281",
-        "ID": "237"
-    },
-    {
-        "nombre": "Tapa Tornillo PVC (marrón, gris, negro y blanco)",
-        "tipo": "x200",
-        "precio": "2512",
-        "ID": "238"
+        "ID": "188"
     }
 ]

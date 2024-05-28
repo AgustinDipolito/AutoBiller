@@ -26,17 +26,42 @@ class _ProductsListState extends State<ProductsList> {
         borderRadius: BorderRadius.circular(15),
       ),
       child: ListView.builder(
-          itemCount: listaService.all.length,
+          itemCount: listaService.allView.length,
           itemBuilder: (context, i) {
-            return (listaService.all.isEmpty)
+            return (listaService.allView.isEmpty)
                 ? const Center(child: CircularProgressIndicator())
-                : lista(listaService.all[i], i, context);
+                : (i >= listaService.allView.length - 4)
+                    ? itemDeHistorial(listaService.allView[i], i, context)
+                    : itemDelista(listaService.allView[i], i, context);
           }),
     );
   }
 }
 
-Widget lista(ItemResponse item, int i, BuildContext context) {
+Widget itemDeHistorial(ItemResponse item, int i, BuildContext context) {
+  return ListTile(
+    title: Text(
+      item.nombre,
+      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+      overflow: TextOverflow.fade,
+    ),
+    subtitle: Text(
+      item.tipo.toLowerCase(),
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(fontSize: 14),
+    ),
+    trailing: Text(
+      "\$ ${item.precio}",
+      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+    ),
+    onTap: () {
+      final pedidoService = Provider.of<PedidoService>(context, listen: false);
+      pedidoService.addCarrito(item);
+    },
+  );
+}
+
+Widget itemDelista(ItemResponse item, int i, BuildContext context) {
   return ListTile(
     title: Text(
       item.nombre,

@@ -1,43 +1,56 @@
 import 'dart:convert';
 
+import 'package:dist_v2/models/item.dart';
 import 'package:dist_v2/models/item_response.dart';
+import 'package:dist_v2/models/pedido.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ListaService with ChangeNotifier {
-  List<ItemResponse> all = [];
+  List<ItemResponse> allView = [];
   final List<ItemResponse> _all = [];
 
   void readJson() async {
     final response = await rootBundle.loadString("assets/catalogo.json");
     final data = await json.decode(response);
     int i = 0;
-    all.clear();
+    allView.clear();
     while (i < data.length) {
-      all.add(ItemResponse.fromJson(data[i]));
+      allView.add(ItemResponse.fromJson(data[i]));
       i++;
       final ids = <dynamic>{};
-      all.retainWhere((x) => ids.add(x.id));
+      allView.retainWhere((x) => ids.add(x.id));
     }
     notifyListeners();
-    _all.addAll(all);
+    _all.addAll(allView);
   }
 
-  void searchItem(String cad) {
-    final itemf = _all.where((item) {
+  void searchItem(String cad, List<Pedido> pedidos) {
+    allView.clear();
+    final itemsFound = _all.where((item) {
       final nombreLow = item.nombre.toLowerCase();
       final searchLow = cad.toLowerCase();
 
       return nombreLow.contains(searchLow);
     }).toList();
 
-    all = itemf.isEmpty ? _all : itemf;
+    final allItems =
+        pedidos.fold<List<Item>>([], (prev, element) => [...prev, ...element.lista]);
+
+    final candidatos = allItems
+        .where((item) => item.nombre.toLowerCase().contains(cad.toLowerCase()))
+        .take(4)
+        .map((e) => ItemResponse(e.nombre, e.tipo, e.precio, e.id.toString()))
+        .toList();
+
+    allView.addAll([...itemsFound, ...candidatos]);
+
     notifyListeners();
   }
 
   void sort() {
-    all.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
+    allView.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
 
     notifyListeners();
   }

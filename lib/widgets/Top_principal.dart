@@ -1,4 +1,5 @@
 import 'package:dist_v2/models/item_response.dart';
+import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/services/lista_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final listaService = Provider.of<ListaService>(context);
     final pedidoService = Provider.of<PedidoService>(context);
+    final clienteService = Provider.of<ClienteService>(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -34,15 +36,12 @@ class SearchBar extends StatelessWidget {
               child: TextField(
                 onSubmitted: (value) async {
                   if (value.isNotEmpty) {
-                    final first = listaService.all.first;
+                    final first = listaService.allView.first;
                     pedidoService.addCarrito(first);
                   }
                 },
                 onChanged: (value) {
-                  listaService.searchItem(value);
-                  if (value.isNotEmpty) {
-                    listaService.sort();
-                  }
+                  listaService.searchItem(value, clienteService.clientes);
                 },
                 decoration: const InputDecoration(
                   focusedBorder: InputBorder.none,

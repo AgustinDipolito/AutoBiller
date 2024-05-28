@@ -4,22 +4,36 @@ import 'package:dist_v2/services/pedido_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CarritoWidget extends StatelessWidget {
+class CarritoWidget extends StatefulWidget {
   CarritoWidget({Key? key, this.cliente}) : super(key: key);
   final Pedido? cliente;
 
+  @override
+  State<CarritoWidget> createState() => _CarritoWidgetState();
+}
+
+class _CarritoWidgetState extends State<CarritoWidget> {
   final ValueNotifier<bool> editMode = ValueNotifier(false);
+  final _carritoController = ScrollController();
+
+  @override
+  void dispose() {
+    editMode.dispose();
+    _carritoController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final pedidoService = Provider.of<PedidoService>(context);
+    final pedidoService = Provider.of<PedidoService>(context)
+      ..setScrollController(_carritoController);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Container(
-            width: MediaQuery.of(context).size.width * .8,
+            height: MediaQuery.of(context).size.height * .65,
             margin: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: const Color(0xFFFFFFFF),
@@ -36,9 +50,11 @@ class CarritoWidget extends StatelessWidget {
                 : ValueListenableBuilder<bool>(
                     valueListenable: editMode,
                     builder: (context, isEditMode, _) => ListView.builder(
-                      itemCount: cliente?.lista.length ?? pedidoService.carrito.length,
+                      itemCount:
+                          widget.cliente?.lista.length ?? pedidoService.carrito.length,
+                      controller: _carritoController,
                       itemBuilder: (_, i) {
-                        var pedido = cliente?.lista[i] ?? pedidoService.carrito[i];
+                        var pedido = widget.cliente?.lista[i] ?? pedidoService.carrito[i];
                         return Dismissible(
                           key: ValueKey(pedido),
                           direction: DismissDirection.startToEnd,
@@ -67,8 +83,9 @@ class CarritoWidget extends StatelessWidget {
                             trailing: isEditMode
                                 ? reorderButton(context, pedidoService, i)
                                 : null,
-                            leading:
-                                Text("${isEditMode ? i.toString() : pedido.cantidad}"),
+                            leading: Text(
+                              isEditMode ? i.toString() : '${pedido.cantidad}',
+                            ),
                             title: Text(
                               pedido.nombre,
                               overflow: TextOverflow.visible,

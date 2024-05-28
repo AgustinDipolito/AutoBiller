@@ -4,17 +4,33 @@ import 'package:flutter/material.dart';
 
 class PedidoService with ChangeNotifier {
   late List<Item> carrito = [];
+  ScrollController? _scrollController;
 
   void addCarrito(ItemResponse itmData) {
-    carrito.add(Item(
-      cantidad: 1,
-      tipo: (itmData.tipo),
-      nombre: (itmData.nombre),
-      precio: (itmData.precio),
-      precioT: (itmData.precio),
-      id: int.parse(itmData.id),
-    ));
+    carrito.add(
+      Item(
+        cantidad: 1,
+        tipo: (itmData.tipo),
+        nombre: (itmData.nombre),
+        precio: (itmData.precio),
+        precioT: (itmData.precio),
+        id: int.parse(itmData.id),
+      ),
+    );
     notifyListeners();
+
+    moveControllerToEnd();
+  }
+
+  void setScrollController(ScrollController scrollController) {
+    _scrollController ??= scrollController;
+  }
+
+  void moveControllerToEnd() {
+    if (carrito.length > 10 && _scrollController != null) {
+      _scrollController?.animateTo(carrito.length * 54,
+          duration: const Duration(milliseconds: 400), curve: Curves.ease);
+    }
   }
 
   void delCant(int i) {
