@@ -18,8 +18,7 @@ class PedidoService with ChangeNotifier {
       ),
     );
     notifyListeners();
-
-    moveControllerToEnd();
+    Future.delayed(const Duration(milliseconds: 200), () => moveControllerToEnd());
   }
 
   void setScrollController(ScrollController scrollController) {
@@ -28,8 +27,9 @@ class PedidoService with ChangeNotifier {
 
   void moveControllerToEnd() {
     if (carrito.length > 10 && _scrollController != null) {
-      _scrollController?.animateTo(carrito.length * 54,
-          duration: const Duration(milliseconds: 400), curve: Curves.ease);
+      // animate to end
+      _scrollController?.animateTo(_scrollController!.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
     }
   }
 

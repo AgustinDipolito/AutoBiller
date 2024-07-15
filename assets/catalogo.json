@@ -312,10 +312,16 @@
         "ID": "52"
     },
     {
-        "nombre": "AZZURRA MODENA A30",
+        "nombre": "H51 AZZURRA MODENA",
         "tipo": "UNIDAD",
-        "precio": "38800",
+        "precio": "28000",
         "ID": "53"
+    },
+    {
+        "nombre": "H51 AZZURRA A30",
+        "tipo": "UNIDAD",
+        "precio": "30000",
+        "ID": "189"
     },
     {
         "nombre": "CERRADURA ANUAC PTA 25/PTA 36",
@@ -847,19 +853,19 @@
     },
     {
         "nombre": "TELA MOSQUITERO 0.60",
-        "tipo": "X25 MTS.",
+        "tipo": "X30 MTS.",
         "precio": "80000",
         "ID": "142"
     },
     {
         "nombre": "TELA MOSQUITERO 0.80",
-        "tipo": "X25 MTS.",
+        "tipo": "X30 MTS.",
         "precio": "104000",
         "ID": "143"
     },
     {
         "nombre": "TELA MOSQUITERO 1.00",
-        "tipo": "X25 MTS.",
+        "tipo": "X30 MTS.",
         "precio": "128000",
         "ID": "144"
     },
@@ -890,19 +896,19 @@
     {
         "nombre": "7X7 1/6 PANFRAN",
         "tipo": "X1000",
-        "precio": "12000",
+        "precio": "9000",
         "ID": "149"
     },
     {
         "nombre": "Riendas",
         "tipo": "x50",
-        "precio": "13189",
+        "precio": "9000",
         "ID": "150"
     },
     {
         "nombre": "E-68",
         "tipo": "x100",
-        "precio": "7788",
+        "precio": "6000",
         "ID": "151"
     },
     {
@@ -920,7 +926,7 @@
     {
         "nombre": "T-89 Negro ",
         "tipo": "x100",
-        "precio": "3454",
+        "precio": "2500",
         "ID": "154"
     },
     {
@@ -932,7 +938,7 @@
     {
         "nombre": "T-90 Negro ",
         "tipo": "x100",
-        "precio": "6909",
+        "precio": "5900",
         "ID": "156"
     },
     {
@@ -944,13 +950,13 @@
     {
         "nombre": "T-91 Negro  ",
         "tipo": "x50 Pares",
-        "precio": "5339",
+        "precio": "4300",
         "ID": "158"
     },
     {
         "nombre": "T-91 Blanco",
         "tipo": "x50 Pares",
-        "precio": "5653",
+        "precio": "4600",
         "ID": "159"
     },
     {
@@ -1034,7 +1040,7 @@
     {
         "nombre": " Parte A Plástica",
         "tipo": "x100",
-        "precio": "12875",
+        "precio": "8500",
         "ID": "173"
     },
     {
@@ -1046,13 +1052,13 @@
     {
         "nombre": "Tirador Negro",
         "tipo": "x100",
-        "precio": "7537",
+        "precio": "4800",
         "ID": "175"
     },
     {
         "nombre": "Aldaba",
         "tipo": "x100",
-        "precio": "7851",
+        "precio": "5400",
         "ID": "176"
     },
     {

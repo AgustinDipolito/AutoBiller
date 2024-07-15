@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:dist_v2/api/api.dart';
 import 'package:dist_v2/api/pdf_stock_api.dart';
 import 'package:dist_v2/services/stock_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class StockPage extends StatefulWidget {
@@ -16,11 +18,19 @@ class StockPage extends StatefulWidget {
 class _StockPageState extends State<StockPage> {
   late StockService stockService;
   Timer? _debounce;
+  List<int> cantMovimiento = List.filled(500, 0);
+  List<int> cantAntes = List.filled(500, 0);
+  String busqueda = '';
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => stockService.init());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      stockService.init();
+      for (var element in stockService.stock) {
+        cantAntes[element.id] = element.cant;
+      }
+    });
   }
 
   @override
@@ -44,7 +54,8 @@ class _StockPageState extends State<StockPage> {
               final pdffile = await PdfStockApi.generate(
                   stockService.stockFiltered.isNotEmpty
                       ? stockService.stockFiltered
-                      : stockService.stock);
+                      : stockService.stock,
+                  busqueda: busqueda);
               PdfApi.openFile(pdffile);
             },
             style: ElevatedButton.styleFrom(
@@ -84,6 +95,7 @@ class _StockPageState extends State<StockPage> {
                   if (value.isEmpty) return;
 
                   stockService.searchItem(value);
+                  busqueda = value;
 
                   if (value.isNotEmpty) {
                     stockService.sort();
@@ -105,31 +117,177 @@ class _StockPageState extends State<StockPage> {
                   final item = stockService.stockFiltered.isNotEmpty
                       ? stockService.stockFiltered[index]
                       : stockService.stock[index];
+
                   return ListTile(
-                    title: Text(item.name.toUpperCase()),
-                    subtitle: Text('${item.cant}'),
+                    title: Text(
+                      item.name.toUpperCase(),
+                      style: const TextStyle(color: Colors.indigo),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Ahora: ${item.cant}  ',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Visibility(
+                              visible: cantMovimiento[item.id] != 0,
+                              child: Text(
+                                '${cantMovimiento[item.id].isNegative ? '' : '+'}${cantMovimiento[item.id]}',
+                                style: TextStyle(
+                                  color: cantMovimiento[item.id].isNegative
+                                      ? Colors.red
+                                      : Colors.green,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Visibility(
+                          visible: cantMovimiento[item.id] != 0,
+                          child: Text(
+                            'Antes: ${cantAntes[item.id]}',
+                            style: const TextStyle(fontWeight: FontWeight.w300),
+                          ),
+                        ),
+                        const Divider()
+                      ],
+                    ),
                     onLongPress: (() {
-                      stockService.removeByName(item.name);
+                      if (index == 0) {
+                        stockService.removeByName(item.name);
+                      }
                     }),
                     trailing: SizedBox(
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          IconButton(
-                            color: kDefaultIconDarkColor,
-                            icon: const Icon(Icons.remove_circle_outline_sharp),
-                            onPressed: () {
-                              if (item.cant > 0) {
+                          Material(
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(45),
+                              radius: 32,
+                              splashColor: Colors.red,
+                              onLongPress: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (context) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 16),
+                                        child: SizedBox(
+                                          height: MediaQuery.of(context).size.height * .5,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              TextField(
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'Restar cantidad',
+                                                ),
+                                                onSubmitted: (value) {
+                                                  stockService.addCantToItem(
+                                                    item.id,
+                                                    cant: int.parse(value) * -1,
+                                                  );
+                                                  cantMovimiento[item.id] -=
+                                                      int.parse(value);
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              const SizedBox(height: 16),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    'Hay: ${item.cant}  ',
+                                                    style: const TextStyle(
+                                                        fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Flexible(child: Text(item.name)),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
+                              onTap: () {
                                 stockService.addCantToItem(item.id, cant: -1);
-                              }
-                            },
+                                cantMovimiento[item.id] -= 1;
+                              },
+                              child: Ink(
+                                child: const Icon(
+                                  Icons.remove_circle_outline,
+                                  size: 32,
+                                ),
+                              ),
+                            ),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            color: kDefaultIconDarkColor,
-                            onPressed: () {
-                              stockService.addCantToItem(item.id);
-                            },
+                          const SizedBox(width: 16),
+                          Material(
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(45),
+                              radius: 32,
+                              splashColor: Colors.green,
+                              onLongPress: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (context) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 16),
+                                        child: SizedBox(
+                                          height: MediaQuery.of(context).size.height * .5,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              TextField(
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'Sumar cantidad',
+                                                ),
+                                                onSubmitted: (value) {
+                                                  stockService.addCantToItem(
+                                                    item.id,
+                                                    cant: int.parse(value),
+                                                  );
+                                                  cantMovimiento[item.id] +=
+                                                      int.parse(value);
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              const SizedBox(height: 16),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    'Hay: ${item.cant}  ',
+                                                    style: const TextStyle(
+                                                        fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Flexible(child: Text(item.name)),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
+                              onTap: () {
+                                stockService.addCantToItem(item.id);
+                                cantMovimiento[item.id] += 1;
+                              },
+                              child: Ink(
+                                child: const Icon(
+                                  Icons.add_circle_outline,
+                                  size: 32,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),

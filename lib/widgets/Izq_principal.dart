@@ -6,13 +6,8 @@ import 'package:dist_v2/models/item_response.dart';
 import 'package:dist_v2/services/lista_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
 
-class ProductsList extends StatefulWidget {
+class ProductsList extends StatelessWidget {
   const ProductsList({Key? key}) : super(key: key);
-  @override
-  State<ProductsList> createState() => _ProductsListState();
-}
-
-class _ProductsListState extends State<ProductsList> {
   @override
   Widget build(BuildContext context) {
     final listaService = Provider.of<ListaService>(context);
@@ -20,20 +15,22 @@ class _ProductsListState extends State<ProductsList> {
     return Container(
       margin: const EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * .2,
+      height: MediaQuery.sizeOf(context).height * 0.25,
       decoration: BoxDecoration(
         color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(15),
       ),
       child: ListView.builder(
-          itemCount: listaService.allView.length,
-          itemBuilder: (context, i) {
-            return (listaService.allView.isEmpty)
-                ? const Center(child: CircularProgressIndicator())
-                : (i >= listaService.allView.length - 4)
-                    ? itemDeHistorial(listaService.allView[i], i, context)
-                    : itemDelista(listaService.allView[i], i, context);
-          }),
+        itemCount: listaService.allView.length,
+        shrinkWrap: true,
+        itemBuilder: (context, i) {
+          return (listaService.allView.isEmpty)
+              ? const Center(child: CircularProgressIndicator())
+              : (i >= listaService.allView.length - 4)
+                  ? itemDeHistorial(listaService.allView[i], i, context)
+                  : itemDelista(listaService.allView[i], i, context);
+        },
+      ),
     );
   }
 }

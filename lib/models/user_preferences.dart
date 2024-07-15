@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/services/stock_service.dart';
 
+import 'stock.dart';
+
 class UserPreferences {
   static SharedPreferences? _preferences;
   static Future init() async => _preferences = await SharedPreferences.getInstance();

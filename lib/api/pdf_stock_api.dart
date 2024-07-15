@@ -6,8 +6,10 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
+import '../models/stock.dart';
+
 class PdfStockApi {
-  static Future<File> generate(List<Stock> stock) async {
+  static Future<File> generate(List<Stock> stock, {String busqueda = ''}) async {
     final pdf = Document();
 
     pdf.addPage(MultiPage(
@@ -22,7 +24,7 @@ class PdfStockApi {
     ));
 
     return PdfApi.saveDocument(
-      name: 'Stock del ${DateTime.now()}.pdf',
+      name: 'Stock $busqueda del ${DateTime.now().toString().substring(0, 10)}.pdf',
       pdf: pdf,
     );
   }

@@ -5,20 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CarritoWidget extends StatefulWidget {
-  CarritoWidget({Key? key, this.cliente}) : super(key: key);
+  const CarritoWidget({Key? key, this.cliente}) : super(key: key);
   final Pedido? cliente;
 
   @override
   State<CarritoWidget> createState() => _CarritoWidgetState();
 }
 
-class _CarritoWidgetState extends State<CarritoWidget> {
+class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserver {
   final ValueNotifier<bool> editMode = ValueNotifier(false);
   final _carritoController = ScrollController();
 
   @override
   void dispose() {
     editMode.dispose();
+
     _carritoController.dispose();
     super.dispose();
   }
@@ -32,8 +33,9 @@ class _CarritoWidgetState extends State<CarritoWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Container(
-            height: MediaQuery.of(context).size.height * .65,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            height: MediaQuery.of(context).size.height * .48,
             margin: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: const Color(0xFFFFFFFF),
@@ -52,6 +54,7 @@ class _CarritoWidgetState extends State<CarritoWidget> {
                     builder: (context, isEditMode, _) => ListView.builder(
                       itemCount:
                           widget.cliente?.lista.length ?? pedidoService.carrito.length,
+                      shrinkWrap: true,
                       controller: _carritoController,
                       itemBuilder: (_, i) {
                         var pedido = widget.cliente?.lista[i] ?? pedidoService.carrito[i];

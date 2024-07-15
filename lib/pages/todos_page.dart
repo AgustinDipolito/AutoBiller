@@ -184,18 +184,27 @@ class _TodosPageState extends State<TodosPage> {
                             cliente.nombre,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
+                          subtitle: cliente.msg == null || (cliente.msg?.isEmpty ?? true)
+                              ? null
+                              : Text(
+                                  cliente.msg!,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w300, fontSize: 12),
+                                ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if (cliente.msg?.isNotEmpty ?? false)
-                                Icon(
-                                  Icons.message,
-                                  color: kDefaultIconDarkColor,
-                                ),
                               Text(
-                                Utils.formatDate(cliente.fecha),
-                                style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.normal),
+                                cliente.fecha.year == DateTime.now().year
+                                    ? Utils.formatDateNoYear(cliente.fecha)
+                                    : Utils.formatDate(cliente.fecha),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                  color: cliente.fecha.month != DateTime.now().month
+                                      ? Colors.blueGrey
+                                      : null,
+                                ),
                               ),
                             ],
                           ),
