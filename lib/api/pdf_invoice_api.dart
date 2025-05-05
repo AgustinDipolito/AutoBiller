@@ -24,7 +24,7 @@ class PdfInvoiceApi {
       ),
     );
 
-    return PdfApi.saveDocument(
+    return FileApi.saveDocument(
       name: 'FACTURA ${invoice.customer.name} - ${invoice.info.number}.pdf',
       pdf: pdf,
     );

@@ -1,11 +1,11 @@
 class Item {
-  final String nombre;
+  String nombre;
   final String tipo;
   final int precio;
   final int id;
   int precioT;
   int cantidad = 0;
-  bool status = false;
+  bool faltante = false;
 
   Item({
     required this.precio,
@@ -22,6 +22,7 @@ class Item {
         tipo = json["tipo"] ?? '',
         precioT = int.parse(json["precioT"]),
         id = int.parse(json["id"] ?? '0'),
+        faltante = json["faltante"] == 'true',
         cantidad = int.parse(json["cantidad"]);
 
   Map<String, dynamic> toJson() {
@@ -32,6 +33,7 @@ class Item {
       "precioT": precioT.toString(),
       "cantidad": cantidad.toString(),
       "id": id.toString(),
+      "faltante": faltante.toString(),
     };
   }
 }

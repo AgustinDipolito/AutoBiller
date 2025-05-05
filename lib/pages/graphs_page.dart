@@ -1,3 +1,8 @@
+import 'package:charts_flutter/flutter.dart';
+import 'package:dist_v2/models/pedido.dart';
+import 'package:dist_v2/models/user_preferences.dart';
+import 'package:dist_v2/models/vip_item.dart';
+import 'package:dist_v2/services/analysis_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -6,12 +11,13 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:dist_v2/helpers/time_serires_gen.dart';
 
 class GraphsPage extends StatelessWidget {
-  const GraphsPage({Key? key}) : super(key: key);
+  const GraphsPage({Key? key, this.item}) : super(key: key);
+  final VipItem? item;
   static const List<String> tipos = ['semana', 'mes', 'año'];
 
   @override
   Widget build(BuildContext context) {
-    final clientes = Provider.of<ClienteService>(context);
+    final clienteService = Provider.of<ClienteService>(context);
     final compact = NumberFormat.compactCurrency(name: "\$", decimalDigits: 0);
     final long = NumberFormat.currency(name: "\$", decimalDigits: 0);
 
@@ -19,14 +25,28 @@ class GraphsPage extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: ListView.builder(
-        itemCount: 3,
+        itemCount: tipos.length,
         itemBuilder: (_, int index) {
-          var dataGraph = calculateTotals(clientes, tipos[index]);
-          var total = 0;
+          final pedidos = clienteService.clientes;
+          final List<Series<TimeSeriesSales, DateTime>> dataGraph;
+          if (item != null) {
+            final data =
+                Provider.of<AnalysisService>(context).getItemTimeSeries(item!, pedidos);
 
-          for (var element in dataGraph.first.data) {
-            total += element.sales;
+            final pedidosSoloItem = data.entries
+                .map((e) => Pedido(
+                    nombre: '',
+                    fecha: e.key,
+                    lista: [],
+                    key: Key(e.key.toString()),
+                    total: e.value))
+                .toList();
+
+            dataGraph = calculateTotals(pedidosSoloItem, tipos[index]);
+          } else {
+            dataGraph = calculateTotals(pedidos, tipos[index]);
           }
+          final total = dataGraph.first.data.fold<double>(0, (prev, e) => prev + e.sales);
 
           String totalWord = index != 0 ? compact.format(total) : long.format(total);
 
@@ -34,11 +54,8 @@ class GraphsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 30),
-              Text('Total ${tipos[index]}: $totalWord'),
-              Grafico(
-                tipo: tipos[index],
-                data: dataGraph,
-              ),
+              Text('Ult. ${tipos[index]}: $totalWord'),
+              Grafico(data: dataGraph),
             ],
           );
         },
@@ -50,8 +67,7 @@ class GraphsPage extends StatelessWidget {
 class Grafico extends StatelessWidget {
   final List<charts.Series<TimeSeriesSales, DateTime>> data;
 
-  const Grafico({Key? key, required this.tipo, required this.data}) : super(key: key);
-  final String tipo;
+  const Grafico({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

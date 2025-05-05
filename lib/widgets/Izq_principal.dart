@@ -15,7 +15,7 @@ class ProductsList extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.sizeOf(context).height * 0.25,
+      height: MediaQuery.sizeOf(context).height * 0.5,
       decoration: BoxDecoration(
         color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(15),

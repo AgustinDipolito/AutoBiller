@@ -55,9 +55,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
               children: [
                 Flexible(child: CarritoWidget()),
                 top.SearchBar(),
-                Flexible(
-                  child: ProductsList(),
-                ),
+                ProductsList(),
               ],
             ),
           ),

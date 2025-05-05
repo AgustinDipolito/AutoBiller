@@ -1,11 +1,9 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:dist_v2/models/pedido.dart';
-import 'package:dist_v2/services/cliente_service.dart';
-import 'package:dist_v2/models/user_preferences.dart';
 import 'package:flutter/cupertino.dart';
 
 List<charts.Series<TimeSeriesSales, DateTime>> calculateTotals(
-    ClienteService clientesService, String tipo) {
+    List<Pedido> clientes, String tipo) {
   List<TimeSeriesSales> data = [];
   int x = 0;
 
@@ -14,12 +12,11 @@ List<charts.Series<TimeSeriesSales, DateTime>> calculateTotals(
   List<Pedido> totalesUltimoAnio = [];
 
   List<DateTime> fechas = [];
-  clientesService.setClientes = UserPreferences.getPedidos();
 
-  while (x < clientesService.clientes.length) {
-    DateTime firstTime = clientesService.clientes[x].fecha;
+  while (x < clientes.length) {
+    DateTime firstTime = clientes[x].fecha;
 
-    var mismoDia = clientesService.clientes.where((element) =>
+    var mismoDia = clientes.where((element) =>
         (element.fecha.day == firstTime.day) && (element.fecha.month == firstTime.month));
 
     if (!(fechas.contains(firstTime))) {

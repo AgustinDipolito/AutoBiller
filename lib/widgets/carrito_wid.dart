@@ -1,7 +1,9 @@
 import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
+import 'package:dist_v2/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class CarritoWidget extends StatefulWidget {
@@ -29,96 +31,106 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
     final pedidoService = Provider.of<PedidoService>(context)
       ..setScrollController(_carritoController);
 
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            height: MediaQuery.of(context).size.height * .48,
-            margin: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFFFFF),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: pedidoService.carrito.isEmpty
-                ? const Center(
-                    child: Icon(
-                      Icons.add_shopping_cart,
-                      size: 40,
-                      color: Color(0xFF808080),
-                    ),
-                  )
-                : ValueListenableBuilder<bool>(
-                    valueListenable: editMode,
-                    builder: (context, isEditMode, _) => ListView.builder(
-                      itemCount:
-                          widget.cliente?.lista.length ?? pedidoService.carrito.length,
-                      shrinkWrap: true,
-                      controller: _carritoController,
-                      itemBuilder: (_, i) {
-                        var pedido = widget.cliente?.lista[i] ?? pedidoService.carrito[i];
-                        return Dismissible(
-                          key: ValueKey(pedido),
-                          direction: DismissDirection.startToEnd,
-                          background: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.only(left: 8),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Eliminar",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                  ),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          height: MediaQuery.of(context).size.height * .48,
+          margin: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFFFFF),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: pedidoService.carrito.isEmpty
+              ? const Center(
+                  child: Icon(
+                    Icons.add_shopping_cart,
+                    size: 40,
+                    color: Color(0xFF808080),
+                  ),
+                )
+              : ValueListenableBuilder<bool>(
+                  valueListenable: editMode,
+                  builder: (context, isEditMode, _) => ListView.builder(
+                    itemCount:
+                        widget.cliente?.lista.length ?? pedidoService.carrito.length,
+                    shrinkWrap: true,
+                    controller: _carritoController,
+                    itemBuilder: (_, i) {
+                      var pedido = widget.cliente?.lista[i] ?? pedidoService.carrito[i];
+                      return Dismissible(
+                        key: ValueKey(pedido),
+                        direction: DismissDirection.startToEnd,
+                        background: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.only(left: 8),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Eliminar",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
                                 ),
                               ),
                             ),
                           ),
-                          onDismissed: (direction) => pedidoService.deleteCarrito(i),
-                          child: ListTile(
-                            onTap: () => pedidoService.addCant(i),
-                            trailing: isEditMode
-                                ? reorderButton(context, pedidoService, i)
-                                : null,
-                            leading: Text(
-                              isEditMode ? i.toString() : '${pedido.cantidad}',
-                            ),
-                            title: Text(
-                              pedido.nombre,
-                              overflow: TextOverflow.visible,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            onLongPress: () => pedidoService.delCant(i),
+                        ),
+                        onDismissed: (direction) => pedidoService.deleteCarrito(i),
+                        child: ListTile(
+                          onTap: () => pedidoService.addCant(i),
+                          trailing: isEditMode
+                              ? reorderButton(context, pedidoService, i)
+                              : null,
+                          leading: Text(
+                            isEditMode ? i.toString() : '${pedido.cantidad}',
                           ),
-                        );
-                      },
-                    ),
+                          title: Text(
+                            pedido.nombre,
+                            overflow: TextOverflow.visible,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          onLongPress: () => pedidoService.delCant(i),
+                        ),
+                      );
+                    },
                   ),
+                ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 0,
+            horizontal: 16,
+          ),
+          child: Text(
+            '${pedidoService.carrito.length} accesorios en el carro.',
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
           ),
         ),
-        Container(
+        Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: 15,
-            horizontal: 4,
+            vertical: 8,
+            horizontal: 16,
           ),
-          height: MediaQuery.of(context).size.height * .3,
-          child: Column(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                "\$ ${pedidoService.sumTot()}",
+                Utils.formatPrice(pedidoService.sumTot().toDouble()),
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              ElevatedButton(
+              IconButton(
                 style: ElevatedButton.styleFrom(
                   shape: const StadiumBorder(),
                   elevation: 4,
@@ -130,20 +142,13 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
                     listen: false,
                   );
                   pedidoService.clearAll();
-                  // setState(() {});
                 },
-                child: const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Vaciar",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.white,
                 ),
               ),
-              ElevatedButton(
+              IconButton(
                 style: ElevatedButton.styleFrom(
                   shape: const StadiumBorder(),
                   elevation: 4,
@@ -152,22 +157,18 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
                 onPressed: () {
                   editMode.value = !editMode.value;
                 },
-                child: const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Reordenar",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
+                icon: const Icon(
+                  Icons.swap_calls,
+                  color: Colors.white,
                 ),
               ),
+              const Spacer(),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: const StadiumBorder(),
                   elevation: 4,
-                  backgroundColor: Colors.blueGrey,
+                  foregroundColor: Colors.blueGrey,
+                  backgroundColor: Colors.white,
                 ),
                 onPressed: () {
                   showDialog(
@@ -217,7 +218,6 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
                             },
                             child: const Text(
                               "Guardar",
-                              style: TextStyle(color: Colors.blue),
                             ),
                           ),
                         ],
@@ -226,9 +226,9 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
                   );
                 },
                 child: const Text(
-                  "Guardar",
+                  "\u{1F6D2} Guardar",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.blueGrey,
                     fontSize: 16,
                   ),
                 ),

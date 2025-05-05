@@ -87,14 +87,15 @@ class _PedidoPageState extends State<PedidoPage> {
                       shrinkWrap: true,
                       itemCount: pedido.lista.length,
                       itemBuilder: (context, i) {
+                        final item = pedido.lista[i];
                         return Container(
                           color: selecteds[i] ? const Color(0xFF808080) : null,
                           child: ListTile(
-                            leading: Text("${pedido.lista[i].cantidad}"),
+                            leading: Text("${item.cantidad}"),
                             onLongPress: () => _switchColor(i),
                             title: RichText(
                               text: TextSpan(
-                                text: pedido.lista[i].nombre,
+                                text: item.nombre,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
@@ -107,7 +108,7 @@ class _PedidoPageState extends State<PedidoPage> {
                                         fontWeight: FontWeight.w200),
                                   ),
                                   TextSpan(
-                                    text: pedido.lista[i].tipo,
+                                    text: item.tipo,
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w600,
@@ -116,14 +117,46 @@ class _PedidoPageState extends State<PedidoPage> {
                                 ],
                               ),
                             ),
-                            trailing: RichText(
-                              text: TextSpan(
-                                text: "${pedido.lista[i].precioT}",
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w100,
-                                    fontSize: 15),
-                              ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    text: "${item.precioT}",
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w100,
+                                        fontSize: 15),
+                                  ),
+                                ),
+                                if (pedido.msg?.toLowerCase().trim() != 'armado')
+                                  IconButton(
+                                    icon: Icon(
+                                      item.faltante
+                                          ? Icons.warning_amber_rounded
+                                          : Icons.check_circle_outline,
+                                      color: item.faltante ? Colors.red : Colors.grey,
+                                    ),
+                                    tooltip: item.faltante
+                                        ? 'Quitar de faltantes'
+                                        : 'Marcar como faltante',
+                                    onPressed: () async {
+                                      setState(() {
+                                        item.faltante = !item.faltante;
+                                      });
+                                      // Save the updated pedido
+                                      await Provider.of<ClienteService>(context,
+                                              listen: false)
+                                          .guardarPedido(
+                                        pedido.nombre,
+                                        pedido.lista,
+                                        pedido.total,
+                                        pedido.fecha,
+                                        pedido.key,
+                                      );
+                                    },
+                                  ),
+                              ],
                             ),
                           ),
                         );
@@ -150,7 +183,7 @@ class _PedidoPageState extends State<PedidoPage> {
               onPressed: () async {
                 final invoice = _generateInvoice(pedido);
                 final pdffile = await PdfInvoiceApi.generate(invoice);
-                await PdfApi.openFile(pdffile);
+                await FileApi.openFile(pdffile);
               },
               child: const Center(
                 child: Text(

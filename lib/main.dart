@@ -30,7 +30,7 @@ class Myapp extends StatelessWidget {
           create: (_) => PedidoService(),
         ),
         ChangeNotifierProvider(
-          create: (_) => ClienteService(),
+          create: (_) => ClienteService()..init(),
         ),
         ChangeNotifierProvider(
           create: (_) => ListaService()..readJson(),

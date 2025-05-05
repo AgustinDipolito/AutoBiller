@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dist_v2/api/api.dart';
-import 'package:dist_v2/services/stock_service.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
@@ -23,7 +22,7 @@ class PdfStockApi {
       footer: (context) => _buildFooter(),
     ));
 
-    return PdfApi.saveDocument(
+    return FileApi.saveDocument(
       name: 'Stock $busqueda del ${DateTime.now().toString().substring(0, 10)}.pdf',
       pdf: pdf,
     );

@@ -26,7 +26,7 @@ class PedidoService with ChangeNotifier {
   }
 
   void moveControllerToEnd() {
-    if (carrito.length > 10 && _scrollController != null) {
+    if (carrito.length > 6 && _scrollController != null) {
       // animate to end
       _scrollController?.animateTo(_scrollController!.position.maxScrollExtent,
           duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);

@@ -11,23 +11,70 @@ class ClienteService with ChangeNotifier {
   List<Pedido> get clientes => _clientes;
   set setClientes(List<Pedido> lista) => _clientes = lista;
 
+  void init() {
+    setClientes = UserPreferences.getPedidos();
+
+    notifyListeners();
+  }
+
   Future<Pedido> guardarPedido(String name, List<Item> list, int tot,
-      [DateTime? date]) async {
+      [DateTime? date, Key? key]) async {
     Pedido pedido = Pedido(
       nombre: name,
       fecha: date ?? DateTime.now(),
       lista: list,
-      key: UniqueKey(),
+      key: key ?? UniqueKey(),
       total: tot,
     );
+
+    // Check if the order already exists in the list
+    final existingIndex = _clientes.indexWhere((element) => element.key == pedido.key);
+    if (existingIndex != -1) {
+      // If it exists, remove the old order
+      await UserPreferences.deleteOne(_clientes[existingIndex].key.toString());
+      _clientes.removeAt(existingIndex);
+    }
+    // Add the new order to the lists
     _clientes = [..._clientes, pedido];
 
     notifyListeners();
     String pedidoString = json.encode(pedido);
 
     await UserPreferences.setPedido(pedidoString, "${pedido.key}");
+    init();
 
     return pedido;
+  }
+
+  Future<int> renameItems(List<String> itemsNamesToRename, String newName) async {
+    // Create a set of item names to rename for efficient lookup
+    final itemNames = itemsNamesToRename.sublist(1);
+
+    int cantModificados = 0;
+    // Update items in all orders
+    for (var pedido in _clientes) {
+      bool pedidoModified = false;
+
+      for (var item in pedido.lista) {
+        if (itemNames.contains(item.nombre.toLowerCase())) {
+          item.nombre = newName;
+          pedidoModified = true;
+        }
+      }
+
+      // If pedido was modified, update it in storage
+      if (pedidoModified) {
+        await UserPreferences.deleteOne("${pedido.key}");
+
+        String pedidoString = json.encode(pedido);
+        await UserPreferences.setPedido(pedidoString, "${pedido.key}");
+        cantModificados++;
+      }
+    }
+    init();
+
+    // notifyListeners();
+    return cantModificados;
   }
 
   editMessage(String msg, Pedido pedido) async {
@@ -57,6 +104,7 @@ class ClienteService with ChangeNotifier {
 
     _clientes = jsonDecode(listString);
     notifyListeners();
+
     return _clientes;
   }
 

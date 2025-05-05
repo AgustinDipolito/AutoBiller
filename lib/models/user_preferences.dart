@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dist_v2/models/pedido.dart';
-import 'package:dist_v2/services/stock_service.dart';
 
 import 'stock.dart';
 

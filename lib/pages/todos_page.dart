@@ -3,6 +3,7 @@ import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/models/user_preferences.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/utils.dart';
+import 'package:dist_v2/widgets/faltantes_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,6 @@ class _TodosPageState extends State<TodosPage> {
   @override
   Widget build(BuildContext context) {
     final clienteService = Provider.of<ClienteService>(context);
-    clienteService.setClientes = UserPreferences.getPedidos();
 
     return Scaffold(
       backgroundColor: Colors.grey,
@@ -35,10 +35,15 @@ class _TodosPageState extends State<TodosPage> {
                 onPressed: () async {
                   final nav = Navigator.of(context);
                   final pedidoGrande = <Item>[];
+                  final List<String> nombres = [];
 
                   for (var i = 0; i < clienteService.clientes.length; i++) {
                     if (selects[i]) {
-                      pedidoGrande.addAll(clienteService.clientes[i].lista);
+                      final pedido = clienteService.clientes[i];
+                      if (!nombres.contains(pedido.nombre)) {
+                        nombres.add(pedido.nombre);
+                      }
+                      pedidoGrande.addAll(pedido.lista);
                     }
                   }
                   final pedidoGrandeJunto = <Item>[];
@@ -55,7 +60,7 @@ class _TodosPageState extends State<TodosPage> {
                   }
 
                   final pedido = Pedido(
-                      nombre: 'CONJUNTO',
+                      nombre: 'CONJUNTO - ${nombres.join(", ")}',
                       fecha: DateTime.now(),
                       lista: pedidoGrandeJunto,
                       key: const Key(''),
@@ -73,7 +78,8 @@ class _TodosPageState extends State<TodosPage> {
                   selects = List.generate(clienteService.clientes.length, (i) => false);
                 });
               },
-              icon: const Icon(Icons.join_full_outlined))
+              icon: const Icon(Icons.join_full_outlined)),
+          FaltantesManager(clienteService: clienteService),
         ],
       ),
       body: SafeArea(
@@ -194,6 +200,19 @@ class _TodosPageState extends State<TodosPage> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              if (cliente.lista.any((acc) => acc.faltante))
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: Text(
+                                    "! " *
+                                        cliente.lista.where((acc) => acc.faltante).length,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.red[900],
+                                    ),
+                                  ),
+                                ),
                               Text(
                                 cliente.fecha.year == DateTime.now().year
                                     ? Utils.formatDateNoYear(cliente.fecha)
