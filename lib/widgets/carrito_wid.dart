@@ -2,8 +2,8 @@ import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
 import 'package:dist_v2/utils.dart';
+import 'package:dist_v2/widgets/edit_cart_item_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class CarritoWidget extends StatefulWidget {
@@ -83,7 +83,23 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
                         ),
                         onDismissed: (direction) => pedidoService.deleteCarrito(i),
                         child: ListTile(
+                          dense: pedido.nombre.length > 20,
                           onTap: () => pedidoService.addCant(i),
+                          onLongPress: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return EditCartItemDialog(
+                                item: pedido,
+                                onSave: (quantity, description) {
+                                  pedidoService.updateCartItem(
+                                    i,
+                                    newCant: quantity,
+                                    newDesc: description,
+                                  );
+                                },
+                              );
+                            },
+                          ),
                           trailing: isEditMode
                               ? reorderButton(context, pedidoService, i)
                               : null,
@@ -95,7 +111,6 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
                             overflow: TextOverflow.visible,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          onLongPress: () => pedidoService.delCant(i),
                         ),
                       );
                     },
@@ -124,7 +139,7 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                Utils.formatPrice(pedidoService.sumTot().toDouble()),
+                Utils.formatPrice(pedidoService.sumTot.toDouble()),
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
@@ -295,7 +310,7 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
     clienteService.guardarPedido(
       name,
       pedidoService.giveSaved(),
-      pedidoService.sumTot(),
+      pedidoService.sumTot,
       date,
     );
     pedidoService.clearAll();

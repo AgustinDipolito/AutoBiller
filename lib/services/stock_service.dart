@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dist_v2/models/user_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:dist_v2/models/item.dart';
 
 import '../models/stock.dart';
 

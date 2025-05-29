@@ -1,6 +1,6 @@
 class Item {
   String nombre;
-  final String tipo;
+  String tipo;
   final int precio;
   final int id;
   int precioT;

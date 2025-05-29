@@ -58,13 +58,22 @@ class PedidoService with ChangeNotifier {
     notifyListeners();
   }
 
-  int sumTot() {
-    int tot = 0;
-    for (var t in carrito) {
-      tot += t.precioT;
+  void updateCartItem(int index, {int? newCant, String? newDesc}) {
+    if (index < 0 || index >= carrito.length) return;
+
+    if (newCant != null) {
+      carrito[index].cantidad = newCant;
+      carrito[index].precioT = (carrito[index].precio) * newCant;
     }
-    return tot;
+
+    if (newDesc != null) {
+      carrito[index].tipo = newDesc;
+    }
+
+    notifyListeners();
   }
+
+  int get sumTot => carrito.fold(0, (sum, item) => sum + item.precioT);
 
   List<Item> giveSaved() {
     List<Item> lista = [];
