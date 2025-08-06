@@ -1,3 +1,4 @@
+import 'package:dist_v2/pages/todos_page.dart';
 import 'package:dist_v2/widgets/carrito_wid.dart';
 import 'package:dist_v2/widgets/search.dart' as top;
 import 'package:dist_v2/widgets/izq_principal.dart';
@@ -44,23 +45,50 @@ class _PrincipalPageState extends State<PrincipalPage> {
             ),
           ],
         ),
-        body: Container(
-          color: Colors.grey,
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: const SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(child: CarritoWidget()),
-                top.SearchBar(),
-                ProductsList(),
-              ],
+        body: GestureDetector(
+          onHorizontalDragEnd: (DragEndDetails details) {
+            // Check if the swipe is from left to right (positive velocity)
+            if (details.primaryVelocity! < 0) {
+              // Navigate to 'todos' page
+              Navigator.push(context, _createRoute());
+            }
+          },
+          child: Container(
+            color: Colors.grey,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: const SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(child: CarritoWidget()),
+                  top.SearchBar(),
+                  ProductsList(),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    transitionDuration: const Duration(milliseconds: 150),
+    pageBuilder: (context, animation, secondaryAnimation) => const TodosPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1.0, 0.0); // from right to left
+      const end = Offset.zero;
+      final tween =
+          Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeOut));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

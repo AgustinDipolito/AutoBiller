@@ -1,4 +1,3 @@
-import 'package:dist_v2/models/item.dart';
 import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/models/vip_item.dart';
 import 'package:dist_v2/pages/history_item_chart.dart';
@@ -29,7 +28,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final List<Pedido> pedidos = clientesService.clientes;

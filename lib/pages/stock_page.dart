@@ -6,9 +6,7 @@ import 'package:dist_v2/api/api.dart';
 import 'package:dist_v2/api/pdf_stock_api.dart';
 import 'package:dist_v2/models/stock.dart';
 import 'package:dist_v2/services/stock_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class StockPage extends StatefulWidget {
@@ -136,7 +134,7 @@ class _StockPageState extends State<StockPage> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.warning),
+                  icon: const Icon(Icons.warning),
                   onPressed: () {
                     _showFilterSheet(context);
                   },

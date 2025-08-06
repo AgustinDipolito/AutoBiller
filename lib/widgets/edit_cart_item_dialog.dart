@@ -1,7 +1,5 @@
 import 'package:dist_v2/models/item.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class EditCartItemDialog extends StatefulWidget {
   final Item item;
@@ -318,12 +316,11 @@ class _EditCartItemDialogState extends State<EditCartItemDialog> {
         ),
         FilledButton(
           onPressed: () {
-            // Parse the quantity and ensure it's at least 1
             final quantity = int.tryParse(_quantityController.text) ?? 1;
 
             // Pass the updated values back
             widget.onSave(
-              quantity < 1 ? 1 : quantity,
+              quantity,
               _descriptionController.text,
             );
 

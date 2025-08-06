@@ -1,6 +1,5 @@
 import 'package:dist_v2/models/item.dart';
 import 'package:dist_v2/models/pedido.dart';
-import 'package:dist_v2/models/user_preferences.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/utils.dart';
 import 'package:dist_v2/widgets/faltantes_manager.dart';

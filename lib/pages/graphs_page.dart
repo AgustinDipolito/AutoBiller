@@ -1,6 +1,5 @@
 import 'package:charts_flutter/flutter.dart';
 import 'package:dist_v2/models/pedido.dart';
-import 'package:dist_v2/models/user_preferences.dart';
 import 'package:dist_v2/models/vip_item.dart';
 import 'package:dist_v2/services/analysis_service.dart';
 import 'package:flutter/material.dart';

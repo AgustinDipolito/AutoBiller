@@ -37,7 +37,7 @@ class FaltantesManager extends StatelessWidget {
                         return ExpansionTile(
                           title: Text(
                             pedido.nombre,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           children: faltantes
                               .map((item) => ListTile(
@@ -95,8 +95,11 @@ class FaltantesManager extends StatelessWidget {
 
                   final markdown = buffer.toString();
                   // Copy to clipboard
-                  await Clipboard.setData(ClipboardData(text: markdown));
                   // Close dialog
+
+                  await Clipboard.setData(ClipboardData(text: markdown));
+
+                  if (!context.mounted) return;
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Copiados al portapapeles!')),

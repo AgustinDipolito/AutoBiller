@@ -110,7 +110,9 @@ class AnalysisService with ChangeNotifier {
     final today = DateTime.now();
 
     // for startDate to today, if date is not in dates, add it with 0 sells
-    for (var date = startDate; date.isBefore(today); date = date.add(Duration(days: 1))) {
+    for (var date = startDate;
+        date.isBefore(today);
+        date = date.add(const Duration(days: 1))) {
       if (!dates.contains(date)) {
         timeSeries[date] = 0;
       }

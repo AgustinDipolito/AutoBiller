@@ -35,8 +35,7 @@ class FileApi {
       await file.writeAsString(csv, encoding: Encoding.getByName('l1')!);
       if (open) await openFile(file);
       return file;
-    } on Exception catch (e) {
-      print(e);
+    } catch (e) {
       return null;
     }
   }
