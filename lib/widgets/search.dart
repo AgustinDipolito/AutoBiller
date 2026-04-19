@@ -5,8 +5,21 @@ import 'package:dist_v2/services/pedido_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SearchBar extends StatelessWidget {
+class SearchBar extends StatefulWidget {
   const SearchBar({Key? key}) : super(key: key);
+
+  @override
+  State<SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +47,7 @@ class SearchBar extends StatelessWidget {
                 ],
               ),
               child: TextField(
+                controller: _controller,
                 onSubmitted: (value) async {
                   if (value.isNotEmpty) {
                     final first = listaService.allView.first;
@@ -43,11 +57,16 @@ class SearchBar extends StatelessWidget {
                 onChanged: (value) {
                   listaService.searchItem(value, clienteService.clientes);
                 },
-                decoration: const InputDecoration(
-                  focusedBorder: InputBorder.none,
-                  border: InputBorder.none,
-                  hintText: "Buscar...",
-                ),
+                decoration: InputDecoration(
+                    focusedBorder: InputBorder.none,
+                    border: InputBorder.none,
+                    hintText: "Buscar...",
+                    suffix: IconButton(
+                        onPressed: () {
+                          _controller.clear();
+                          listaService.searchItem('', clienteService.clientes);
+                        },
+                        icon: const Icon(Icons.clear))),
               ),
             ),
           ),
@@ -58,12 +77,12 @@ class SearchBar extends StatelessWidget {
               elevation: 4,
               backgroundColor: Colors.blueGrey,
             ),
-            onPressed: () {
+            onPressed: () async {
               final pedidoService = Provider.of<PedidoService>(context, listen: false);
               final namecontroller = TextEditingController();
               final colorcontroller = TextEditingController();
               final pricecontroller = TextEditingController();
-              showDialog(
+              await showDialog(
                 context: context,
                 builder: (_) {
                   return AlertDialog(
@@ -134,6 +153,7 @@ class SearchBar extends StatelessWidget {
         int.parse(pricecontroller.text), "0000");
 
     pedidoService.addCarrito(data);
+
     Navigator.pop(context);
   }
 }

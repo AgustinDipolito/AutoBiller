@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dist_v2/api/api.dart';
 import 'package:dist_v2/api/pdf_invoice_api.dart';
 import 'package:dist_v2/models/customer.dart';
@@ -9,6 +11,7 @@ import 'package:dist_v2/services/pedido_service.dart';
 import 'package:dist_v2/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PedidoPage extends StatefulWidget {
   const PedidoPage({Key? key}) : super(key: key);
@@ -19,6 +22,16 @@ class PedidoPage extends StatefulWidget {
 
 class _PedidoPageState extends State<PedidoPage> {
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _discountController = TextEditingController();
+  final TextEditingController _balanceController = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _discountController.dispose();
+    _balanceController.dispose();
+    super.dispose();
+  }
 
   List<bool> selecteds = [];
   @override
@@ -26,6 +39,8 @@ class _PedidoPageState extends State<PedidoPage> {
     final pedido = ModalRoute.of(context)!.settings.arguments as Pedido;
     selecteds = List.generate(pedido.lista.length, (i) => false);
     _controller.text = pedido.msg ?? '';
+    _discountController.text = pedido.discountPercentage?.toString() ?? '';
+    _balanceController.text = pedido.balance?.toString() ?? '';
     final widthButton = MediaQuery.of(context).size.width * .3;
     return SafeArea(
       child: Scaffold(
@@ -65,14 +80,60 @@ class _PedidoPageState extends State<PedidoPage> {
                 ),
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width * .8,
-                  child: TextField(
+                  child: _buildTextField(
                     controller: _controller,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    label: 'Mensaje',
                     onSubmitted: (msg) =>
                         Provider.of<ClienteService>(context, listen: false)
                             .editMessage(msg, pedido),
                   ),
                 ),
+                const SizedBox(height: 8),
+                if (pedido.msg?.toLowerCase().trim() != 'armado')
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width * .38,
+                        child: _buildTextField(
+                          controller: _discountController,
+                          label: 'Descuento %',
+                          keyboardType: TextInputType.number,
+                          onSubmitted: (value) async {
+                            final discount = double.tryParse(value);
+                            setState(() {
+                              pedido.discountPercentage = discount;
+                            });
+                            // Guardar usando la instancia completa del pedido
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setString(
+                                "${pedido.key}", jsonEncode(pedido.toJson()));
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width * .38,
+                        child: _buildTextField(
+                          controller: _balanceController,
+                          label: 'Saldo anterior',
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: true, decimal: true),
+                          onSubmitted: (value) async {
+                            final balance = double.tryParse(value);
+                            setState(() {
+                              pedido.balance = balance;
+                            });
+                            // Guardar usando la instancia completa del pedido
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setString(
+                                "${pedido.key}", jsonEncode(pedido.toJson()));
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                const SizedBox(height: 8),
                 Flexible(
                   child: Container(
                     constraints: BoxConstraints(
@@ -248,6 +309,30 @@ class _PedidoPageState extends State<PedidoPage> {
 
   _switchColor(i) => setState(() => selecteds[i] = !selecteds[i]);
 
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required Function(String) onSubmitted,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      style: const TextStyle(color: Colors.white, fontSize: 14),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white70),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white54),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+      ),
+      onSubmitted: onSubmitted,
+    );
+  }
+
   Invoice _generateInvoice(Pedido pedido) {
     final date = DateTime.now();
     final dueDate = date.add(const Duration(days: 3));
@@ -276,6 +361,8 @@ class _PedidoPageState extends State<PedidoPage> {
       ),
       customer: Customer(name: pedido.nombre, address: "Ubicacion: -"),
       items: lista,
+      discountPercentage: pedido.discountPercentage,
+      balance: pedido.balance,
     );
   }
 }

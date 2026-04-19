@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dist_v2/pages/analysis_page.dart';
 import 'package:dist_v2/pages/graphs_page.dart';
+import 'package:dist_v2/pages/reporte_page.dart';
 
 class StadisticPage extends StatefulWidget {
-  const StadisticPage({Key? key}) : super(key: key);
+  const StadisticPage({super.key});
 
   @override
   State<StadisticPage> createState() => _StadisticPageState();
@@ -17,16 +18,23 @@ class _StadisticPageState extends State<StadisticPage>
   final List<BottomNavigationBarItem> _items = [
     const BottomNavigationBarItem(icon: Icon(Icons.data_object), label: 'Datos'),
     const BottomNavigationBarItem(icon: Icon(Icons.graphic_eq), label: 'Ventas'),
+    const BottomNavigationBarItem(icon: Icon(Icons.assessment), label: 'Reporte'),
   ];
 
   @override
   void initState() {
     super.initState();
     _controller = TabController(
-      length: 2,
+      length: 3,
       initialIndex: 0,
       vsync: this,
     )..addListener(_viewSwitcher);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,9 +48,14 @@ class _StadisticPageState extends State<StadisticPage>
           color: Colors.grey,
           child: TabBarView(
             controller: _controller,
-            children: const [
-              AnalysisPage(),
-              GraphsPage(),
+            children: [
+              const AnalysisPage(),
+              const GraphsPage(),
+              Builder(
+                builder: (context) {
+                  return ReportePage();
+                },
+              ),
             ],
           ),
         ),

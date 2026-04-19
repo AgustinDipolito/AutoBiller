@@ -33,37 +33,50 @@ class _TodosPageState extends State<TodosPage> {
                 color: kDefaultIconDarkColor,
                 onPressed: () async {
                   final nav = Navigator.of(context);
-                  final pedidoGrande = <Item>[];
-                  final List<String> nombres = [];
+                  // Get selected client names and items
+                  final selectedNames = <String>[];
+                  final allSelectedItems = <Item>[];
 
                   for (var i = 0; i < clienteService.clientes.length; i++) {
                     if (selects[i]) {
-                      final pedido = clienteService.clientes[i];
-                      if (!nombres.contains(pedido.nombre)) {
-                        nombres.add(pedido.nombre);
+                      final cliente = clienteService.clientes[i];
+                      if (!selectedNames.contains(cliente.nombre)) {
+                        selectedNames.add(cliente.nombre);
                       }
-                      pedidoGrande.addAll(pedido.lista);
+                      allSelectedItems.addAll(cliente.lista);
                     }
                   }
-                  final pedidoGrandeJunto = <Item>[];
 
-                  for (var element in pedidoGrande) {
-                    if (!pedidoGrandeJunto
-                        .any((conjunto) => element.nombre == conjunto.nombre)) {
-                      pedidoGrandeJunto.add(element);
+                  // Use a map to efficiently combine items with the same name and type
+                  final itemMap = <String, Item>{};
+
+                  for (final item in allSelectedItems) {
+                    // Create a unique key for each item based on name and type
+                    final key = '${item.nombre}|${item.tipo}';
+
+                    if (itemMap.containsKey(key)) {
+                      // Update quantity if item already exists
+                      itemMap[key]!.cantidad += item.cantidad;
                     } else {
-                      final index = pedidoGrandeJunto
-                          .indexWhere((conjunto) => element.nombre == conjunto.nombre);
-                      pedidoGrandeJunto[index].cantidad += element.cantidad;
+                      // Add new item (create a copy to avoid modifying original)
+                      itemMap[key] = Item.fromJson(item.toJson());
                     }
                   }
+
+                  // Convert map values back to list
+                  final pedidoGrandeJunto = itemMap.values.toList();
+                  final nombres = selectedNames;
 
                   final pedido = Pedido(
-                      nombre: 'CONJUNTO - ${nombres.join(", ")}',
-                      fecha: DateTime.now(),
-                      lista: pedidoGrandeJunto,
-                      key: const Key(''),
-                      total: 0);
+                    nombre: 'CONJUNTO - ${nombres.join(", ")}',
+                    fecha: DateTime.now(),
+                    lista: pedidoGrandeJunto,
+                    key: const Key(''),
+                    total: pedidoGrandeJunto.fold(
+                      0,
+                      (sum, item) => sum + (item.precio * item.cantidad),
+                    ),
+                  );
                   selectionMode = false;
                   setState(() {});
                   nav.pushNamed("pedido", arguments: pedido);

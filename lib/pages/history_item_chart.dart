@@ -3,60 +3,18 @@ import 'package:dist_v2/pages/graphs_page.dart';
 import 'package:dist_v2/services/analysis_service.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
 import '../api/api.dart';
 
-charts.Series<DateTime, DateTime> _createSeries(Map<DateTime, int> data) {
-  return charts.Series<DateTime, DateTime>(
-    id: 'Ventas',
+List<FlSpot> _createSpots(Map<DateTime, int> data) {
+  final sortedEntries = data.entries.toList()..sort((a, b) => a.key.compareTo(b.key));
 
-    colorFn: (_, __) => charts.MaterialPalette.white, // blueGrey shade
-    domainFn: (DateTime date, _) => date,
-    measureFn: (DateTime date, _) => data[date],
-    data: data.keys.toList(),
-  );
-}
-
-charts.RangeAnnotationSegment<Object> _createStockAnnotation(num avgSales) {
-  return charts.RangeAnnotationSegment(
-    avgSales,
-    avgSales * 2,
-    charts.RangeAnnotationAxisType.measure,
-    startLabel: 'Min: $avgSales',
-    endLabel: 'Max: ${avgSales * 2}',
-    labelAnchor: charts.AnnotationLabelAnchor.end,
-    color: charts.MaterialPalette.green.shadeDefault.lighter, // green shade
-  );
-}
-
-charts.NumericAxisSpec _createMeasureAxis(num maxValue) {
-  return charts.NumericAxisSpec(
-    viewport: charts.NumericExtents(0, maxValue * 1.2),
-    tickProviderSpec: const charts.BasicNumericTickProviderSpec(
-      desiredTickCount: 5,
-      zeroBound: true,
-    ),
-    renderSpec: const charts.GridlineRendererSpec(
-      labelStyle: charts.TextStyleSpec(
-        fontSize: 12,
-        color: charts.MaterialPalette.white,
-      ),
-    ),
-  );
-}
-
-charts.DateTimeAxisSpec _createDateAxis() {
-  return const charts.DateTimeAxisSpec(
-    tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
-      day: charts.TimeFormatterSpec(
-        format: 'dd/MM',
-        transitionFormat: 'dd/MM/yyyy',
-      ),
-    ),
-  );
+  return sortedEntries.asMap().entries.map((entry) {
+    return FlSpot(entry.key.toDouble(), entry.value.value.toDouble());
+  }).toList();
 }
 
 class ProductChart extends StatelessWidget {
@@ -258,30 +216,202 @@ class ProductChart extends StatelessWidget {
   }
 
   Widget _buildChart(Map<DateTime, int> movements, Map<String, num> stats) {
-    return SizedBox(
+    final spots = _createSpots(movements);
+    final maxY = stats['maxSales']!.toDouble() * 1.2;
+    final avgSales = stats['avgSales']!.toDouble();
+
+    return Container(
       height: 300,
-      child: charts.TimeSeriesChart(
-        [_createSeries(movements)],
-        animate: true,
-        dateTimeFactory: const charts.LocalDateTimeFactory(),
-        defaultRenderer: charts.LineRendererConfig(
-          includeArea: true,
-          areaOpacity: 0.2,
-          strokeWidthPx: 2.5,
-        ),
-        behaviors: [
-          charts.ChartTitle('Ventas Semanales',
-              behaviorPosition: charts.BehaviorPosition.top),
-          charts.SeriesLegend(position: charts.BehaviorPosition.bottom),
-          charts.RangeAnnotation([
-            _createStockAnnotation(stats['avgSales']!),
-          ]),
-          charts.LinePointHighlighter(
-            showHorizontalFollowLine: charts.LinePointHighlighterFollowLineType.nearest,
+      padding: const EdgeInsets.all(16),
+      child: LineChart(
+        LineChartData(
+          gridData: FlGridData(
+            show: true,
+            drawVerticalLine: true,
+            horizontalInterval: maxY / 5,
+            verticalInterval: spots.length > 1 ? (spots.length - 1) / 5 : 1,
+            getDrawingHorizontalLine: (value) {
+              return FlLine(
+                color: Colors.white.withValues(alpha: 0.3),
+                strokeWidth: 1,
+              );
+            },
+            getDrawingVerticalLine: (value) {
+              return FlLine(
+                color: Colors.white.withValues(alpha: 0.3),
+                strokeWidth: 1,
+              );
+            },
           ),
-        ],
-        primaryMeasureAxis: _createMeasureAxis(stats['maxSales']!),
-        domainAxis: _createDateAxis(),
+          titlesData: FlTitlesData(
+            show: true,
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 30,
+                interval: spots.length > 5 ? (spots.length / 5).ceil().toDouble() : 1,
+                getTitlesWidget: (value, meta) {
+                  final index = value.toInt();
+                  if (index < 0 || index >= movements.length) return Container();
+
+                  final sortedDates = movements.keys.toList()..sort();
+                  if (index < sortedDates.length) {
+                    return SideTitleWidget(
+                      meta: meta,
+                      child: Text(
+                        DateFormat('dd/MM').format(sortedDates[index]),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                        ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+              ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: maxY / 5,
+                reservedSize: 42,
+                getTitlesWidget: (value, meta) {
+                  return Text(
+                    value.toInt().toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          borderData: FlBorderData(
+            show: true,
+            border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+          ),
+          minX: 0,
+          maxX: spots.isNotEmpty ? spots.length - 1.0 : 0,
+          minY: 0,
+          maxY: maxY,
+          lineBarsData: [
+            LineChartBarData(
+              spots: spots,
+              isCurved: true,
+              gradient: LinearGradient(
+                colors: [
+                  Colors.blueGrey.shade300,
+                  Colors.blueGrey.shade500,
+                ],
+              ),
+              barWidth: 3,
+              isStrokeCapRound: true,
+              dotData: FlDotData(
+                show: true,
+                getDotPainter: (spot, percent, barData, index) {
+                  return FlDotCirclePainter(
+                    radius: 4,
+                    color: Colors.white,
+                    strokeWidth: 2,
+                    strokeColor: Colors.blueGrey.shade500,
+                  );
+                },
+              ),
+              belowBarData: BarAreaData(
+                show: true,
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.blueGrey.shade300.withValues(alpha: 0.3),
+                    Colors.blueGrey.shade500.withValues(alpha: 0.1),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+          ],
+          // Add horizontal line for average sales
+          extraLinesData: ExtraLinesData(
+            horizontalLines: [
+              HorizontalLine(
+                y: avgSales,
+                color: Colors.green.shade300,
+                strokeWidth: 2,
+                dashArray: [5, 5],
+                label: HorizontalLineLabel(
+                  show: true,
+                  alignment: Alignment.topRight,
+                  padding: const EdgeInsets.only(right: 5, bottom: 5),
+                  style: const TextStyle(
+                    color: Colors.green,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  labelResolver: (line) => 'Promedio: ${avgSales.toInt()}',
+                ),
+              ),
+              HorizontalLine(
+                y: avgSales * 2,
+                color: Colors.orange.shade300,
+                strokeWidth: 2,
+                dashArray: [5, 5],
+                label: HorizontalLineLabel(
+                  show: true,
+                  alignment: Alignment.topRight,
+                  padding: const EdgeInsets.only(right: 5, top: 5),
+                  style: const TextStyle(
+                    color: Colors.orange,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  labelResolver: (line) => 'Stock ideal: ${(avgSales * 2).toInt()}',
+                ),
+              ),
+            ],
+          ),
+          lineTouchData: LineTouchData(
+            touchTooltipData: LineTouchTooltipData(
+              getTooltipColor: (LineBarSpot spot) => Colors.blueGrey.shade800,
+              tooltipBorderRadius: BorderRadius.circular(8),
+              getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                return touchedBarSpots.map((barSpot) {
+                  final flSpot = barSpot;
+                  final index = flSpot.x.toInt();
+                  final sortedDates = movements.keys.toList()..sort();
+
+                  if (index < sortedDates.length) {
+                    return LineTooltipItem(
+                      '${DateFormat('dd/MM/yyyy').format(sortedDates[index])}\n',
+                      const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Ventas: ${flSpot.y.toInt()}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return null;
+                }).toList();
+              },
+            ),
+            handleBuiltInTouches: true,
+          ),
+        ),
       ),
     );
   }
@@ -327,7 +457,7 @@ class _StatCard extends StatelessWidget {
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: color.withOpacity(0.8),
+                      color: color.withValues(alpha: 0.8),
                     ),
                 overflow: TextOverflow.ellipsis,
               ),

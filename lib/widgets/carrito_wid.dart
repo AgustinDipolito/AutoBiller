@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
 import 'package:dist_v2/utils.dart';
 import 'package:dist_v2/widgets/edit_cart_item_dialog.dart';
+import 'package:dist_v2/widgets/qr_scan_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +17,7 @@ class CarritoWidget extends StatefulWidget {
   State<CarritoWidget> createState() => _CarritoWidgetState();
 }
 
-class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserver {
+class _CarritoWidgetState extends State<CarritoWidget> {
   final ValueNotifier<bool> editMode = ValueNotifier(false);
   final _carritoController = ScrollController();
 
@@ -177,6 +180,18 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
                   color: Colors.white,
                 ),
               ),
+              IconButton(
+                style: ElevatedButton.styleFrom(
+                  shape: const StadiumBorder(),
+                  elevation: 4,
+                  backgroundColor: Colors.blueGrey,
+                ),
+                onPressed: () => _scanAndRestorePedido(context),
+                icon: const Icon(
+                  Icons.qr_code_scanner,
+                  color: Colors.white,
+                ),
+              ),
               const Spacer(),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -275,6 +290,7 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
                   TextField(
                     autofocus: true,
                     controller: posController,
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(hintText: 'Nueva pos'),
                   ),
                 ],
@@ -314,5 +330,57 @@ class _CarritoWidgetState extends State<CarritoWidget> with WidgetsBindingObserv
       date,
     );
     pedidoService.clearAll();
+  }
+
+  Future<void> _scanAndRestorePedido(BuildContext context) async {
+    final scanned = await Navigator.of(context).push<String>(
+      MaterialPageRoute(
+        builder: (_) => const QrScanPage(),
+      ),
+    );
+
+    if (scanned == null || scanned.trim().isEmpty) return;
+
+    final pedido = _parsePedidoFromQr(scanned);
+    if (pedido == null) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No se pudo leer el pedido del QR.'),
+        ),
+      );
+      return;
+    }
+
+    if (!context.mounted) return;
+    final pedidoService = Provider.of<PedidoService>(context, listen: false);
+    pedidoService.replaceCarrito(pedido.lista);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Pedido cargado al carrito.'),
+      ),
+    );
+  }
+
+  Pedido? _parsePedidoFromQr(String data) {
+    try {
+      var payload = data.trim();
+      if (payload.startsWith('dist_v2:')) {
+        payload = payload.substring('dist_v2:'.length);
+      }
+
+      final decoded = jsonDecode(payload);
+      if (decoded is Map<String, dynamic>) {
+        return Pedido.fromJson(decoded);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+      return null;
+    }
+    return null;
   }
 }

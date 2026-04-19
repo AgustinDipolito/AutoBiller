@@ -81,6 +81,22 @@ class PedidoService with ChangeNotifier {
     return lista;
   }
 
+  void replaceCarrito(List<Item> items) {
+    carrito = items.map((item) {
+      final newItem = Item(
+        cantidad: item.cantidad,
+        tipo: item.tipo,
+        nombre: item.nombre,
+        precio: item.precio,
+        precioT: item.precio * item.cantidad,
+        id: item.id,
+      );
+      return newItem;
+    }).toList();
+    notifyListeners();
+    Future.delayed(const Duration(milliseconds: 200), () => moveControllerToEnd());
+  }
+
   void clearAll() {
     carrito.clear();
     notifyListeners();

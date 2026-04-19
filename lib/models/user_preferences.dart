@@ -2,12 +2,15 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dist_v2/models/pedido.dart';
+import 'package:collection/collection.dart';
 
 import 'stock.dart';
 
 class UserPreferences {
   static SharedPreferences? _preferences;
   static Future init() async => _preferences = await SharedPreferences.getInstance();
+
+  static List<String> get _keys => _preferences?.getKeys().toList() ?? ['init'];
 
   static Future setPedido(String lista, String key) async {
     await _preferences!.setString("pedidos$key", lista);
@@ -18,9 +21,14 @@ class UserPreferences {
   }
 
   static List<Stock> getStock() {
-    var key =
-        _preferences!.getKeys().firstWhere((element) => element.startsWith('stock'));
+    if (_preferences == null) {
+      return [];
+    }
 
+    var key = _keys.firstWhereOrNull((element) => element.startsWith('stock'));
+    if (key == null) {
+      return [];
+    }
     try {
       List<Stock> stock = <Stock>[];
 
@@ -29,7 +37,7 @@ class UserPreferences {
       if (json.isNotEmpty) {
         final maps = jsonDecode(json);
         for (var map in maps) {
-          final itemStock = Stock.fromJson(map);
+          final itemStock = Stock.fromJson(map, fromFirebase: false);
 
           stock.add(itemStock);
         }
@@ -42,7 +50,10 @@ class UserPreferences {
   }
 
   static List<Pedido> getPedidos() {
-    var keys = _preferences!.getKeys().where((element) => element.startsWith('pedido'));
+    if (_preferences == null) {
+      return [];
+    }
+    var keys = _keys.where((element) => element.startsWith('pedido'));
     try {
       List<Pedido> pedidos = [];
       List<String> keysPedidos = [];
@@ -67,21 +78,75 @@ class UserPreferences {
   }
 
   static int getCantidadPedidos() {
-    return _preferences!
-        .getKeys()
-        .where((element) => element.startsWith('pedido'))
-        .length;
+    if (_preferences == null) {
+      return 0;
+    }
+    return _keys.where((element) => element.startsWith('pedido')).length;
   }
 
   static Future clearAllStored() async {
     await _preferences!.clear();
   }
 
-  static Future deleteOne(String key) async {
-    var newKey = key.substring(2, key.length - 2);
-
-    if (_preferences!.containsKey("pedidos$newKey")) {
-      await _preferences!.remove("pedidos$newKey");
+  /// Extrae el hash único de una key tipo "[<[<[#0966f]>]>]" o "[<'#0966f'>]"
+  static String extractHash(String key) {
+    // Buscar el patrón #XXXXX dentro de la key
+    final regex = RegExp(r'#([a-fA-F0-9]+)');
+    final match = regex.firstMatch(key);
+    if (match != null) {
+      return match.group(0)!; // Retorna "#0966f"
     }
+    return key; // Si no encuentra el patrón, retorna la key original
+  }
+
+  static Future deleteOne(String key) async {
+    // Intentar eliminar con la key tal cual
+    if (_preferences!.containsKey("pedidos$key")) {
+      await _preferences!.remove("pedidos$key");
+      return;
+    }
+
+    // Buscar por hash en todas las keys de pedidos
+    final hash = extractHash(key);
+    final pedidoKeys = _keys.where((k) => k.startsWith('pedido'));
+
+    for (var pedidoKey in pedidoKeys) {
+      if (pedidoKey.contains(hash)) {
+        await _preferences!.remove(pedidoKey);
+        return;
+      }
+    }
+  }
+
+  /// Elimina pedidos duplicados basándose en el hash único
+  static Future<int> removeDuplicates() async {
+    if (_preferences == null) return 0;
+
+    final pedidoKeys = _keys.where((k) => k.startsWith('pedido')).toList();
+    final seenHashes = <String>{};
+    final keysToRemove = <String>[];
+
+    for (var key in pedidoKeys) {
+      final hash = extractHash(key);
+      if (seenHashes.contains(hash)) {
+        // Es un duplicado
+        keysToRemove.add(key);
+      } else {
+        seenHashes.add(hash);
+      }
+    }
+
+    // Eliminar duplicados
+    for (var key in keysToRemove) {
+      await _preferences!.remove(key);
+    }
+
+    return keysToRemove.length;
+  }
+
+  /// Obtiene todas las keys de pedidos (para debug)
+  static List<String> getAllPedidoKeys() {
+    if (_preferences == null) return [];
+    return _keys.where((k) => k.startsWith('pedido')).toList();
   }
 }

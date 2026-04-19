@@ -6,12 +6,16 @@ class Invoice {
   final Supplier supplier;
   final Customer customer;
   final List<InvoiceItem> items;
+  final double? discountPercentage; // Porcentaje de descuento (ej: 10 = 10%)
+  final double? balance; // Saldo anterior (positivo = debe, negativo = a favor)
 
   const Invoice({
     required this.info,
     required this.supplier,
     required this.customer,
     required this.items,
+    this.discountPercentage,
+    this.balance,
   });
 }
 

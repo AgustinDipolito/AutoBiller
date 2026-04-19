@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "407728281687",
+    "project_id": "in-out-15bb6",
+    "storage_bucket": "in-out-15bb6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407728281687:android:c501493ceb53a55683eb12",
+        "android_client_info": {
+          "package_name": "com.example.dist_v2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUVrbAtzpFo3-FmD7hEdIePHTeVOYSOqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407728281687:android:c79c5f37975019e683eb12",
+        "android_client_info": {
+          "package_name": "com.example.in_out"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUVrbAtzpFo3-FmD7hEdIePHTeVOYSOqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407728281687:android:285cb773d6d2f7ee83eb12",
+        "android_client_info": {
+          "package_name": "com.finances.in_out"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUVrbAtzpFo3-FmD7hEdIePHTeVOYSOqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

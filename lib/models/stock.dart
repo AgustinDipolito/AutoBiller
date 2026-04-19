@@ -1,3 +1,5 @@
+// ignore_for_file:constant_identifier_names
+
 class Stock {
   final int id;
   int cant;
@@ -6,6 +8,7 @@ class Stock {
   int ultimoMov;
   StockType type;
   Proveedor proveedor;
+  bool cambiosPendientes; // Marca cambios locales pendientes de sincronizar
 
   Stock({
     required this.fechaMod,
@@ -15,9 +18,10 @@ class Stock {
     required this.id,
     this.type = StockType.otro,
     this.proveedor = Proveedor.otro,
+    this.cambiosPendientes = false,
   });
 
-  factory Stock.fromJson(Map<String, dynamic> json) => Stock(
+  factory Stock.fromJson(Map<String, dynamic> json, {bool fromFirebase = false}) => Stock(
         cant: int.parse(json['cant']),
         name: json['name'],
         id: int.parse(json['id']),
@@ -25,9 +29,10 @@ class Stock {
         proveedor: Proveedor.values[int.parse(json['proveedor'] ?? '8')],
         fechaMod: json['date'] != null ? DateTime.parse(json['date']) : DateTime(2023),
         ultimoMov: 0, // json['ultimaCant'] != null ? int.parse(json['ultimaCant']) : 0,
+        cambiosPendientes: fromFirebase ? false : (json['cambiosPendientes'] ?? true),
       );
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool includeLocalFields = true}) {
     return {
       "name": name,
       "cant": cant.toString(),
@@ -36,6 +41,7 @@ class Stock {
       "ultimaCant": ultimoMov.toString(),
       "type": type.index.toString(),
       "proveedor": proveedor.index.toString(),
+      if (includeLocalFields) "cambiosPendientes": cambiosPendientes,
     };
   }
 }
@@ -64,4 +70,31 @@ enum Proveedor {
   dylplast,
   plastic,
   otro,
+}
+
+enum GroupType {
+  Burletes,
+
+  Burletes_EPDM,
+  Bipuntos,
+  Bisagras,
+  Brazos_y_limitadores,
+
+  Cerraduras,
+  Cierres_batientes,
+  Cierres_corredizos,
+  Cierres_de_abrir,
+  Complementos,
+  Escuadras_aluminio,
+  Felpas_nylon,
+  Pasadores,
+  Picaportes,
+  Rodamientos,
+  Tornillos,
+  Plasticos,
+  Calzos,
+  Otros;
+
+  @override
+  String toString() => name.replaceAll('_', ' ');
 }

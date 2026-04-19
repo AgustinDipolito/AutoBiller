@@ -78,6 +78,10 @@ class _AnalysisPageState extends State<AnalysisPage> {
               analysisService.export();
             },
           ),
+          _button(
+            name: 'DATASET',
+            action: () => _exportDataset(context),
+          ),
         ],
       ),
       body: Column(
@@ -215,5 +219,86 @@ class _AnalysisPageState extends State<AnalysisPage> {
         style: const TextStyle(color: Colors.white),
       ),
     );
+  }
+
+  Future<void> _exportDataset(BuildContext context) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Exportar Dataset'),
+        content: const Text(
+          'Seleccione el formato de dataset para minería de datos:\n\n'
+          '• Productos Agregados: Métricas por producto (frecuencia, precios, volumen)\n\n'
+          '• Transacciones: Cada fila es un item de un pedido (análisis temporal y patrones)'
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton.icon(
+            onPressed: () => Navigator.pop(context, 'productos'),
+            icon: const Icon(Icons.analytics),
+            label: const Text('Productos'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () => Navigator.pop(context, 'transacciones'),
+            icon: const Icon(Icons.receipt_long),
+            label: const Text('Transacciones'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (result != null && mounted) {
+      // Mostrar indicador de carga
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      try {
+        if (result == 'productos') {
+          await analysisService.exportDataset(clientesService.clientes);
+        } else {
+          await analysisService.exportTransactionDataset(clientesService.clientes);
+        }
+
+        if (mounted) {
+          Navigator.pop(context); // Cerrar indicador
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                result == 'productos'
+                    ? 'Dataset de productos exportado exitosamente'
+                    : 'Dataset de transacciones exportado exitosamente',
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          Navigator.pop(context); // Cerrar indicador
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error al exportar: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
   }
 }

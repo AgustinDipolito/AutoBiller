@@ -43,15 +43,13 @@ class PdfInvoiceApi {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Container(
-                    height: 50,
-                    width: 50,
-                    child: BarcodeWidget(
-                      barcode: Barcode.qrCode(),
-                      data: invoice.info.number,
-                    ),
+                  BarcodeWidget(
+                    barcode: Barcode.qrCode(),
+                    height: 75,
+                    width: 75,
+                    data: invoice.info.number,
                   ),
-                  SizedBox(height: 0.8 * PdfPageFormat.cm),
+                  SizedBox(height: 0.5 * PdfPageFormat.cm),
                   buildInvoiceInfo(invoice.info),
                 ],
               ),
@@ -133,7 +131,17 @@ class PdfInvoiceApi {
     final netTotal = invoice.items
         .map((item) => item.unitPrice * item.quantity)
         .reduce((item1, item2) => item1 + item2);
-    final total = netTotal;
+
+    // Calcular descuento
+    final discountAmount = invoice.discountPercentage != null
+        ? netTotal * (invoice.discountPercentage! / 100)
+        : 0.0;
+
+    // Aplicar descuento
+    final afterDiscount = netTotal - discountAmount;
+
+    // Aplicar saldo (positivo = se suma, negativo = se resta)
+    final total = afterDiscount + (invoice.balance ?? 0.0);
 
     return Container(
       alignment: Alignment.centerRight,
@@ -146,19 +154,71 @@ class PdfInvoiceApi {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildText(
-                  title: 'Monto Total:',
-                  titleStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: .7,
-                  ),
-                  value: Utils.formatPrice(total),
+                  title: total == netTotal ? 'Total:' : 'Monto:',
+                  titleStyle: total != netTotal
+                      ? TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        )
+                      : TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: .7,
+                        ),
+                  value: Utils.formatPrice(netTotal),
                   unite: true,
                 ),
-                SizedBox(height: 2 * PdfPageFormat.mm),
-                Container(height: 1, color: PdfColors.grey400),
-                SizedBox(height: 0.5 * PdfPageFormat.mm),
-                Container(height: 1, color: PdfColors.grey400),
+                if (invoice.discountPercentage != null &&
+                    invoice.discountPercentage! > 0) ...[
+                  SizedBox(height: 1 * PdfPageFormat.mm),
+                  buildText(
+                    title: '- Promo ${invoice.discountPercentage!.toStringAsFixed(0)}%:',
+                    titleStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    value: Utils.formatPrice(discountAmount),
+                    unite: true,
+                  ),
+                ],
+                if (invoice.balance != null && invoice.balance! != 0) ...[
+                  SizedBox(height: 1 * PdfPageFormat.mm),
+                  buildText(
+                    title: '${invoice.balance! > 0 ? '+' : '-'} Saldo Ant:',
+                    titleStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    value: Utils.formatPrice(invoice.balance!.abs()),
+                    unite: true,
+                  ),
+                ],
+                // SizedBox(height: 2 * PdfPageFormat.mm),
+                // Container(height: 1, color: PdfColors.grey400),
+                // SizedBox(height: 0.5 * PdfPageFormat.mm),
+                // Container(height: 1, color: PdfColors.grey400),
+                // SizedBox(height: 1 * PdfPageFormat.mm),
+                if ((invoice.balance != null && invoice.balance! != 0) ||
+                    (invoice.discountPercentage != null &&
+                        invoice.discountPercentage! > 0)) ...[
+                  SizedBox(height: 1 * PdfPageFormat.mm),
+                  Container(height: 0.5, color: PdfColors.grey400),
+                  SizedBox(height: 1 * PdfPageFormat.mm),
+                  buildText(
+                    title: 'TOTAL:',
+                    titleStyle: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: .7,
+                    ),
+                    value: Utils.formatPrice(total),
+                    unite: true,
+                  ),
+                  SizedBox(height: 1 * PdfPageFormat.mm),
+                  Container(height: 0.5, color: PdfColors.grey400),
+                  SizedBox(height: 0.5 * PdfPageFormat.mm),
+                  Container(height: 0.8, color: PdfColors.grey400),
+                ],
               ],
             ),
           ),

@@ -20,16 +20,39 @@ class ProductsList extends StatelessWidget {
         color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(15),
       ),
-      child: ListView.builder(
-        itemCount: listaService.allView.length,
-        shrinkWrap: true,
-        itemBuilder: (context, i) {
-          return (listaService.allView.isEmpty)
-              ? const Center(child: CircularProgressIndicator())
-              : (i >= listaService.allView.length - 4)
-                  ? itemDeHistorial(listaService.allView[i], i, context)
-                  : itemDelista(listaService.allView[i], i, context);
-        },
+      child: Column(
+        children: [
+          // Badge indicador de modo
+
+          // Lista de productos
+          Expanded(
+            child: ListView.builder(
+              itemCount: listaService.allView.length + 1,
+              shrinkWrap: true,
+              itemBuilder: (context, i) {
+                if (i == 0) {
+                  return ListTile(
+                    dense: true,
+                    title: Text(
+                      'Productos ${listaService.mode}',
+                      style: const TextStyle(
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                      overflow: TextOverflow.fade,
+                    ),
+                  );
+                }
+                final j = i - 1;
+                return (listaService.allView.isEmpty)
+                    ? const Center(child: CircularProgressIndicator())
+                    : (j >= listaService.allView.length - 4)
+                        ? itemDeHistorial(listaService.allView[j], j, context)
+                        : itemDelista(listaService.allView[j], j, context);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

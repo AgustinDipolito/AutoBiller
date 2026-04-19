@@ -6,12 +6,46 @@ import 'package:dist_v2/models/pedido.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'catalogo_service_with_firebase.dart';
 
 class ListaService with ChangeNotifier {
   List<ItemResponse> allView = [];
   final List<ItemResponse> _all = [];
+  final CatalogoService _catalogoService = CatalogoService();
 
-  void readJson() async {
+  // Modo actual: 'offline' (catalogo.json) o 'firebase'
+  String _mode = 'offline';
+  String get mode => _mode;
+
+  /// Cambiar entre modo offline y Firebase
+  Future<void> switchMode(String newMode) async {
+    if (newMode != 'offline' && newMode != 'firebase') return;
+
+    _mode = newMode;
+    _catalogoService.setCatalogoMode(newMode);
+
+    // Recargar datos según el modo
+    if (_mode == 'offline') {
+      await readJson();
+    } else {
+      await loadFromFirebase();
+    }
+
+    notifyListeners();
+  }
+
+  /// Cargar desde Firebase
+  Future<void> loadFromFirebase() async {
+    try {
+      allView = await _catalogoService.getProductosAsItemResponse();
+      allView.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error cargando desde Firebase: $e');
+    }
+  }
+
+  Future<void> readJson() async {
     final response = await rootBundle.loadString("assets/catalogo.json");
     final data = await json.decode(response);
     int i = 0;
@@ -20,14 +54,29 @@ class ListaService with ChangeNotifier {
       allView.add(ItemResponse.fromJson(data[i]));
       i++;
       final ids = <dynamic>{};
+
       allView.retainWhere((x) => ids.add(x.id));
     }
     notifyListeners();
     _all.addAll(allView);
   }
 
-  void searchItem(String cad, List<Pedido> pedidos) {
+  Future<void> searchItem(String cad, List<Pedido> pedidos) async {
     allView.clear();
+
+    if (_mode == 'firebase') {
+      // Buscar en Firebase
+      try {
+        final results = await _catalogoService.buscarProductosAsItemResponse(cad);
+        allView.addAll(results);
+        notifyListeners();
+        return;
+      } catch (e) {
+        debugPrint('Error buscando en Firebase: $e');
+      }
+    }
+
+    // Buscar en offline (comportamiento original)
     final itemsFound = _all.where((item) {
       final nombreLow = item.nombre.toLowerCase();
       final searchLow = cad.toLowerCase();
@@ -35,8 +84,15 @@ class ListaService with ChangeNotifier {
       return nombreLow.contains(searchLow);
     }).toList();
 
-    final allItems =
-        pedidos.fold<List<Item>>([], (prev, element) => [...prev, ...element.lista]);
+    if (itemsFound.length >= 4) {
+      allView.addAll(itemsFound);
+      notifyListeners();
+      return;
+    }
+
+    final allItems = pedidos
+        .take(180)
+        .fold<List<Item>>([], (prev, element) => [...prev, ...element.lista]);
 
     final candidatos = allItems
         .where((item) => item.nombre.toLowerCase().contains(cad.toLowerCase()))

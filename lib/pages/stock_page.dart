@@ -5,7 +5,9 @@ import 'dart:async';
 import 'package:dist_v2/api/api.dart';
 import 'package:dist_v2/api/pdf_stock_api.dart';
 import 'package:dist_v2/models/stock.dart';
-import 'package:dist_v2/services/stock_service.dart';
+import 'package:dist_v2/services/stock_analysis_service.dart';
+import 'package:dist_v2/services/stock_service_with_firebase.dart';
+import 'package:dist_v2/widgets/low_stock_alerts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,6 +47,7 @@ class _StockPageState extends State<StockPage> {
   @override
   Widget build(BuildContext context) {
     stockService = Provider.of<StockService>(context);
+    final stockAnalysisService = Provider.of<StockAnalysisService>(context);
     // stockService.stock = UserPreferences.getStock();
 
     return Scaffold(
@@ -52,6 +55,7 @@ class _StockPageState extends State<StockPage> {
         backgroundColor: Colors.blueGrey,
         title: const Text('Stock'),
         actions: [
+          LowStockAlertsButton(stockAnalysisService: stockAnalysisService),
           IconButton(
             onPressed: () async {
               final pdffile = await PdfStockApi.generate(

@@ -1,5 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:dist_v2/api/api.dart';
-import 'package:dist_v2/models/item.dart';
+import 'package:dist_v2/helpers/fuzzy_matcher.dart';
 import 'package:dist_v2/models/pedido.dart';
 import 'package:dist_v2/models/vip_item.dart';
 import 'package:flutter/material.dart';
@@ -78,13 +79,16 @@ class AnalysisService with ChangeNotifier {
     List<int> cant = [];
 
     for (var pedido in pedidos) {
-      // Find matching item once instead of multiple times
-      final matchingItem = pedido.lista.firstWhere(
-          (e) => e.nombre.trim().toUpperCase() == item.nombre.trim().toUpperCase(),
-          orElse: () =>
-              Item(nombre: 'error', precio: 0, cantidad: 0, id: 0, precioT: 0, tipo: ''));
+      // Find matching item using fuzzy matching to handle name variations
+      final itemNames = pedido.lista.map((e) => e.nombre).toList();
+      final matchResult = FuzzyMatcher.findBestMatch(
+        item.nombre,
+        itemNames,
+        minConfidence: 85,
+      );
 
-      if (matchingItem.nombre != 'error') {
+      if (matchResult != null) {
+        final matchingItem = pedido.lista[matchResult.index];
         final normalizedDate =
             DateTime(pedido.fecha.year, pedido.fecha.month, pedido.fecha.day);
 
@@ -136,6 +140,65 @@ class AnalysisService with ChangeNotifier {
 
   // notifyListeners();
 
+  /// Calculates statistics for a specific product based on sales history
+  /// Used for stock level recommendations
+  Map<String, num> calculateProductStats(VipItem item, List<Pedido> pedidos) {
+    final timeSeries = getItemTimeSeries(item, pedidos);
+
+    // Group by week (starting Monday)
+    final Map<DateTime, int> weeklyMovements = {};
+    for (var entry in timeSeries.entries) {
+      final weekStart = entry.key.subtract(
+        Duration(days: entry.key.weekday - 1),
+      );
+      weeklyMovements.update(
+        weekStart,
+        (value) => value + entry.value,
+        ifAbsent: () => entry.value,
+      );
+    }
+
+    if (weeklyMovements.isEmpty) {
+      return {
+        'avgWeeklySales': 0,
+        'minSales': 0,
+        'maxSales': 0,
+        'efficiency': 0,
+        'totalWeeks': 0,
+        'zeroSalesWeeks': 0,
+        'trend': 0,
+      };
+    }
+
+    final nonZeroSales = weeklyMovements.values.where((e) => e > 0);
+    final totalWeeks = weeklyMovements.values.length;
+    final sortedSales = weeklyMovements.values.toList()..sort();
+    final avgWeeklySales = sortedSales.isEmpty
+      ? 0
+      : (sortedSales.length.isOdd
+        ? sortedSales[sortedSales.length ~/ 2]
+        : ((sortedSales[sortedSales.length ~/ 2 - 1] + sortedSales[sortedSales.length ~/ 2]) / 2).ceil());
+    final minSales = nonZeroSales.isEmpty ? 0 : nonZeroSales.min;
+    final maxSales = nonZeroSales.isEmpty ? 0 : nonZeroSales.max;
+    final zeroSalesWeeks = totalWeeks - nonZeroSales.length;
+    final efficiency = weeklyMovements.values.isEmpty
+        ? 0
+        : ((nonZeroSales.length / totalWeeks) * 100).round();
+    final trend = nonZeroSales.isEmpty || nonZeroSales.length < 2
+        ? 0
+        : ((nonZeroSales.last - nonZeroSales.first) / nonZeroSales.first * 100).round();
+
+    return {
+      'avgWeeklySales': avgWeeklySales,
+      'minSales': minSales,
+      'maxSales': maxSales,
+      'efficiency': efficiency,
+      'totalWeeks': totalWeeks,
+      'zeroSalesWeeks': zeroSalesWeeks,
+      'trend': trend,
+    };
+  }
+
   List<VipItem> getTopRaised({int? limit}) {
     vipItems.sort((a, b) => b.recaudado.compareTo(a.recaudado));
     var tops = vipItems.sublist(0, limit);
@@ -183,6 +246,177 @@ class AnalysisService with ChangeNotifier {
   void export() async {
     final rows = [VipItem.propTittles, ...vipItems.map((e) => e.toString())];
     await FileApi.createCSV(rows, 'vip_items');
+  }
+
+  /// Exporta un dataset completo para minería de datos
+  /// Incluye métricas agregadas por producto y métricas temporales
+  Future<void> exportDataset(List<Pedido> pedidos) async {
+    final rows = <String>[];
+
+    // Header con todas las columnas relevantes
+    rows.add('producto_id,producto_nombre,cantidad_total,repeticiones,recaudado_total,'
+        'precio_promedio,precio_min,precio_max,primer_venta,ultima_venta,'
+        'dias_activo,frecuencia_venta_dias,recaudado_por_venta,cantidad_por_venta,'
+        'variacion_precio,es_producto_frecuente,es_alto_valor,categoria_volumen');
+
+    // Calcular métricas por producto
+    for (var vipItem in vipItems) {
+      // Obtener todas las ventas del producto
+      final ventasProducto = <Map<String, dynamic>>[];
+      final precios = <int>[];
+
+      for (var pedido in pedidos) {
+        for (var item in pedido.lista) {
+          if (item.nombre.trim().toUpperCase() == vipItem.nombre.trim().toUpperCase()) {
+            ventasProducto.add({
+              'fecha': pedido.fecha,
+              'cantidad': item.cantidad,
+              'precio': item.precio,
+              'precioTotal': item.precioT,
+              'cliente': pedido.nombre,
+            });
+            precios.add(item.precio);
+          }
+        }
+      }
+
+      if (ventasProducto.isEmpty) continue;
+
+      // Ordenar por fecha
+      ventasProducto
+          .sort((a, b) => (a['fecha'] as DateTime).compareTo(b['fecha'] as DateTime));
+
+      final primerVenta = ventasProducto.first['fecha'] as DateTime;
+      final ultimaVenta = ventasProducto.last['fecha'] as DateTime;
+      final diasActivo = ultimaVenta.difference(primerVenta).inDays + 1;
+
+      // Métricas de precio
+      final precioPromedio = precios.reduce((a, b) => a + b) / precios.length;
+      final precioMin = precios.reduce((a, b) => a < b ? a : b);
+      final precioMax = precios.reduce((a, b) => a > b ? a : b);
+      final variacionPrecio = precioMax - precioMin;
+
+      // Métricas de frecuencia
+      final frecuenciaVentaDias = diasActivo > 0 ? vipItem.repeticiones / diasActivo : 0;
+      final recaudadoPorVenta =
+          vipItem.repeticiones > 0 ? vipItem.recaudado / vipItem.repeticiones : 0;
+      final cantidadPorVenta =
+          vipItem.repeticiones > 0 ? vipItem.cantTotal / vipItem.repeticiones : 0;
+
+      // Clasificaciones
+      final esProductoFrecuente = vipItem.repeticiones >= 30 ? 1 : 0;
+      final esAltoValor = vipItem.recaudado >= 50000 ? 1 : 0;
+
+      String categoriaVolumen;
+      if (vipItem.cantTotal >= 30) {
+        categoriaVolumen = 'alto';
+      } else if (vipItem.cantTotal >= 10) {
+        categoriaVolumen = 'medio';
+      } else {
+        categoriaVolumen = 'bajo';
+      }
+
+      // Escapar nombre para CSV
+      final nombreEscapado = vipItem.nombre.contains(',')
+          ? '"${vipItem.nombre.replaceAll('"', '""')}"'
+          : vipItem.nombre;
+
+      rows.add('${vipItem.id},'
+          '$nombreEscapado,'
+          '${vipItem.cantTotal},'
+          '${vipItem.repeticiones},'
+          '${vipItem.recaudado},'
+          '${precioPromedio.toStringAsFixed(2)},'
+          '$precioMin,'
+          '$precioMax,'
+          '${primerVenta.toIso8601String()},'
+          '${ultimaVenta.toIso8601String()},'
+          '$diasActivo,'
+          '${frecuenciaVentaDias.toStringAsFixed(4)},'
+          '${recaudadoPorVenta.toStringAsFixed(2)},'
+          '${cantidadPorVenta.toStringAsFixed(2)},'
+          '$variacionPrecio,'
+          '$esProductoFrecuente,'
+          '$esAltoValor,'
+          '$categoriaVolumen');
+    }
+
+    await FileApi.createCSV(
+        rows, 'dataset_productos_${DateTime.now().millisecondsSinceEpoch}');
+  }
+
+  /// Exporta dataset de transacciones individuales (nivel pedido-item)
+  Future<void> exportTransactionDataset(List<Pedido> pedidos) async {
+    final rows = <String>[];
+
+    // Header
+    rows.add('pedido_id,fecha,año,mes,dia,dia_semana,cliente,'
+        'producto_id,producto_nombre,cantidad,precio_unitario,precio_total,'
+        'total_pedido,items_en_pedido,es_cliente_frecuente');
+
+    // Contador de pedidos por cliente
+    final clienteFrecuencia = <String, int>{};
+    for (var pedido in pedidos) {
+      clienteFrecuencia[pedido.nombre] = (clienteFrecuencia[pedido.nombre] ?? 0) + 1;
+    }
+
+    // [<[<[#b3349]>]>] suele venir asi, solo quedarse con letras y numeros.
+    final keyRegex = RegExp(r'[^a-zA-Z0-9]');
+
+    // Generar filas por cada item de cada pedido
+    for (var pedido in pedidos) {
+      final pKeyFormatted = pedido.key.toString().replaceAll(keyRegex, '');
+
+      if (pKeyFormatted.isEmpty) {
+        continue;
+      }
+
+      final esClienteFrecuente = (clienteFrecuencia[pedido.nombre] ?? 0) >= 3 ? 1 : 0;
+      final itemsEnPedido = pedido.lista.length;
+
+      for (var item in pedido.lista) {
+        // Limpiar nombre: remover comas, saltos de línea, tabs y espacios múltiples
+        final nombreEscapado = item.nombre
+            .replaceAll(',', '')
+            .replaceAll('\n', ' ')
+            .replaceAll('\r', ' ')
+            .replaceAll('\t', ' ')
+            .replaceAll(RegExp(r'\s+'), ' ')
+            .trim();
+
+        // Limpiar cliente de la misma manera
+        final clienteEscapado = pedido.nombre
+            .replaceAll(',', '')
+            .replaceAll('\n', ' ')
+            .replaceAll('\r', ' ')
+            .replaceAll('\t', ' ')
+            .replaceAll(RegExp(r'\s+'), ' ')
+            .trim();
+
+        if (item.cantidad <= 0) {
+          continue;
+        }
+
+        rows.add('$pKeyFormatted,'
+            '${pedido.fecha.toIso8601String()},'
+            '${pedido.fecha.year},'
+            '${pedido.fecha.month},'
+            '${pedido.fecha.day},'
+            '${pedido.fecha.weekday},'
+            '$clienteEscapado,'
+            '${item.id},'
+            '$nombreEscapado,'
+            '${item.cantidad},'
+            '${item.precio},'
+            '${item.precioT},'
+            '${pedido.total},'
+            '$itemsEnPedido,'
+            '$esClienteFrecuente');
+      }
+    }
+
+    await FileApi.createCSV(
+        rows, 'dataset_transacciones_${DateTime.now().millisecondsSinceEpoch}');
   }
 }
 

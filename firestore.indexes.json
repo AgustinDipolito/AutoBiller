@@ -1,0 +1,29 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "catalogo_historial",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "syncMetadata.lastModified",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "catalogo_historial",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "productoId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "syncMetadata.lastModified",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

@@ -1,9 +1,7 @@
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:dist_v2/models/pedido.dart';
 import 'package:flutter/cupertino.dart';
 
-List<charts.Series<TimeSeriesSales, DateTime>> calculateTotals(
-    List<Pedido> clientes, String tipo) {
+List<TimeSeriesSales> calculateTotals(List<Pedido> clientes, String tipo) {
   List<TimeSeriesSales> data = [];
   int x = 0;
 
@@ -15,6 +13,10 @@ List<charts.Series<TimeSeriesSales, DateTime>> calculateTotals(
 
   while (x < clientes.length) {
     DateTime firstTime = clientes[x].fecha;
+    if (firstTime.difference(DateTime.now()).inDays > 366) {
+      x++;
+      continue;
+    }
 
     var mismoDia = clientes.where((element) =>
         (element.fecha.day == firstTime.day) && (element.fecha.month == firstTime.month));
@@ -65,16 +67,7 @@ List<charts.Series<TimeSeriesSales, DateTime>> calculateTotals(
     default:
   }
 
-  return [
-    charts.Series<TimeSeriesSales, DateTime>(
-      id: 'Sales',
-      colorFn: (_, __) => charts.MaterialPalette.white,
-      domainFn: (TimeSeriesSales sales, _) => sales.weekday,
-      measureFn: (TimeSeriesSales sales, _) => sales.sales,
-      data: data,
-      labelAccessorFn: (TimeSeriesSales sales, _) => '\$${sales.sales.toString()}',
-    ),
-  ];
+  return data;
 }
 
 /// Sample time series data type.
