@@ -1148,7 +1148,7 @@ class _FinnappDataTableState<T> extends State<FinnappDataTable<T>> {
                       sliverItem.isExpanded!,
                     );
                   } else {
-                    return _buildDataRow(sliverItem.item!, sliverItem.depth);
+                    return _buildDataRow(sliverItem.item as T, sliverItem.depth);
                   }
                 },
               );

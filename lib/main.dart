@@ -14,7 +14,7 @@ import 'package:dist_v2/services/pedido_service.dart';
 import 'models/user_preferences.dart';
 import 'services/stock_service_with_firebase.dart';
 
-main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.init();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

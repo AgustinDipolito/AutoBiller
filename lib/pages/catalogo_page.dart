@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +19,7 @@ import '../api/excel_catalogo_api.dart';
 import '../models/stock.dart' show StockType, Proveedor, GroupType;
 
 class CatalogoPage extends StatefulWidget {
-  const CatalogoPage({Key? key}) : super(key: key);
+  const CatalogoPage({super.key});
 
   @override
   State<CatalogoPage> createState() => _CatalogoPageState();
@@ -840,7 +838,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
   void _importar() async {
     try {
       // Seleccionar archivo Excel
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['xlsx'],
         withData: true,
@@ -1169,7 +1167,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
 class ProductoFormDialog extends StatefulWidget {
   final Producto? producto;
 
-  const ProductoFormDialog({Key? key, this.producto}) : super(key: key);
+  const ProductoFormDialog({super.key, this.producto});
 
   @override
   State<ProductoFormDialog> createState() => _ProductoFormDialogState();
@@ -1545,7 +1543,7 @@ class _ProductoFormDialogState extends State<ProductoFormDialog> {
 
   Future<void> _pickImage() async {
     try {
-      final image = await FilePicker.platform.pickFiles(
+      final image = await FilePicker.pickFiles(
         type: FileType.image,
         withData: true,
       );
@@ -1641,7 +1639,7 @@ class _ProductoFormDialogState extends State<ProductoFormDialog> {
 
 /// Dialog para edición masiva de precios
 class EdicionMasivaDialog extends StatefulWidget {
-  const EdicionMasivaDialog({Key? key}) : super(key: key);
+  const EdicionMasivaDialog({super.key});
 
   @override
   State<EdicionMasivaDialog> createState() => _EdicionMasivaDialogState();
@@ -1914,7 +1912,7 @@ class _EdicionMasivaDialogState extends State<EdicionMasivaDialog> {
 
 /// Página de historial de cambios
 class HistorialPage extends StatefulWidget {
-  const HistorialPage({Key? key}) : super(key: key);
+  const HistorialPage({super.key});
 
   @override
   State<HistorialPage> createState() => _HistorialPageState();
@@ -2186,7 +2184,7 @@ class _HistorialPageState extends State<HistorialPage> {
 
 /// Dialog para seleccionar familia
 class SeleccionFamiliaDialog extends StatefulWidget {
-  const SeleccionFamiliaDialog({Key? key}) : super(key: key);
+  const SeleccionFamiliaDialog({super.key});
 
   @override
   State<SeleccionFamiliaDialog> createState() => _SeleccionFamiliaDialogState();
@@ -2276,7 +2274,7 @@ class _SeleccionFamiliaDialogState extends State<SeleccionFamiliaDialog> {
 
 /// Dialog para seleccionar marca
 class SeleccionMarcaDialog extends StatefulWidget {
-  const SeleccionMarcaDialog({Key? key}) : super(key: key);
+  const SeleccionMarcaDialog({super.key});
 
   @override
   State<SeleccionMarcaDialog> createState() => _SeleccionMarcaDialogState();
@@ -2366,7 +2364,7 @@ class _SeleccionMarcaDialogState extends State<SeleccionMarcaDialog> {
 
 /// Dialog para seleccionar grupo
 class SeleccionGrupoDialog extends StatefulWidget {
-  const SeleccionGrupoDialog({Key? key}) : super(key: key);
+  const SeleccionGrupoDialog({super.key});
 
   @override
   State<SeleccionGrupoDialog> createState() => _SeleccionGrupoDialogState();

@@ -6,10 +6,10 @@ class EditCartItemDialog extends StatefulWidget {
   final Function(int quantity, String description) onSave;
 
   const EditCartItemDialog({
-    Key? key,
+    super.key,
     required this.item,
     required this.onSave,
-  }) : super(key: key);
+  });
 
   @override
   State<EditCartItemDialog> createState() => _EditCartItemDialogState();
@@ -365,9 +365,9 @@ class _EditCartItemDialogState extends State<EditCartItemDialog> {
 
 class SimpleVerticalDivider extends StatelessWidget {
   const SimpleVerticalDivider({
-    Key? key,
+    super.key,
     required this.primaryIndex,
-  }) : super(key: key);
+  });
 
   final int primaryIndex;
 

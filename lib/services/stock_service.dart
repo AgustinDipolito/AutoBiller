@@ -126,7 +126,7 @@ class StockService with ChangeNotifier {
     notifyListeners();
   }
 
-  init() {
+  void init() {
     stock = UserPreferences.getStock();
 
     notifyListeners();

@@ -82,7 +82,7 @@ class PdfStockApi {
         ],
       );
 
-  static _buildSimpleText({
+  static pw.Row _buildSimpleText({
     required String title,
     required String value,
   }) {

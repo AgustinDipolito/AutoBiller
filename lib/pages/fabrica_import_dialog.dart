@@ -71,8 +71,7 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppTheme.primaryColor,
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
               ),
               child: Row(
                 children: [
@@ -139,15 +138,13 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                border: Border(
-                    top: BorderSide(color: Colors.grey.shade200)),
+                border: Border(top: BorderSide(color: Colors.grey.shade200)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed:
-                        _isLoading ? null : () => Navigator.pop(context),
+                    onPressed: _isLoading ? null : () => Navigator.pop(context),
                     child: const Text('Cancelar'),
                   ),
                   if (_currentStep > 0) ...[
@@ -161,13 +158,11 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
                   ElevatedButton(
                     onPressed: _isLoading ? null : _avanzar,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _currentStep == 2
-                          ? Colors.green
-                          : AppTheme.primaryColor,
+                      backgroundColor:
+                          _currentStep == 2 ? Colors.green : AppTheme.primaryColor,
                       foregroundColor: Colors.white,
                     ),
-                    child: Text(
-                        _currentStep == 2 ? 'Importar' : 'Siguiente'),
+                    child: Text(_currentStep == 2 ? 'Importar' : 'Siguiente'),
                   ),
                 ],
               ),
@@ -219,9 +214,7 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: isActive ? AppTheme.primaryColor : Colors.grey.shade300,
-            border: isCurrent
-                ? Border.all(color: AppTheme.primaryColor, width: 3)
-                : null,
+            border: isCurrent ? Border.all(color: AppTheme.primaryColor, width: 3) : null,
           ),
           child: Center(
             child: isActive && !isCurrent
@@ -253,9 +246,7 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
     return Container(
       height: 2,
       margin: const EdgeInsets.only(bottom: 16),
-      color: _currentStep > afterStep
-          ? AppTheme.primaryColor
-          : Colors.grey.shade300,
+      color: _currentStep > afterStep ? AppTheme.primaryColor : Colors.grey.shade300,
     );
   }
 
@@ -306,29 +297,22 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: _fileBytes != null
-                      ? Colors.green.shade300
-                      : Colors.grey.shade300,
+                  color:
+                      _fileBytes != null ? Colors.green.shade300 : Colors.grey.shade300,
                   width: 2,
                   strokeAlign: BorderSide.strokeAlignCenter,
                 ),
                 borderRadius: BorderRadius.circular(12),
-                color: _fileBytes != null
-                    ? Colors.green.shade50
-                    : Colors.grey.shade50,
+                color: _fileBytes != null ? Colors.green.shade50 : Colors.grey.shade50,
               ),
               child: Column(
                 children: [
                   Icon(
                     _fileBytes != null
-                        ? (_fileType == 'pdf'
-                            ? Icons.picture_as_pdf
-                            : Icons.table_chart)
+                        ? (_fileType == 'pdf' ? Icons.picture_as_pdf : Icons.table_chart)
                         : Icons.cloud_upload_outlined,
                     size: 48,
-                    color: _fileBytes != null
-                        ? Colors.green
-                        : Colors.grey.shade400,
+                    color: _fileBytes != null ? Colors.green : Colors.grey.shade400,
                   ),
                   const SizedBox(height: 12),
                   Text(
@@ -355,8 +339,8 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
                     TextButton.icon(
                       onPressed: _seleccionarArchivo,
                       icon: const Icon(Icons.swap_horiz, size: 16),
-                      label: const Text('Cambiar archivo',
-                          style: TextStyle(fontSize: 12)),
+                      label:
+                          const Text('Cambiar archivo', style: TextStyle(fontSize: 12)),
                     ),
                   ],
                 ],
@@ -395,7 +379,7 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
 
   Future<void> _seleccionarArchivo() async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['xlsx', 'pdf'],
         withData: true,
@@ -449,9 +433,7 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
               prefixIcon: Icon(Icons.tab),
               border: OutlineInputBorder(),
             ),
-            items: _hojas
-                .map((h) => DropdownMenuItem(value: h, child: Text(h)))
-                .toList(),
+            items: _hojas.map((h) => DropdownMenuItem(value: h, child: Text(h))).toList(),
             onChanged: (value) {
               if (value != null && value != _hojaSeleccionada) {
                 _hojaSeleccionada = value;
@@ -472,15 +454,13 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
           ),
           child: Row(
             children: [
-              Icon(Icons.info_outline,
-                  color: Colors.blue.shade700, size: 20),
+              Icon(Icons.info_outline, color: Colors.blue.shade700, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'Se detectaron $_totalRows filas y ${_headers.length} columnas. '
                   'Asigne cada columna al campo correspondiente.',
-                  style:
-                      TextStyle(fontSize: 12, color: Colors.blue.shade700),
+                  style: TextStyle(fontSize: 12, color: Colors.blue.shade700),
                 ),
               ),
             ],
@@ -535,8 +515,7 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
               ),
               child: Text(
                 header,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500, fontSize: 13),
+                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -552,17 +531,13 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
               isDense: true,
               decoration: InputDecoration(
                 isDense: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6)),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
               ),
               items: [
-                const DropdownMenuItem(
-                    value: '', child: Text('— Ignorar —')),
+                const DropdownMenuItem(value: '', child: Text('— Ignorar —')),
                 ...FabricaFieldMapping.allFields
-                    .where((f) =>
-                        f == currentMapping || !usedFields.contains(f))
+                    .where((f) => f == currentMapping || !usedFields.contains(f))
                     .map((field) => DropdownMenuItem(
                           value: field,
                           child: Text(
@@ -604,8 +579,8 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
           columns: _headers
               .map((h) => DataColumn(
                     label: Text(h,
-                        style: const TextStyle(
-                            fontSize: 11, fontWeight: FontWeight.bold)),
+                        style:
+                            const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                   ))
               .toList(),
           rows: _preview.map((row) {
@@ -650,9 +625,7 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
   // ==================== STEP 3: Confirmation ====================
 
   Widget _buildStep3() {
-    final mappedFields = _columnMapping.entries
-        .where((e) => e.value.isNotEmpty)
-        .toList();
+    final mappedFields = _columnMapping.entries.where((e) => e.value.isNotEmpty).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -670,36 +643,27 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.check_circle,
-                      color: Colors.green.shade700, size: 24),
+                  Icon(Icons.check_circle, color: Colors.green.shade700, size: 24),
                   const SizedBox(width: 8),
                   const Text(
                     'Resumen de importación',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
-              _buildSummaryRow(
-                  Icons.factory, 'Fábrica', _nombreController.text),
-              _buildSummaryRow(Icons.insert_drive_file, 'Archivo',
-                  _fileName ?? ''),
-              _buildSummaryRow(
-                  Icons.table_chart,
-                  'Tipo',
-                  _fileType == 'pdf'
-                      ? 'PDF (referencia)'
-                      : 'Excel'),
+              _buildSummaryRow(Icons.factory, 'Fábrica', _nombreController.text),
+              _buildSummaryRow(Icons.insert_drive_file, 'Archivo', _fileName ?? ''),
+              _buildSummaryRow(Icons.table_chart, 'Tipo',
+                  _fileType == 'pdf' ? 'PDF (referencia)' : 'Excel'),
               if (_fileType != 'pdf') ...[
-                _buildSummaryRow(Icons.view_list, 'Filas a importar',
-                    '$_totalRows productos'),
+                _buildSummaryRow(
+                    Icons.view_list, 'Filas a importar', '$_totalRows productos'),
                 _buildSummaryRow(Icons.map, 'Campos mapeados',
                     '${mappedFields.length} de ${FabricaFieldMapping.allFields.length}'),
               ],
               if (widget.fabricaExistente != null)
-                _buildSummaryRow(Icons.update, 'Acción',
-                    'Actualizar fábrica existente'),
+                _buildSummaryRow(Icons.update, 'Acción', 'Actualizar fábrica existente'),
             ],
           ),
         ),
@@ -727,8 +691,7 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
         ],
 
         if (_fileType != 'pdf' &&
-            !_columnMapping.values
-                .contains(FabricaFieldMapping.nombre)) ...[
+            !_columnMapping.values.contains(FabricaFieldMapping.nombre)) ...[
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(12),
@@ -764,12 +727,10 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
           Icon(icon, size: 16, color: Colors.grey.shade600),
           const SizedBox(width: 8),
           Text('$label: ',
-              style: const TextStyle(
-                  fontSize: 13, fontWeight: FontWeight.w500)),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
           Expanded(
             child: Text(value,
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis),
+                style: const TextStyle(fontSize: 13), overflow: TextOverflow.ellipsis),
           ),
         ],
       ),
@@ -836,11 +797,9 @@ class _FabricaImportDialogState extends State<FabricaImportDialog> {
         _hojas = List<String>.from(resultado['hojas']);
         _hojaSeleccionada = resultado['hojaSeleccionada'];
         _headers = List<String>.from(resultado['headers']);
-        _columnMapping =
-            Map<String, String>.from(resultado['autoMapping']);
-        _preview = (resultado['preview'] as List)
-            .map((row) => List<String>.from(row))
-            .toList();
+        _columnMapping = Map<String, String>.from(resultado['autoMapping']);
+        _preview =
+            (resultado['preview'] as List).map((row) => List<String>.from(row)).toList();
         _totalRows = resultado['totalRows'];
         _isLoading = false;
       });

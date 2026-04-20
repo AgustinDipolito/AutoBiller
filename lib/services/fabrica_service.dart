@@ -100,8 +100,8 @@ class FabricaService {
     final productosActuales = await _catalogoService.getProductos();
     List<Producto> productosEnCatalogo = [];
     for (final p in productosActuales) {
-      final ratio = weightedRatio(nombreProducto.toLowerCase(), p.nombre.toLowerCase());
-      if (ratio >= 65) {
+      final ratio = weightedRatio(p.nombre.toLowerCase(), nombreProducto.toLowerCase());
+      if (ratio >= 60) {
         productosEnCatalogo.add(p);
       }
     }

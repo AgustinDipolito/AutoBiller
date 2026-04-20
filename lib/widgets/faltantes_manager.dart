@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 
 class FaltantesManager extends StatelessWidget {
   const FaltantesManager({
-    Key? key,
+    super.key,
     required this.clienteService,
-  }) : super(key: key);
+  });
 
   final ClienteService clienteService;
 

@@ -1120,7 +1120,6 @@ class CatalogoService {
         'errores': errores,
       };
     } catch (e) {
-      print('Error al importar desde Excel: $e');
       errores.add('Error general: $e');
       return {
         'importados': importados,

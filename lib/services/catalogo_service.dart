@@ -71,7 +71,6 @@ class CatalogoService {
 
       return true;
     } catch (e) {
-      print('Error al crear producto: $e');
       return false;
     }
   }
@@ -99,7 +98,6 @@ class CatalogoService {
 
       return true;
     } catch (e) {
-      print('Error al actualizar producto: $e');
       return false;
     }
   }
@@ -176,7 +174,6 @@ class CatalogoService {
 
       return actualizados;
     } catch (e) {
-      print('Error en actualización masiva: $e');
       return 0;
     }
   }
@@ -230,7 +227,6 @@ class CatalogoService {
 
       return actualizados;
     } catch (e) {
-      print('Error en suma masiva: $e');
       return 0;
     }
   }
@@ -279,7 +275,6 @@ class CatalogoService {
 
       return actualizados;
     } catch (e) {
-      print('Error en asignación masiva: $e');
       return 0;
     }
   }
@@ -328,7 +323,6 @@ class CatalogoService {
 
       return actualizados;
     } catch (e) {
-      print('Error en cambio de estado masivo: $e');
       return 0;
     }
   }
@@ -376,7 +370,6 @@ class CatalogoService {
 
       return actualizados;
     } catch (e) {
-      print('Error en asignación masiva de familia: $e');
       return 0;
     }
   }
@@ -424,7 +417,6 @@ class CatalogoService {
 
       return actualizados;
     } catch (e) {
-      print('Error en asignación masiva de marca: $e');
       return 0;
     }
   }
@@ -472,7 +464,6 @@ class CatalogoService {
 
       return actualizados;
     } catch (e) {
-      print('Error en asignación masiva de grupo: $e');
       return 0;
     }
   }
@@ -528,7 +519,6 @@ class CatalogoService {
       await _cargarDesdeLocal();
       _isLoaded = true;
     } catch (e) {
-      print('Error al cargar productos: $e');
       _productos = [];
     }
   }
@@ -557,7 +547,6 @@ class CatalogoService {
         _historial = historialList.map((json) => CambioHistorial.fromJson(json)).toList();
       }
     } catch (e) {
-      print('Error al cargar desde local: $e');
       _productos = [];
     }
   }
@@ -566,9 +555,7 @@ class CatalogoService {
   Future<void> _guardarProductos() async {
     try {
       await _guardarEnLocal();
-    } catch (e) {
-      print('Error al guardar productos: $e');
-    }
+    } catch (_) {}
   }
 
   /// Guardar en SharedPreferences
@@ -584,9 +571,7 @@ class CatalogoService {
           : _historial;
       final historialJson = historialLimitado.map((h) => h.toJson()).toList();
       await prefs.setString('catalogo_historial', json.encode(historialJson));
-    } catch (e) {
-      print('Error al guardar en local: $e');
-    }
+    } catch (_) {}
   }
 
   /// Comparar productos y registrar cambios
@@ -870,7 +855,6 @@ class CatalogoService {
         'errores': errores,
       };
     } catch (e) {
-      print('Error al importar desde Excel: $e');
       errores.add('Error general: $e');
       return {
         'importados': importados,

@@ -238,7 +238,7 @@ class PdfInvoiceApi {
         ],
       );
 
-  static buildSimpleText({
+  static Row buildSimpleText({
     required String title,
     required String value,
   }) {
@@ -255,7 +255,7 @@ class PdfInvoiceApi {
     );
   }
 
-  static buildText({
+  static Container buildText({
     required String title,
     required String value,
     double width = double.infinity,

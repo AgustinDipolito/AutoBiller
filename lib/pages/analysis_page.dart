@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AnalysisPage extends StatefulWidget {
-  const AnalysisPage({Key? key}) : super(key: key);
+  const AnalysisPage({super.key});
 
   @override
   State<AnalysisPage> createState() => _AnalysisPageState();
@@ -226,11 +226,9 @@ class _AnalysisPageState extends State<AnalysisPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Exportar Dataset'),
-        content: const Text(
-          'Seleccione el formato de dataset para minería de datos:\n\n'
-          '• Productos Agregados: Métricas por producto (frecuencia, precios, volumen)\n\n'
-          '• Transacciones: Cada fila es un item de un pedido (análisis temporal y patrones)'
-        ),
+        content: const Text('Seleccione el formato de dataset para minería de datos:\n\n'
+            '• Productos Agregados: Métricas por producto (frecuencia, precios, volumen)\n\n'
+            '• Transacciones: Cada fila es un item de un pedido (análisis temporal y patrones)'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

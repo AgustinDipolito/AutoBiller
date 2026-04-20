@@ -9,7 +9,7 @@ import 'package:dist_v2/services/cliente_service.dart';
 import 'package:dist_v2/helpers/time_serires_gen.dart';
 
 class GraphsPage extends StatelessWidget {
-  const GraphsPage({Key? key, this.item}) : super(key: key);
+  const GraphsPage({super.key, this.item});
   final VipItem? item;
   static const List<String> tipos = ['semana', 'mes', 'año'];
 
@@ -118,7 +118,7 @@ class Grafico extends StatelessWidget {
   final List<TimeSeriesSales> data;
   final String tipo;
 
-  const Grafico({Key? key, required this.data, required this.tipo}) : super(key: key);
+  const Grafico({super.key, required this.data, required this.tipo});
 
   @override
   Widget build(BuildContext context) {

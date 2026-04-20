@@ -145,7 +145,6 @@ class ExcelCatalogoApi {
         return file;
       }
     } catch (e) {
-      print('Error al generar Excel: $e');
       return null;
     }
   }
@@ -362,7 +361,6 @@ class ExcelCatalogoApi {
         return file;
       }
     } catch (e) {
-      print('Error al generar Excel con estadísticas: $e');
       return null;
     }
   }

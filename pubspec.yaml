@@ -37,7 +37,7 @@ dependencies:
   open_filex: ^4.7.0
   collection: ^1.19.1
   excel: ^4.0.6
-  file_picker: ^10.3.10
+  file_picker: ^11.0.2
   mobile_scanner: ^7.1.4
   
   # Firebase
@@ -51,7 +51,7 @@ dependencies:
   cached_network_image: ^3.3.0
   
   fuzzywuzzy: ^1.2.0
-  csv: ^6.0.0
+  csv: ^8.0.0
   path: ^1.9.1
   web: ^1.1.1
 

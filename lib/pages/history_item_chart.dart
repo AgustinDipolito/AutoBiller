@@ -20,7 +20,7 @@ List<FlSpot> _createSpots(Map<DateTime, int> data) {
 class ProductChart extends StatelessWidget {
   final VipItem item;
 
-  const ProductChart({Key? key, required this.item}) : super(key: key);
+  const ProductChart({super.key, required this.item});
 
   Future<void> _exportToPDF(Map<DateTime, int> movements, Map<String, num> stats) async {
     final pdf = pw.Document();

@@ -53,7 +53,7 @@ class StatusChip extends StatelessWidget {
   final VoidCallback? onTap;
 
   const StatusChip({
-    Key? key,
+    super.key,
     required this.value,
     this.trueLabel = 'Sí',
     this.falseLabel = 'No',
@@ -67,7 +67,7 @@ class StatusChip extends StatelessWidget {
     this.backgroundOpacity = 0.2,
     this.useDarkerText = true,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -144,10 +144,10 @@ class ActiveStatusChip extends StatelessWidget {
   final VoidCallback? onTap;
 
   const ActiveStatusChip({
-    Key? key,
+    super.key,
     required this.isActive,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -168,10 +168,10 @@ class AvailabilityStatusChip extends StatelessWidget {
   final VoidCallback? onTap;
 
   const AvailabilityStatusChip({
-    Key? key,
+    super.key,
     required this.isAvailable,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -192,10 +192,10 @@ class VisibilityStatusChip extends StatelessWidget {
   final VoidCallback? onTap;
 
   const VisibilityStatusChip({
-    Key? key,
+    super.key,
     required this.isVisible,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -216,10 +216,10 @@ class PaymentStatusChip extends StatelessWidget {
   final VoidCallback? onTap;
 
   const PaymentStatusChip({
-    Key? key,
+    super.key,
     required this.isPaid,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -240,10 +240,10 @@ class CompletionStatusChip extends StatelessWidget {
   final VoidCallback? onTap;
 
   const CompletionStatusChip({
-    Key? key,
+    super.key,
     required this.isCompleted,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

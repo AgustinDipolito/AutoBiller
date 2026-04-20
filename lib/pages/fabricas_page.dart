@@ -78,8 +78,7 @@ class _FabricasPageState extends State<FabricasPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.primaryColor,
-        title: const Text('Gestión de Fábricas',
-            style: TextStyle(color: Colors.white)),
+        title: const Text('Gestión de Fábricas', style: TextStyle(color: Colors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -111,8 +110,7 @@ class _FabricasPageState extends State<FabricasPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.factory_outlined,
-              size: 80, color: Colors.grey.shade300),
+          Icon(Icons.factory_outlined, size: 80, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text(
             'No hay fábricas cargadas',
@@ -136,8 +134,7 @@ class _FabricasPageState extends State<FabricasPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryColor,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
           ),
         ],
@@ -169,7 +166,7 @@ class _FabricasPageState extends State<FabricasPage> {
         if (_productoComparar != null) ...[
           VerticalDivider(width: 1, color: Colors.grey.shade300),
           SizedBox(
-            width: 360,
+            width: 420,
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: FabricaCompareWidget(
@@ -233,18 +230,15 @@ class _FabricasPageState extends State<FabricasPage> {
                       await _cargarItemsFabrica(fabrica.id);
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       decoration: BoxDecoration(
                         border: Border(
                           left: BorderSide(
-                            color: isSelected
-                                ? AppTheme.primaryColor
-                                : Colors.transparent,
+                            color:
+                                isSelected ? AppTheme.primaryColor : Colors.transparent,
                             width: 3,
                           ),
-                          bottom:
-                              BorderSide(color: Colors.grey.shade200),
+                          bottom: BorderSide(color: Colors.grey.shade200),
                         ),
                       ),
                       child: Row(
@@ -271,17 +265,14 @@ class _FabricasPageState extends State<FabricasPage> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   fabrica.nombre,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 13,
-                                    color: isSelected
-                                        ? AppTheme.primaryColor
-                                        : null,
+                                    color: isSelected ? AppTheme.primaryColor : null,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -318,12 +309,9 @@ class _FabricasPageState extends State<FabricasPage> {
                                 value: 'eliminar',
                                 child: Row(
                                   children: [
-                                    Icon(Icons.delete,
-                                        size: 18, color: Colors.red),
+                                    Icon(Icons.delete, size: 18, color: Colors.red),
                                     SizedBox(width: 8),
-                                    Text('Eliminar',
-                                        style:
-                                            TextStyle(color: Colors.red)),
+                                    Text('Eliminar', style: TextStyle(color: Colors.red)),
                                   ],
                                 ),
                               ),
@@ -385,8 +373,7 @@ class _FabricasPageState extends State<FabricasPage> {
             ),
             child: Row(
               children: [
-                Icon(Icons.inventory_2,
-                    size: 20, color: AppTheme.primaryColor),
+                Icon(Icons.inventory_2, size: 20, color: AppTheme.primaryColor),
                 const SizedBox(width: 8),
                 Text(
                   '${_fabricaSeleccionada!.nombre} — ${_itemsFabricaActual.length} productos',
@@ -398,8 +385,7 @@ class _FabricasPageState extends State<FabricasPage> {
                 const Spacer(),
                 Text(
                   _fabricaSeleccionada!.archivoNombre,
-                  style: TextStyle(
-                      fontSize: 11, color: Colors.grey.shade600),
+                  style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
                 ),
               ],
             ),
@@ -432,8 +418,7 @@ class _FabricasPageState extends State<FabricasPage> {
                       const SizedBox(width: 4),
                       if (!item.agregadoACatalogo)
                         IconButton(
-                          icon: const Icon(Icons.add_shopping_cart,
-                              size: 18),
+                          icon: const Icon(Icons.add_shopping_cart, size: 18),
                           color: Colors.green,
                           tooltip: 'Agregar al catálogo',
                           padding: EdgeInsets.zero,
@@ -441,8 +426,7 @@ class _FabricasPageState extends State<FabricasPage> {
                           onPressed: () => _mostrarDialogAgregar(item),
                         )
                       else
-                        const Icon(Icons.check_circle,
-                            size: 18, color: Colors.green),
+                        const Icon(Icons.check_circle, size: 18, color: Colors.green),
                     ],
                   ),
                 ),
@@ -472,9 +456,7 @@ class _FabricasPageState extends State<FabricasPage> {
                   sortable: true,
                   width: 120,
                   builder: (item, value) => Text(
-                    item.precio != null
-                        ? _formatCurrency.format(item.precio)
-                        : '-',
+                    item.precio != null ? _formatCurrency.format(item.precio) : '-',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.green,
@@ -497,13 +479,11 @@ class _FabricasPageState extends State<FabricasPage> {
                 DataTableColumnConfig<FabricaItem>(
                   id: 'estado',
                   label: 'Estado',
-                  getValue: (item) =>
-                      item.agregadoACatalogo ? 'Agregado' : 'Pendiente',
+                  getValue: (item) => item.agregadoACatalogo ? 'Agregado' : 'Pendiente',
                   sortable: true,
                   width: 100,
                   builder: (item, _) => Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: item.agregadoACatalogo
                           ? Colors.green.shade50
@@ -516,15 +496,12 @@ class _FabricasPageState extends State<FabricasPage> {
                       ),
                     ),
                     child: Text(
-                      item.agregadoACatalogo
-                          ? '✓ Agregado'
-                          : 'Pendiente',
+                      item.agregadoACatalogo ? '✓ Agregado' : 'Pendiente',
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: item.agregadoACatalogo
-                            ? Colors.green
-                            : Colors.grey.shade600,
+                        color:
+                            item.agregadoACatalogo ? Colors.green : Colors.grey.shade600,
                       ),
                     ),
                   ),
@@ -550,16 +527,13 @@ class _FabricasPageState extends State<FabricasPage> {
                   valueListenable: _itemsSeleccionados,
                   builder: (context, selected, _) {
                     if (selected.isEmpty) return const SizedBox.shrink();
-                    final pendientes = selected
-                        .where((i) => !i.agregadoACatalogo)
-                        .toList();
+                    final pendientes =
+                        selected.where((i) => !i.agregadoACatalogo).toList();
                     if (pendientes.isEmpty) return const SizedBox.shrink();
                     return ElevatedButton.icon(
-                      onPressed: () =>
-                          _agregarMultiplesACatalogo(pendientes),
+                      onPressed: () => _agregarMultiplesACatalogo(pendientes),
                       icon: const Icon(Icons.add_shopping_cart, size: 18),
-                      label: Text(
-                          'Agregar ${pendientes.length} al catálogo'),
+                      label: Text('Agregar ${pendientes.length} al catálogo'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
@@ -593,8 +567,7 @@ class _FabricasPageState extends State<FabricasPage> {
     final resultado = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (context) =>
-          FabricaImportDialog(fabricaExistente: fabrica),
+      builder: (context) => FabricaImportDialog(fabricaExistente: fabrica),
     );
 
     if (resultado == true) {
@@ -618,10 +591,8 @@ class _FabricasPageState extends State<FabricasPage> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style:
-                ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Eliminar',
-                style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Eliminar', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -685,10 +656,8 @@ class _FabricasPageState extends State<FabricasPage> {
                 builder: (context) {
                   return StatefulBuilder(
                     builder: (context, setDialogState) {
-                      final markup =
-                          double.tryParse(markupController.text) ?? 0;
-                      final precioFinal =
-                          (item.precio! * (1 + markup / 100)).round();
+                      final markup = double.tryParse(markupController.text) ?? 0;
+                      final precioFinal = (item.precio! * (1 + markup / 100)).round();
                       markupController.addListener(() {
                         setDialogState(() {});
                       });
@@ -714,10 +683,8 @@ class _FabricasPageState extends State<FabricasPage> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style:
-                ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text('Agregar',
-                style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Agregar', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -761,8 +728,7 @@ class _FabricasPageState extends State<FabricasPage> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-                'Se agregarán ${items.length} productos pendientes al catálogo.'),
+            Text('Se agregarán ${items.length} productos pendientes al catálogo.'),
             const SizedBox(height: 16),
             TextField(
               controller: markupController,
@@ -783,10 +749,8 @@ class _FabricasPageState extends State<FabricasPage> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style:
-                ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text('Agregar todos',
-                style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Agregar todos', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

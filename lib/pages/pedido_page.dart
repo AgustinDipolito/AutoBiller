@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PedidoPage extends StatefulWidget {
-  const PedidoPage({Key? key}) : super(key: key);
+  const PedidoPage({super.key});
 
   @override
   State<PedidoPage> createState() => _PedidoPageState();
@@ -307,7 +307,7 @@ class _PedidoPageState extends State<PedidoPage> {
     );
   }
 
-  _switchColor(i) => setState(() => selecteds[i] = !selecteds[i]);
+  void _switchColor(int i) => setState(() => selecteds[i] = !selecteds[i]);
 
   Widget _buildTextField({
     required TextEditingController controller,

@@ -174,7 +174,7 @@ class ClienteService with ChangeNotifier {
     return cantModificados;
   }
 
-  editMessage(String msg, Pedido pedido) async {
+  Future<void> editMessage(String msg, Pedido pedido) async {
     pedido.msg = msg;
 
     final i = _clientes
@@ -210,7 +210,7 @@ class ClienteService with ChangeNotifier {
     return _clientes;
   }
 
-  deletePedido(int i, String key) async {
+  Future<void> deletePedido(int i, String key) async {
     await UserPreferences.deleteOne(key);
 
     // Eliminar de Firebase si está habilitado

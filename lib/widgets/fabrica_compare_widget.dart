@@ -201,7 +201,7 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
     );
   }
 
-  Widget _buildCatalogoPriceCard(prod) {
+  Widget _buildCatalogoPriceCard(Producto? prod) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -226,7 +226,7 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
                   ),
                 ),
                 Text(
-                  prod!.nombre,
+                  prod?.nombre ?? 'Sin nombre',
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
@@ -238,7 +238,7 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
             ),
           ),
           Text(
-            _formatCurrency.format(prod!.precio),
+            _formatCurrency.format(prod?.precio),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,

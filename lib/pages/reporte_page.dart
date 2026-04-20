@@ -234,7 +234,7 @@ class _ReportePageState extends State<ReportePage> {
                         ],
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),
@@ -265,7 +265,7 @@ class _ReportePageState extends State<ReportePage> {
                         ],
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),
@@ -296,7 +296,7 @@ class _ReportePageState extends State<ReportePage> {
                         ],
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),

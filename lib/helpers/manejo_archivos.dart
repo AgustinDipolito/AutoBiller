@@ -87,16 +87,13 @@ class FilesManager {
   // Función para guardar una imagen en web
   static Future<bool> saveImageFile(String imagePath) async {
     try {
-      XFile? comprimida;
       // if (comprimir) comprimida = await compressImageFile(imagePath);
 
       final fileName = getNameOfFile(imagePath);
 
       // En web, guardamos en localStorage o descargamos
       final bytes = await (XFile(imagePath).readAsBytes());
-      if (bytes != null) {
-        await downloadFile(fileName, bytes);
-      }
+      await downloadFile(fileName, bytes);
       return true;
     } on Exception catch (e) {
       if (kDebugMode) {

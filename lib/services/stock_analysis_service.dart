@@ -14,7 +14,7 @@ class StockAnalysisService with ChangeNotifier {
   final AnalysisService _analysisService;
   final ClienteService _clienteService;
 
-  List<StockAlert> _alerts = [];
+  final List<StockAlert> _alerts = [];
   bool _isAnalyzing = false;
 
   StockAnalysisService(

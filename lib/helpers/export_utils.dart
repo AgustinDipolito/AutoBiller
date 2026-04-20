@@ -365,7 +365,7 @@ class ExportUtils {
     }).toList();
 
     final List<List<dynamic>> rows = [filteredHeaders, ...filteredData];
-    final String csvData = const ListToCsvConverter().convert(rows);
+    final String csvData = Csv().encode(rows);
     await FilesManager.downloadFile(
       '$fileName.csv',
       Uint8List.fromList(utf8.encode(csvData)),

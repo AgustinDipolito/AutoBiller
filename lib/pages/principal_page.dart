@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:dist_v2/services/lista_service.dart';
 
 class PrincipalPage extends StatefulWidget {
-  const PrincipalPage({Key? key}) : super(key: key);
+  const PrincipalPage({super.key});
 
   @override
   State<PrincipalPage> createState() => _PrincipalPageState();
@@ -18,7 +18,6 @@ class PrincipalPage extends StatefulWidget {
 class _PrincipalPageState extends State<PrincipalPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ListaService>(context, listen: false).readJson();

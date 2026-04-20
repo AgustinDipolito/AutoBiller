@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TodosPage extends StatefulWidget {
-  const TodosPage({Key? key}) : super(key: key);
+  const TodosPage({super.key});
 
   @override
   State<TodosPage> createState() => _TodosPageState();

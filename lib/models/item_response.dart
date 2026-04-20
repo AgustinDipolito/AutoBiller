@@ -6,7 +6,7 @@ class ItemResponse {
 
   ItemResponse(this.nombre, this.tipo, this.precio, this.id);
 
-  ItemResponse.fromJson(json)
+  ItemResponse.fromJson(Map<String, dynamic> json)
       : nombre = json["nombre"] as String,
         tipo = json["tipo"] ?? '',
         id = json["ID"] ?? json['id'] as String,
