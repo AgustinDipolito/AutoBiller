@@ -156,7 +156,7 @@ class _FabricasPageState extends State<FabricasPage> {
 
         // Panel 2: Items de la fábrica seleccionada
         Expanded(
-          flex: 3,
+          flex: 2,
           child: _fabricaSeleccionada != null
               ? _buildItemsPanel()
               : _buildSelectFabricaMessage(),
@@ -165,8 +165,8 @@ class _FabricasPageState extends State<FabricasPage> {
         // Panel 3: Comparación (solo si hay producto seleccionado)
         if (_productoComparar != null) ...[
           VerticalDivider(width: 1, color: Colors.grey.shade300),
-          SizedBox(
-            width: 420,
+          Flexible(
+            // width: 420,
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: FabricaCompareWidget(
@@ -623,6 +623,7 @@ class _FabricasPageState extends State<FabricasPage> {
 
   void _mostrarDialogAgregar(FabricaItem item) async {
     final markupController = TextEditingController(text: '30');
+    final discountController = TextEditingController(text: '0');
 
     final confirmar = await showDialog<bool>(
       context: context,
@@ -641,6 +642,17 @@ class _FabricasPageState extends State<FabricasPage> {
               Text('Precio fábrica: ${_formatCurrency.format(item.precio)}'),
             const SizedBox(height: 16),
             TextField(
+              controller: discountController,
+              decoration: const InputDecoration(
+                labelText: 'Porcentaje de descuento (%)',
+                hintText: 'Ej: 10',
+                suffixText: '%',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 12),
+            TextField(
               controller: markupController,
               decoration: const InputDecoration(
                 labelText: 'Porcentaje de markup (%)',
@@ -657,10 +669,15 @@ class _FabricasPageState extends State<FabricasPage> {
                   return StatefulBuilder(
                     builder: (context, setDialogState) {
                       final markup = double.tryParse(markupController.text) ?? 0;
-                      final precioFinal = (item.precio! * (1 + markup / 100)).round();
-                      markupController.addListener(() {
-                        setDialogState(() {});
-                      });
+                      final discount = double.tryParse(discountController.text) ?? 0;
+
+                      final precioBase = item.precio ?? 0;
+                      final precioConDescuento = precioBase * (1 - discount / 100);
+                      final precioFinal =
+                          (precioConDescuento * (1 + markup / 100)).round();
+
+                      markupController.addListener(() => setDialogState(() {}));
+                      discountController.addListener(() => setDialogState(() {}));
                       return Text(
                         'Precio final: ${_formatCurrency.format(precioFinal)}',
                         style: const TextStyle(
@@ -692,15 +709,19 @@ class _FabricasPageState extends State<FabricasPage> {
 
     if (confirmar == true) {
       final markup = double.tryParse(markupController.text) ?? 0;
-      await _agregarACatalogo(item, markup);
+      final discount = double.tryParse(discountController.text) ?? 0;
+      await _agregarACatalogo(item, markup, discount);
     }
     markupController.dispose();
+    discountController.dispose();
   }
 
-  Future<void> _agregarACatalogo(FabricaItem item, double markup) async {
+  Future<void> _agregarACatalogo(FabricaItem item, double markup,
+      [double discount = 0]) async {
     final resultado = await _fabricaService.copiarACatalogo(
       item,
       porcentajeMarkup: markup,
+      porcentajeDescuento: discount,
     );
 
     if (resultado != null && mounted) {
@@ -720,6 +741,7 @@ class _FabricasPageState extends State<FabricasPage> {
 
   Future<void> _agregarMultiplesACatalogo(List<FabricaItem> items) async {
     final markupController = TextEditingController(text: '30');
+    final discountController = TextEditingController(text: '0');
 
     final confirmar = await showDialog<bool>(
       context: context,
@@ -730,6 +752,17 @@ class _FabricasPageState extends State<FabricasPage> {
           children: [
             Text('Se agregarán ${items.length} productos pendientes al catálogo.'),
             const SizedBox(height: 16),
+            TextField(
+              controller: discountController,
+              decoration: const InputDecoration(
+                labelText: 'Porcentaje de descuento (%)',
+                hintText: 'Ej: 10',
+                suffixText: '%',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 12),
             TextField(
               controller: markupController,
               decoration: const InputDecoration(
@@ -758,6 +791,7 @@ class _FabricasPageState extends State<FabricasPage> {
 
     if (confirmar == true) {
       final markup = double.tryParse(markupController.text) ?? 0;
+      final discount = double.tryParse(discountController.text) ?? 0;
 
       // Show loading
       showDialog(
@@ -778,6 +812,7 @@ class _FabricasPageState extends State<FabricasPage> {
       final agregados = await _fabricaService.copiarMultiplesACatalogo(
         items,
         porcentajeMarkup: markup,
+        porcentajeDescuento: discount,
       );
 
       if (mounted) {
@@ -794,5 +829,6 @@ class _FabricasPageState extends State<FabricasPage> {
       }
     }
     markupController.dispose();
+    discountController.dispose();
   }
 }

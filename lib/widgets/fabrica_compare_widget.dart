@@ -10,7 +10,7 @@ import '../utils.dart';
 class FabricaCompareWidget extends StatefulWidget {
   final String nombreProducto;
   final VoidCallback? onClose;
-  final Function(FabricaItem item, double porcentaje)? onAgregarACatalogo;
+  final Function(FabricaItem item, double markup, double descuento)? onAgregarACatalogo;
 
   const FabricaCompareWidget({
     super.key,
@@ -28,6 +28,8 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
   final _formatCurrency =
       NumberFormat.currency(locale: 'es_AR', symbol: '\$', decimalDigits: 0);
   final _markupController = TextEditingController(text: '30');
+  final Map<String, TextEditingController> _discountControllers = {};
+  final _searchController = TextEditingController();
 
   List<FabricaItem> _similares = [];
   List<Producto> _productosEnCatalogo = [];
@@ -36,6 +38,7 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
   @override
   void initState() {
     super.initState();
+    _searchController.text = widget.nombreProducto;
     _cargarComparacion();
   }
 
@@ -43,22 +46,34 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
   void didUpdateWidget(covariant FabricaCompareWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.nombreProducto != widget.nombreProducto) {
+      _searchController.text = widget.nombreProducto;
       _cargarComparacion();
     }
   }
 
   Future<void> _cargarComparacion() async {
+    final query = _searchController.text;
+    if (query.isEmpty) {
+      setState(() {
+        _similares = [];
+        _productosEnCatalogo = [];
+        _isLoading = false;
+      });
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
-      final resultado = await _fabricaService.compararPrecios(widget.nombreProducto);
+      final resultado = await _fabricaService.compararPrecios(query);
       if (mounted) {
         setState(() {
           _similares = resultado['similares'] as List<FabricaItem>;
-          _productosEnCatalogo = resultado['productoEnCatalogo'] as List<Producto>;
+          _productosEnCatalogo = resultado['productosEnCatalogo'] as List<Producto>;
           _isLoading = false;
         });
       }
     } catch (e) {
+      debugPrint('Error al cargar comparación: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -68,6 +83,10 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
   @override
   void dispose() {
     _markupController.dispose();
+    for (var controller in _discountControllers.values) {
+      controller.dispose();
+    }
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -167,12 +186,47 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
       );
     }
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Precio actual en catálogo
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Search Bar
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Buscar producto...',
+              prefixIcon: const Icon(Icons.search, size: 20),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.clear, size: 18),
+                onPressed: () {
+                  _searchController.clear();
+                  _cargarComparacion();
+                },
+              ),
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+            ),
+            style: const TextStyle(fontSize: 14),
+            onSubmitted: (_) => _cargarComparacion(),
+          ),
+        ),
+
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Precio actual en catálogo
           if (_productosEnCatalogo.isNotEmpty) ...[
             for (final prod in _productosEnCatalogo) _buildCatalogoPriceCard(prod),
             const SizedBox(height: 16),
@@ -190,14 +244,17 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
           ),
           const SizedBox(height: 8),
 
-          // Markup input
-          _buildMarkupInput(),
+          // Markup/Discount input
+          _buildConfigInput(),
           const SizedBox(height: 12),
 
           // Lista de precios por fábrica
           ..._similares.map((item) => _buildFactoryPriceCard(item)),
         ],
       ),
+    ),
+  ),
+],
     );
   }
 
@@ -250,7 +307,7 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
     );
   }
 
-  Widget _buildMarkupInput() {
+  Widget _buildConfigInput() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -260,13 +317,13 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
       ),
       child: Row(
         children: [
-          Icon(Icons.percent, size: 18, color: Colors.orange.shade700),
+          Icon(Icons.trending_up, size: 18, color: Colors.orange.shade700),
           const SizedBox(width: 8),
           const Text(
-            'Markup:',
+            'Markup Global:',
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 12),
           SizedBox(
             width: 60,
             child: TextField(
@@ -283,9 +340,9 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
               onChanged: (_) => setState(() {}),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 12),
           Text(
-            'se aplica al agregar',
+            'se aplica sobre el precio neto',
             style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
           ),
         ],
@@ -296,8 +353,19 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
   Widget _buildFactoryPriceCard(FabricaItem item) {
     final fabricaNombre = _fabricaService.getNombreFabrica(item.fabricaSourceId);
     final markup = double.tryParse(_markupController.text) ?? 0;
-    final precioConMarkup =
-        item.precio != null ? (item.precio! * (1 + markup / 100)) : null;
+    
+    // Obtener o crear controlador para el descuento individual
+    if (!_discountControllers.containsKey(item.id)) {
+      _discountControllers[item.id] = TextEditingController(text: '0');
+    }
+    final discountController = _discountControllers[item.id]!;
+    final discount = double.tryParse(discountController.text) ?? 0;
+
+    double? precioFinal;
+    if (item.precio != null) {
+      final precioConDescuento = item.precio! * (1 - discount / 100);
+      precioFinal = precioConDescuento * (1 + markup / 100);
+    }
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -374,27 +442,51 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
             // Price row
             Row(
               children: [
-                // Factory price
+                // Individual discount input
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Precio fábrica',
+                      'Desc (%)',
                       style: TextStyle(fontSize: 10, color: Colors.grey),
                     ),
-                    Text(
-                      item.precio != null
-                          ? _formatCurrency.format(item.precio)
-                          : 'Sin precio',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                    const SizedBox(height: 4),
+                    SizedBox(
+                      width: 50,
+                      child: TextField(
+                        controller: discountController,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (_) => setState(() {}),
                       ),
                     ),
                   ],
                 ),
 
-                if (precioConMarkup != null) ...[
+                const SizedBox(width: 12),
+
+                // Factory Price
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Fábrica',
+                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                    ),
+                    Text(
+                      item.precio != null ? _formatCurrency.format(item.precio) : '-',
+                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                    ),
+                  ],
+                ),
+
+                if (precioFinal != null) ...[
                   const SizedBox(width: 16),
                   const Icon(Icons.arrow_forward, size: 16, color: Colors.grey),
                   const SizedBox(width: 16),
@@ -402,12 +494,12 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Con ${_markupController.text}% markup',
-                        style: const TextStyle(fontSize: 10, color: Colors.grey),
+                      const Text(
+                        'P. Final (Neto + Markup)',
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                       Text(
-                        _formatCurrency.format(precioConMarkup.round()),
+                        _formatCurrency.format(precioFinal.round()),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
@@ -423,7 +515,7 @@ class _FabricaCompareWidgetState extends State<FabricaCompareWidget> {
                 // Add button
                 if (!item.agregadoACatalogo && widget.onAgregarACatalogo != null)
                   ElevatedButton.icon(
-                    onPressed: () => widget.onAgregarACatalogo!(item, markup),
+                    onPressed: () => widget.onAgregarACatalogo!(item, markup, discount),
                     icon: const Icon(Icons.add_shopping_cart, size: 16),
                     label: const Text('Agregar', style: TextStyle(fontSize: 12)),
                     style: ElevatedButton.styleFrom(

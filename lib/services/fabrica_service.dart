@@ -80,19 +80,22 @@ class FabricaService {
 
     // Fuzzy match con threshold
     final similares = <FabricaItem>[];
+    final queryLower = nombreProducto.toLowerCase();
+
     for (final item in allItems) {
-      final ratio =
-          weightedRatio(nombreProducto.toLowerCase(), item.nombre.toLowerCase());
-      if (ratio >= 60) {
-        // threshold 60%
+      final ratio = weightedRatio(nombreProducto, item.nombre);
+      final containsMatch = item.nombre.toLowerCase().contains(queryLower) ||
+          (item.codigo?.toLowerCase().contains(queryLower) ?? false);
+
+      if (ratio >= 60 || containsMatch) {
         similares.add(item);
       }
     }
 
     // Ordenar por relevancia (mejor match primero)
     similares.sort((a, b) {
-      final ratioA = weightedRatio(nombreProducto.toLowerCase(), a.nombre.toLowerCase());
-      final ratioB = weightedRatio(nombreProducto.toLowerCase(), b.nombre.toLowerCase());
+      final ratioA = weightedRatio(nombreProducto, a.nombre);
+      final ratioB = weightedRatio(nombreProducto, b.nombre);
       return ratioB.compareTo(ratioA);
     });
 
@@ -100,8 +103,11 @@ class FabricaService {
     final productosActuales = await _catalogoService.getProductos();
     List<Producto> productosEnCatalogo = [];
     for (final p in productosActuales) {
-      final ratio = weightedRatio(p.nombre.toLowerCase(), nombreProducto.toLowerCase());
-      if (ratio >= 60) {
+      final ratio = weightedRatio(p.nombre, nombreProducto);
+      final containsMatch = p.nombre.toLowerCase().contains(queryLower) ||
+          (p.codigoStock?.toLowerCase().contains(queryLower) ?? false);
+
+      if (ratio >= 70 || containsMatch) {
         productosEnCatalogo.add(p);
       }
     }
@@ -330,13 +336,15 @@ class FabricaService {
   Future<Producto?> copiarACatalogo(
     FabricaItem item, {
     required double porcentajeMarkup,
+    double porcentajeDescuento = 0,
   }) async {
     try {
       final nextId = await _catalogoService.getNextId();
 
-      // Calcular precio con markup
+      // Calcular precio: (base * (1 - desc)) * (1 + markup)
       final precioOriginal = item.precio ?? 0;
-      final precioConMarkup = (precioOriginal * (1 + porcentajeMarkup / 100)).round();
+      final precioConDescuento = precioOriginal * (1 - porcentajeDescuento / 100);
+      final precioFinal = (precioConDescuento * (1 + porcentajeMarkup / 100)).round();
 
       final fabricaNombre = getNombreFabrica(item.fabricaSourceId);
 
@@ -359,7 +367,7 @@ class FabricaService {
       final producto = Producto(
         id: nextId,
         nombre: item.nombre,
-        precio: precioConMarkup,
+        precio: precioFinal,
         tipo: item.categoria ?? '',
         descripcion: item.descripcion,
         codigoStock: item.codigo,
@@ -386,6 +394,7 @@ class FabricaService {
   Future<int> copiarMultiplesACatalogo(
     List<FabricaItem> items, {
     required double porcentajeMarkup,
+    double porcentajeDescuento = 0,
   }) async {
     int agregados = 0;
     for (final item in items) {
@@ -393,6 +402,7 @@ class FabricaService {
         final resultado = await copiarACatalogo(
           item,
           porcentajeMarkup: porcentajeMarkup,
+          porcentajeDescuento: porcentajeDescuento,
         );
         if (resultado != null) agregados++;
       }
