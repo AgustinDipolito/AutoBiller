@@ -23,12 +23,11 @@ class _PrincipalPageState extends State<PrincipalPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ListaService>(context, listen: false).readJson();
       Provider.of<ClienteService>(context, listen: false).initWithFirebase();
-      
+
       // Initialize stock analysis after data is loaded
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
-          Provider.of<StockAnalysisService>(context, listen: false)
-              .analyzeStockLevels();
+          Provider.of<StockAnalysisService>(context, listen: false).analyzeStockLevels();
         }
       });
     });
@@ -112,13 +111,13 @@ class _PrincipalPageState extends State<PrincipalPage> {
             color: Colors.grey,
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: const SingleChildScrollView(
+            child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Flexible(child: CarritoWidget()),
-                  top.SearchBar(),
+                  Flexible(child: const CarritoWidget()),
+                  const top.SearchBar(),
                   ProductsList(),
                 ],
               ),

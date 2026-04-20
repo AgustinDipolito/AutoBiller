@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CarritoWidget extends StatefulWidget {
-  const CarritoWidget({Key? key, this.cliente}) : super(key: key);
+  const CarritoWidget({super.key, this.cliente});
   final Pedido? cliente;
 
   @override
