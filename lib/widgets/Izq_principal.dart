@@ -7,7 +7,7 @@ import 'package:dist_v2/services/lista_service.dart';
 import 'package:dist_v2/services/pedido_service.dart';
 
 class ProductsList extends StatelessWidget {
-  const ProductsList({Key? key}) : super(key: key);
+  const ProductsList({super.key});
   @override
   Widget build(BuildContext context) {
     final listaService = Provider.of<ListaService>(context);
