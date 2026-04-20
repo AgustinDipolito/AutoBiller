@@ -1,5 +1,6 @@
 import 'package:dist_v2/pages/analysis_page.dart';
 import 'package:dist_v2/pages/catalogo_page.dart';
+import 'package:dist_v2/pages/fabricas_page.dart';
 import 'package:dist_v2/pages/login_page.dart';
 import 'package:dist_v2/pages/pedido_page.dart';
 import 'package:dist_v2/pages/principal_page.dart';
@@ -20,4 +21,5 @@ final Map<String, Widget Function(BuildContext)> appRoutes = {
   "stock": (_) => const StockPage(),
   "stockAlerts": (_) => const StockAlertsPage(),
   "catalogo": (_) => const CatalogoPage(),
+  "fabricas": (_) => const FabricasPage(),
 };

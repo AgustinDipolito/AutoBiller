@@ -86,6 +86,16 @@ class _CatalogoPageState extends State<CatalogoPage> {
           ),
           if (kIsWeb)
             IconButton(
+              icon: const Icon(Icons.factory, color: Colors.white),
+              tooltip: 'Gestionar Fábricas',
+              onPressed: () {
+                Navigator.pushNamed(context, 'fabricas').then((_) {
+                  _cargarProductos(); // Refresh in case items were added
+                });
+              },
+            ),
+          if (kIsWeb)
+            IconButton(
               icon: const Icon(Icons.upload_file, color: Colors.white),
               tooltip: 'Importar',
               onPressed: _importar,
